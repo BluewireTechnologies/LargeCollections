@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using LargeCollections.Resources;
 using MbUnit.Framework;
 using Moq;
 

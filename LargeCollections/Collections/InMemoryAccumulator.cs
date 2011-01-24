@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LargeCollections
+namespace LargeCollections.Collections
 {
     public class InMemoryAccumulator<T> : IAccumulator<T>
     {

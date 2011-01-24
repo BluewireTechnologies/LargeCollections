@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using LargeCollections.Resources;
+using LargeCollections.Storage;
 
-namespace LargeCollections
+namespace LargeCollections.Collections
 {
     public class FileAccumulator<T> : IAccumulator<T>
     {
         public string FileName { get; private set; }
         private readonly FileReference fileResource;
-        private readonly IItemSerialiser<T[]> serialiser;
+        private readonly IItemSerialiser<T> serialiser;
         private readonly BufferedItemWriter<T> writer;
         private IDisposable reference;
 
-        public FileAccumulator(string file, IItemSerialiser<T[]> serialiser)
+        public FileAccumulator(string file, IItemSerialiser<T> serialiser)
         {
             FileName = file;
             fileResource = new FileReference(file);

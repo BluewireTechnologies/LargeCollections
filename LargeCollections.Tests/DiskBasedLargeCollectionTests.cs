@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LargeCollections.Collections;
+using LargeCollections.Resources;
+using LargeCollections.Storage;
 using MbUnit.Framework;
 
 namespace LargeCollections.Tests
@@ -10,7 +13,7 @@ namespace LargeCollections.Tests
     {
         private static ILargeCollection<int> GetCollection(IEnumerable<int> values)
         {
-            using(var accumulator = new FileAccumulator<int>(Path.GetTempFileName(), new DefaultItemSerialiser<int[]>()))
+            using(var accumulator = new FileAccumulator<int>(Path.GetTempFileName(), new DefaultItemSerialiser<int>()))
             {
                 accumulator.AddRange(values);
                 return accumulator.Complete();
@@ -21,7 +24,7 @@ namespace LargeCollections.Tests
         public void AccumulatorCleansUpBackingStore_If_NoCollectionIsCreated()
         {
             var fileName = Path.GetTempFileName();
-            using (var accumulator = new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int[]>()))
+            using (var accumulator = new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))
             {
                 accumulator.Add(1);
             }

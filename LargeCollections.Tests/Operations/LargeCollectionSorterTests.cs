@@ -1,7 +1,9 @@
-﻿using MbUnit.Framework;
+﻿using LargeCollections.Collections;
+using LargeCollections.Operations;
+using MbUnit.Framework;
 using Moq;
 
-namespace LargeCollections.Tests
+namespace LargeCollections.Tests.Operations
 {
     [TestFixture]
     public class LargeCollectionSorterTests

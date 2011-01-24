@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace LargeCollections
+namespace LargeCollections.Operations
 {
     public class SortedDistinctEnumerator<T> : IEnumerator<T>
     {

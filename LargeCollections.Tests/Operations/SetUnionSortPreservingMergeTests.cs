@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using LargeCollections.Operations;
 using MbUnit.Framework;
 
-namespace LargeCollections.Tests
+namespace LargeCollections.Tests.Operations
 {
     [TestFixture]
     public class SetUnionSortPreservingMergeTests

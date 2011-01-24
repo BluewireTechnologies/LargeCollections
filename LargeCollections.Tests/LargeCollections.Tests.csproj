@@ -62,14 +62,17 @@
     <Compile Include="BatchedSinglePassCollectionTests.cs" />
     <Compile Include="DiskBasedLargeCollectionTests.cs" />
     <Compile Include="DisposableListTests.cs" />
+    <Compile Include="Storage\BufferedItemWriterTests.cs" />
+    <Compile Include="Storage\GuidBatchSerialiserTests.cs" />
     <Compile Include="InMemoryLargeCollectionTests.cs" />
-    <Compile Include="LargeCollectionSorterTests.cs" />
+    <Compile Include="Operations\LargeCollectionSorterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SetDifferenceMergeTests.cs" />
-    <Compile Include="SetUnionSortPreservingMergeTests.cs" />
+    <Compile Include="Operations\SetDifferenceMergeTests.cs" />
+    <Compile Include="Operations\SetUnionSortPreservingMergeTests.cs" />
     <Compile Include="SinglePassCollectionTests.cs" />
     <Compile Include="SizeBasedAccumulatorSelectorTests.cs" />
-    <Compile Include="SortedDistinctEnumeratorTests.cs" />
+    <Compile Include="Operations\SortedDistinctEnumeratorTests.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

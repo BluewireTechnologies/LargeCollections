@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LargeCollections.Collections;
+using LargeCollections.Resources;
 
-namespace LargeCollections
+namespace LargeCollections.Operations
 {
     public interface ISortOrder<T> : IEquatable<ISortOrder<T>>, IComparer<T>
     {

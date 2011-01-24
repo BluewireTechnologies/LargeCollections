@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LargeCollections
+namespace LargeCollections.Resources
 {
     public class DisposableList<T> : List<T>, IDisposable where T : IDisposable
     {

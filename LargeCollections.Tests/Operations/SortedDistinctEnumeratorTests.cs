@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using LargeCollections.Operations;
 using MbUnit.Framework;
 
-namespace LargeCollections.Tests
+namespace LargeCollections.Tests.Operations
 {
     [TestFixture]
     public class SortedDistinctEnumeratorTests

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LargeCollections.Collections;
+using LargeCollections.Operations;
 using MbUnit.Framework;
 
-namespace LargeCollections.Tests
+namespace LargeCollections.Tests.Operations
 {
     [TestFixture]
     public class SetDifferenceMergeTests
@@ -53,7 +55,7 @@ namespace LargeCollections.Tests
 
         
 
-        [Test,Ignore("Currently failing because the Guid serialiser needs testing")]
+        [Test]
         public void Fuzz_GuidSets_LargeCollectionProducesSameResultsAsEnumerables()
         {
             var setA = GenerateGuids(100).ToArray();

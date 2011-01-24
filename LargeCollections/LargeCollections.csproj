@@ -41,32 +41,38 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BatchedSinglePassCollection.cs" />
-    <Compile Include="DefaultItemSerialiser.cs" />
-    <Compile Include="DiskBasedLargeCollection.cs" />
-    <Compile Include="DisposableList.cs" />
-    <Compile Include="FileAccumulator.cs" />
-    <Compile Include="FileReference.cs" />
+    <Compile Include="Storage\BufferedItemReader.cs" />
+    <Compile Include="Storage\BufferedItemWriter.cs" />
+    <Compile Include="Storage\DefaultItemSerialiser.cs" />
+    <Compile Include="Collections\DiskBasedLargeCollection.cs" />
+    <Compile Include="Resources\DisposableList.cs" />
+    <Compile Include="Collections\FileAccumulator.cs" />
+    <Compile Include="Resources\FileReference.cs" />
+    <Compile Include="Storage\GuidBatchSerialiser.cs" />
     <Compile Include="IAccumulator.cs" />
+    <Compile Include="IAccumulatorSelector.cs" />
     <Compile Include="IAppendable.cs" />
     <Compile Include="ICountable.cs" />
     <Compile Include="IHasBackingStore.cs" />
     <Compile Include="IHasUnderlyingCollection.cs" />
     <Compile Include="ILargeCollection.cs" />
-    <Compile Include="InMemoryAccumulator.cs" />
-    <Compile Include="InMemoryLargeCollection.cs" />
+    <Compile Include="Collections\InMemoryAccumulator.cs" />
+    <Compile Include="Collections\InMemoryLargeCollection.cs" />
     <Compile Include="IReferenceCountedResource.cs" />
     <Compile Include="ISinglePassCollection.cs" />
-    <Compile Include="ISortedMerge.cs" />
+    <Compile Include="Operations\ISortedMerge.cs" />
     <Compile Include="LargeCollectionExtensions.cs" />
-    <Compile Include="LargeCollectionSorter.cs" />
+    <Compile Include="Operations\LargeCollectionSorter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SetDifferenceMerge.cs" />
-    <Compile Include="SetUnionSortPreservingMerge.cs" />
-    <Compile Include="SinglePassCollection.cs" />
+    <Compile Include="Storage\SerialiserSelector.cs" />
+    <Compile Include="Operations\SetDifferenceMerge.cs" />
+    <Compile Include="Operations\SetUnionSortPreservingMerge.cs" />
+    <Compile Include="Collections\SinglePassCollection.cs" />
     <Compile Include="SizeBasedAccumulatorSelector.cs" />
-    <Compile Include="SortedDistinctEnumerator.cs" />
-    <Compile Include="SortedEnumerableMerger.cs" />
+    <Compile Include="Operations\SortedDistinctEnumerator.cs" />
+    <Compile Include="Operations\SortedEnumerableMerger.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

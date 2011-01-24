@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Timers;
 using LargeCollections;
+using LargeCollections.Collections;
+using LargeCollections.Operations;
 using NConsoler;
 
 namespace LargeCollectionProfiler
@@ -113,7 +115,7 @@ namespace LargeCollectionProfiler
             var enumerables = Profile(sharedSet.Concat(setA), sharedSet.Concat(setB), EnumerableDifference, resultSets);
             var largeCollections = Profile(sharedSet.Concat(setA), sharedSet.Concat(setB), LargeCollectionDifference, resultSets);
 
-            if(!resultSets[0].SequenceEqual(resultSets[1]))
+            if(!resultSets[0].OrderBy(i => i).SequenceEqual(resultSets[1]))
             {
                 Console.WriteLine("Mismatched results! enumerable : {0} elements, LC: {1} elements", resultSets[0].Count(), resultSets[1].Count());
             }

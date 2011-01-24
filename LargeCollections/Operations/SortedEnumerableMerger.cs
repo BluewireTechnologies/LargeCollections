@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LargeCollections.Resources;
 
-namespace LargeCollections
+namespace LargeCollections.Operations
 {
     public class SortedEnumerableMerger<T> : IEnumerable<T>
     {

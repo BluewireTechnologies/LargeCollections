@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using LargeCollections.Resources;
+using LargeCollections.Storage;
 
-namespace LargeCollections
+namespace LargeCollections.Collections
 {
     public class DiskBasedLargeCollection<T> : ILargeCollection<T>, IHasBackingStore<FileReference>
     {
-        private readonly IItemSerialiser<T[]> serialiser;
+        private readonly IItemSerialiser<T> serialiser;
 
-        public DiskBasedLargeCollection(FileReference backingStore, long itemCount, IItemSerialiser<T[]> serialiser)
+        public DiskBasedLargeCollection(FileReference backingStore, long itemCount, IItemSerialiser<T> serialiser)
         {
             this.serialiser = serialiser;
             BackingStore = backingStore;
@@ -39,7 +41,7 @@ namespace LargeCollections
         public void Dispose()
         {
             reference.Dispose();
-            }
+        }
 
         public long Count { get; private set; }
 

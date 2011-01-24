@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LargeCollections
+namespace LargeCollections.Operations
 {
     public class SetDifferenceMerge<T> : ISortedMerge<T>
     {

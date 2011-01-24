@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace LargeCollections
+namespace LargeCollections.Collections
 {
     public class SinglePassCollection<T> : ISinglePassCollection<T>, IHasUnderlyingCollection
     {
