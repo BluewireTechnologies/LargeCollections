@@ -29,5 +29,11 @@ namespace LargeCollections.Tests.Operations
             Assert.Sorted(merged, SortOrder.Increasing);
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            Utils.AssertReferencesDisposed();
+        }
+
     }
 }

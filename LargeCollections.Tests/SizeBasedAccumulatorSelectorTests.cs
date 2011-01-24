@@ -33,5 +33,11 @@ namespace LargeCollections.Tests
                 Assert.IsNull(collection.GetBackingStore<object>());
             }
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Utils.AssertReferencesDisposed();
+        }
     }
 }

@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
+using LargeCollections.Collections;
+using System.Collections.Generic;
+using LargeCollections.Resources;
 
 namespace LargeCollections
 {
@@ -19,6 +23,26 @@ namespace LargeCollections
             return default(T);
         }
 
+        public static T GetBackingStore<T>(this IEnumerator enumerator)
+        {
+            if (enumerator is IHasUnderlyingCollection)
+            {
+                return ((IHasUnderlyingCollection)enumerator).UnderlyingCollection.GetBackingStore<T>();
+            }
+            return default(T);
+        }
+
+
+        public static IReferenceCountedResource CollectResources(this IEnumerable<IEnumerable> resources)
+        {
+            return new MultipleResource(resources.Select(r => r.GetBackingStore<IReferenceCountedResource>()).Where(r => r != null).ToArray());
+        }
+
+        public static IReferenceCountedResource CollectResources(this IEnumerable<IEnumerator> resources)
+        {
+            return new MultipleResource(resources.Select(r => r.GetBackingStore<IReferenceCountedResource>()).Where(r => r != null).ToArray());
+        }
+
         public static IDisposable Acquire<T>(this ILargeCollection<T> collection)
         {
             var backingStore = collection.GetBackingStore<IReferenceCountedResource>();
@@ -33,13 +57,30 @@ namespace LargeCollections
             }
         }
 
-        public static T GetBackingStore<T>(this IEnumerator enumerator)
+        public static ISinglePassCollection<T> AsSinglePass<T>(this ILargeCollection<T> collection)
         {
-            if (enumerator is IHasUnderlyingCollection)
+            return new SinglePassCollection<T>(collection);
+        }
+
+        public static ISinglePassCollection<T> SinglePass<T>(this IAccumulatorSelector accumulatorSelector, Action<IAccumulator<T>> func)
+        {
+            using(var accumulator = accumulatorSelector.GetAccumulator<T>())
             {
-                return ((IHasUnderlyingCollection)enumerator).UnderlyingCollection.GetBackingStore<T>();
+                func(accumulator);
+                using(var set = accumulator.Complete())
+                {
+                    return new SinglePassCollection<T>(set);
+                }
             }
-            return default(T);
+        }
+
+        public static T GetOperator<T>(this IAccumulatorSelector accumulatorSelector, Func<T> createDefault)
+        {
+            if(accumulatorSelector is IOperatorCache)
+            {
+                return ((IOperatorCache)accumulatorSelector).GetInstance(createDefault);
+            }
+            return createDefault();
         }
     }
 }

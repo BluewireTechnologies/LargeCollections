@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LargeCollections
+namespace LargeCollections.Operations
 {
     /// <summary>
     /// Reads an ISinglePassCollection as a series of batches of the specified size.

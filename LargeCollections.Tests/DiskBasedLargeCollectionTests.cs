@@ -63,5 +63,11 @@ namespace LargeCollections.Tests
                 Assert.IsTrue(collection.GetBackingStore<FileReference>().File.Exists);
             }
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Utils.AssertReferencesDisposed();
+        }
     }
 }

@@ -143,5 +143,11 @@ namespace LargeCollections.Tests.Operations
             return outputSet;
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            Utils.AssertReferencesDisposed();
+        }
+
     }
 }

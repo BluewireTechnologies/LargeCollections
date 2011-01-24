@@ -11,5 +11,11 @@ namespace LargeCollections.Tests
         {
             while (count-- > 0) yield return generate();
         }
+
+        public static void AssertReferencesDisposed()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
     }
 }

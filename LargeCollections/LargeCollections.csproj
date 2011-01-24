@@ -40,7 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BatchedSinglePassCollection.cs" />
+    <Compile Include="IOperatorCache.cs" />
+    <Compile Include="Operations\BatchedSinglePassCollection.cs" />
+    <Compile Include="Operations\ConcatenatedLargeCollection.cs" />
+    <Compile Include="Linq\Extensions.cs" />
+    <Compile Include="Resources\MultipleResource.cs" />
     <Compile Include="Storage\BufferedItemReader.cs" />
     <Compile Include="Storage\BufferedItemWriter.cs" />
     <Compile Include="Storage\DefaultItemSerialiser.cs" />

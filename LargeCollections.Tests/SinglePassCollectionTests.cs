@@ -170,5 +170,11 @@ namespace LargeCollections.Tests
             yield return 1;
             yield return 2;
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Utils.AssertReferencesDisposed();
+        }
     }
 }

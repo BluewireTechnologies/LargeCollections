@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LargeCollections.Collections;
+using LargeCollections.Linq;
 using LargeCollections.Resources;
 
 namespace LargeCollections.Operations
@@ -37,20 +38,24 @@ namespace LargeCollections.Operations
 
         public ILargeCollection<T> Sort<T>(ISinglePassCollection<T> source, IComparer<T> comparison)
         {
-            if(source.Count == 0) return InMemoryAccumulator<T>.Empty();
-
-            var batchSize = (int)Math.Max(Math.Sqrt(source.Count), minBatchSize);
-            // prepare to read the source set in batches.
-            var batches = new BatchedSinglePassCollection<T>(source, batchSize);
-
-            // for each batch, sort it and store as an ILargeCollection.
-            var sortedBatches = SortBatches(batches, comparison, () => accumulatorSelector.GetAccumulator<T>(source.Count)).ToList();
-            if (batches.Count == 1)
+            using (source)
             {
-                // just one batch. return it.
-                return sortedBatches.Single();
+                if (source.Count == 0) return InMemoryAccumulator<T>.Empty();
+
+                var batchSize = (int) Math.Max(Math.Sqrt(source.Count), minBatchSize);
+                // prepare to read the source set in batches.
+                using (var batches = source.Batch(batchSize))
+                {
+                    // for each batch, sort it and store as an ILargeCollection.
+                    var sortedBatches = SortBatches(batches, comparison, () => accumulatorSelector.GetAccumulator<T>(source.Count)).ToList();
+                    if (batches.Count == 1)
+                    {
+                        // just one batch. return it.
+                        return sortedBatches.Single();
+                    }
+                    return Merge(sortedBatches, comparison, source.Count);
+                }
             }
-            return Merge(sortedBatches, comparison, source.Count);
         }
 
         private ILargeCollection<T> Merge<T>(IEnumerable<ILargeCollection<T>> sortedBatches, IComparer<T> comparison, long totalSize)

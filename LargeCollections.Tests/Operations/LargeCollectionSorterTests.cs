@@ -91,5 +91,11 @@ namespace LargeCollections.Tests.Operations
             }
             selector.Verify(s => s.GetAccumulator<int>(batchSize), Times.Never());
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Utils.AssertReferencesDisposed();
+        }
     }
 }

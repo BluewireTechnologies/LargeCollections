@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace LargeCollections
 {
@@ -33,6 +34,11 @@ namespace LargeCollections
         }
 
         protected abstract void CleanUp();
+
+        ~ReferenceCountedResource()
+        {
+            Debug.Assert(RefCount == 0, String.Format("Resource was not released before finalisation. {0}", this));
+        }
 
         class Reference : IDisposable
         {

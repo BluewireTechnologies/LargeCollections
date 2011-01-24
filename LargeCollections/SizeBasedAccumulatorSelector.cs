@@ -1,11 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using LargeCollections.Collections;
 using LargeCollections.Storage;
 
 namespace LargeCollections
 {
-    public class SizeBasedAccumulatorSelector : IAccumulatorSelector
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Threadsafe.
+    /// </remarks>
+    public class SizeBasedAccumulatorSelector : IAccumulatorSelector, IOperatorCache
     {
         private readonly long backingStoreThreshold;
 
@@ -96,6 +103,20 @@ namespace LargeCollections
             {
                 accumulator.Dispose();
             }
+        }
+
+        // simplest way to make the cache threadsafe
+        [ThreadStatic]
+        private IDictionary<Type, object> operatorCache = new Dictionary<Type, object>();
+        public T GetInstance<T>(Func<T> create)
+        {
+            object operatorInstance;
+            if (!operatorCache.TryGetValue(typeof(T), out operatorInstance))
+            {
+                operatorInstance = create();
+                operatorCache[typeof (T)] = operatorInstance;
+            }
+            return (T)operatorInstance;
         }
     }
 }
