@@ -22,7 +22,7 @@ namespace LargeCollections.Tests
         {
             using(var batcher = new BatchedSinglePassCollection<int>(GetCollection(1, 2, 3, 4, 5), 10))
             {
-                Assert.AreEqual(1, batcher.Count);
+                Assert.AreEqual(1, batcher.GetUnderlying<ICountable>().Count);
                 Assert.IsTrue(batcher.MoveNext());
                 Assert.AreElementsEqual(new []{ 1, 2, 3, 4, 5 }, batcher.Current);
                 Assert.IsFalse(batcher.MoveNext());
@@ -34,7 +34,7 @@ namespace LargeCollections.Tests
         {
             using (var batcher = new BatchedSinglePassCollection<int>(GetCollection(1, 2, 3, 4, 5), 5))
             {
-                Assert.AreEqual(1, batcher.Count);
+                Assert.AreEqual(1, batcher.GetUnderlying<ICountable>().Count);
                 Assert.IsTrue(batcher.MoveNext());
                 Assert.AreElementsEqual(new[] { 1, 2, 3, 4, 5 }, batcher.Current);
                 Assert.IsFalse(batcher.MoveNext());
@@ -46,7 +46,7 @@ namespace LargeCollections.Tests
         {
             using (var batcher = new BatchedSinglePassCollection<int>(GetCollection(1, 2, 3, 4, 5), 2))
             {
-                Assert.AreEqual(3, batcher.Count);
+                Assert.AreEqual(3, batcher.GetUnderlying<ICountable>().Count);
             }
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LargeCollections.Collections;
+using LargeCollections.Linq;
 using LargeCollections.Operations;
 using MbUnit.Framework;
 
@@ -10,11 +11,15 @@ namespace LargeCollections.Tests.Operations
     [TestFixture]
     public class SetDifferenceMergeTests
     {
+        private IEnumerable<int> Sorted(params int[] items)
+        {
+            return new SortedEnumerable<int>(items, Comparer<int>.Default);
+        }
         [Test]
         public void SingleSortedEnumerableIsInvariant()
         {
-            var items = new[] { 1, 2, 3, 4, 5 };
-            var merged = new SortedEnumerableMerger<int>(new[] { items }, Comparer<int>.Default, new SetDifferenceMerge<int>());
+            var items = Sorted(1, 2, 3, 4, 5);
+            var merged = new SortedEnumerableMerger<int>(new[] { items }, new SetDifferenceMerge<int>());
 
             Assert.AreElementsEqual(items, merged);
         }
@@ -23,11 +28,11 @@ namespace LargeCollections.Tests.Operations
         public void MultipleSortedEnumerablesDoNotYieldElementsOccurringInMultipleEnumerables()
         {
             var itemSets = new[] {
-                new [] {2, 4, 6, 7, 9, 12 },
-                new [] {1, 3, 4, 7 },
-                new [] {5, 8, 10, 11 },
+                Sorted(2, 4, 6, 7, 9, 12),
+                Sorted(1, 3, 4, 7),
+                Sorted(5, 8, 10, 11)
             };
-            var merged = new SortedEnumerableMerger<int>(itemSets, Comparer<int>.Default, new SetDifferenceMerge<int>());
+            var merged = new SortedEnumerableMerger<int>(itemSets, new SetDifferenceMerge<int>());
 
             Assert.AreElementsEqual(new []{ 1, 2, 3, 5, 6, 8, 9, 10, 11, 12 }, merged);
         }
@@ -36,11 +41,11 @@ namespace LargeCollections.Tests.Operations
         public void MultipleSortedEnumerablesDoYieldElementsOccurringMultipleTimesInAnEnumerable()
         {
             var itemSets = new[] {
-                new [] {2, 4, 6, 7, 7, 9, 12 },
-                new [] {1, 3, 3, 4, 7 },
-                new [] {5, 8, 10, 11 },
+                Sorted(2, 4, 6, 7, 7, 9, 12),
+                Sorted(1, 3, 3, 4, 7),
+                Sorted(5, 8, 10, 11)
             };
-            var merged = new SortedEnumerableMerger<int>(itemSets, Comparer<int>.Default, new SetDifferenceMerge<int>());
+            var merged = new SortedEnumerableMerger<int>(itemSets, new SetDifferenceMerge<int>());
 
             Assert.AreElementsEqual(new[] { 1, 2, 3, 5, 6, 8, 9, 10, 11, 12 }, merged);
         }
@@ -58,54 +63,29 @@ namespace LargeCollections.Tests.Operations
         [Test]
         public void Fuzz_GuidSets_LargeCollectionProducesSameResultsAsEnumerables()
         {
-            var setA = GenerateGuids(100).ToArray();
-            var setB = GenerateGuids(100).ToArray();
+            var shared = GenerateGuids(100).ToArray();
+            var setA = shared.Concat(GenerateGuids(100)).ToArray();
+            var setB = shared.Concat(GenerateGuids(100)).ToArray();
 
-            var largeCollection = LargeCollectionDifference(setA, setB).ToArray();
-            var enumerable = EnumerableDifference(setA, setB).ToArray();
+            using (var largeCollection = LargeCollectionDifference(setA, setB))
+            {
+                var enumerable = EnumerableDifference(setA, setB).ToArray();
 
-            Assert.AreElementsEqualIgnoringOrder(enumerable, largeCollection);
+                Assert.AreElementsEqualIgnoringOrder(enumerable, largeCollection.ToArray());
+            }
         }
 
         private static IAccumulatorSelector accumulatorSelector = new SizeBasedAccumulatorSelector(0);
 
         private static ILargeCollection<Guid> LargeCollectionDifference(IEnumerable<Guid> setA, IEnumerable<Guid> setB)
         {
-            var largeSetA = Load(setA);
-            var largeSetB = Load(setB);
+            var operations = new LargeCollectionOperations(accumulatorSelector);
 
-            var sorter = new LargeCollectionSorter(accumulatorSelector);
-            using (var sorted = sorter.Sort(largeSetA))
+            using (var largeSetA = operations.Buffer(setA))
             {
-                largeSetA = new SinglePassCollection<Guid>(sorted);
-            }
-
-            using (var sorted = sorter.Sort(largeSetB))
-            {
-                largeSetB = new SinglePassCollection<Guid>(sorted);
-            }
-
-            using (var accumulator = accumulatorSelector.GetAccumulator<Guid>(Math.Max(largeSetA.Count, largeSetB.Count)))
-            {
-                using (var difference = new SortedEnumeratorMerger<Guid>(new List<IEnumerator<Guid>> { largeSetA, largeSetB }, Comparer<Guid>.Default, new SetDifferenceMerge<Guid>()))
+                using (var largeSetB = operations.Buffer(setB))
                 {
-                    while (difference.MoveNext())
-                    {
-                        accumulator.Add(difference.Current);
-                    }
-                }
-                return accumulator.Complete();
-            }
-        }
-
-        private static ISinglePassCollection<Guid> Load(IEnumerable<Guid> set)
-        {
-            using (var accumulator = accumulatorSelector.GetAccumulator<Guid>())
-            {
-                accumulator.AddRange(set);
-                using (var collection = accumulator.Complete())
-                {
-                    return new SinglePassCollection<Guid>(collection);
+                    return operations.Difference(largeSetA.AsSinglePass(), largeSetB.AsSinglePass()).Buffer();
                 }
             }
         }

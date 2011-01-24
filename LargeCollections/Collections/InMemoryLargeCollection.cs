@@ -27,10 +27,6 @@ namespace LargeCollections.Collections
 
         public void Dispose()
         {
-            if(@internal != null)
-            {
-                @internal = null;
-            }
         }
 
         public long Count { get; private set; }

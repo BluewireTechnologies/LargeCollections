@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using LargeCollections.Collections;
@@ -58,6 +59,23 @@ namespace LargeCollections
         {
             return new HybridAccumulator<T>(backingStoreThreshold);
         }
+
+
+        /// <summary>
+        /// Get an accumulator tailored to a set of similar size to that provided.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IAccumulator<T> GetAccumulator<T>(IEnumerator source)
+        {
+            var countable = source.GetUnderlying<ICountable>();
+            if(countable != null)
+            {
+                return GetAccumulator<T>(countable.Count);
+            }
+            return new HybridAccumulator<T>(backingStoreThreshold);
+        }
+
 
         class HybridAccumulator<T> : IAccumulator<T>
         {

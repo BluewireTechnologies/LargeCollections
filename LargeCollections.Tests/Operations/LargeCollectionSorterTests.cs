@@ -1,4 +1,7 @@
-﻿using LargeCollections.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
+using LargeCollections.Collections;
+using LargeCollections.Linq;
 using LargeCollections.Operations;
 using MbUnit.Framework;
 using Moq;
@@ -12,6 +15,7 @@ namespace LargeCollections.Tests.Operations
         {
             var selector = new Mock<IAccumulatorSelector>();
             selector.Setup(s => s.GetAccumulator<int>()).Returns(() => new InMemoryAccumulator<int>());
+            selector.Setup(s => s.GetAccumulator<int>(It.IsAny<IEnumerator>())).Returns(() => new InMemoryAccumulator<int>());
             selector.Setup(s => s.GetAccumulator<int>(It.IsAny<long>())).Returns(() => new InMemoryAccumulator<int>());
             return selector;
         }
@@ -30,8 +34,8 @@ namespace LargeCollections.Tests.Operations
             {
                 using (var singlePassCollection = new SinglePassCollection<int>(collection))
                 {
-                    var sorted = sorter.Sort(singlePassCollection);
-                    Assert.IsEmpty(sorted);
+                    var sorted = sorter.Sort(singlePassCollection, Comparer<int>.Default);
+                    Assert.IsEmpty(sorted.Buffer());
                 }
             }
         }
@@ -44,8 +48,8 @@ namespace LargeCollections.Tests.Operations
             {
                 using(var singlePassCollection = new SinglePassCollection<int>(collection))
                 {
-                    var sorted = sorter.Sort(singlePassCollection);
-                    AssertSorted(collection, sorted);
+                    var sorted = sorter.Sort(singlePassCollection, Comparer<int>.Default);
+                    AssertSorted(collection, sorted.Buffer());
                 }
             }
         }
@@ -65,8 +69,8 @@ namespace LargeCollections.Tests.Operations
             {
                 using (var singlePassCollection = new SinglePassCollection<int>(collection))
                 {
-                    var sorted = sorter.Sort(singlePassCollection);
-                    AssertSorted(collection, sorted);
+                    var sorted = sorter.Sort(singlePassCollection, Comparer<int>.Default);
+                    AssertSorted(collection, sorted.Buffer());
                 }
             }
         }
@@ -86,7 +90,7 @@ namespace LargeCollections.Tests.Operations
             {
                 using (var singlePassCollection = new SinglePassCollection<int>(collection))
                 {
-                    sorter.Sort(singlePassCollection);
+                    sorter.Sort(singlePassCollection, Comparer<int>.Default);
                 }
             }
             selector.Verify(s => s.GetAccumulator<int>(batchSize), Times.Never());

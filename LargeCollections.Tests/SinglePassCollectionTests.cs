@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LargeCollections.Collections;
+using LargeCollections.Resources;
 using MbUnit.Framework;
 using Moq;
 
@@ -16,8 +17,10 @@ namespace LargeCollections.Tests
             var resource = MockResource();
             underlying.As<IHasBackingStore<IReferenceCountedResource>>().SetupGet(b => b.BackingStore).Returns(resource);
 
-            new SinglePassCollection<int>(underlying.Object);
-            Assert.AreEqual(1, resource.RefCount);
+            using (new SinglePassCollection<int>(underlying.Object))
+            {
+                Assert.AreEqual(1, resource.RefCount);
+            }
         }
 
         [Test]
@@ -38,16 +41,17 @@ namespace LargeCollections.Tests
         {
             var underlying = MockUnderlyingCollection();
             var resource = MockResource();
-            resource.Acquire();
-
-            underlying.As<IHasBackingStore<IReferenceCountedResource>>().SetupGet(b => b.BackingStore).Returns(resource);
-            using (var collection = new SinglePassCollection<int>(underlying.Object))
+            using (resource.Acquire())
             {
-                collection.Dispose();
-                collection.Dispose();
-                collection.Dispose();
+                underlying.As<IHasBackingStore<IReferenceCountedResource>>().SetupGet(b => b.BackingStore).Returns(resource);
+                using (var collection = new SinglePassCollection<int>(underlying.Object))
+                {
+                    collection.Dispose();
+                    collection.Dispose();
+                    collection.Dispose();
+                }
+                Assert.AreEqual(1, resource.RefCount);
             }
-            Assert.AreEqual(1, resource.RefCount);
         }
 
 

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LargeCollections.Resources
 {
-    public class DisposableList<T> : List<T>, IDisposable where T : IDisposable
+    public class DisposableList<T> : List<T>, IDisposable
     {
         public DisposableList()
         {
@@ -15,7 +16,7 @@ namespace LargeCollections.Resources
 
         public void Dispose()
         {
-            foreach (var item in this)
+            foreach (var item in this.OfType<IDisposable>())
             {
                 try
                 {

@@ -1,4 +1,6 @@
-﻿namespace LargeCollections
+﻿using System.Collections;
+
+namespace LargeCollections
 {
     public interface IAccumulatorSelector
     {
@@ -16,5 +18,12 @@
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IAccumulator<T> GetAccumulator<T>();
+
+        /// <summary>
+        /// Get an accumulator tailored to a set of similar size to that provided.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        IAccumulator<T> GetAccumulator<T>(IEnumerator source);
     }
 }

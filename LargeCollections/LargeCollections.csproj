@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -44,6 +45,8 @@
     <Compile Include="Operations\BatchedSinglePassCollection.cs" />
     <Compile Include="Operations\ConcatenatedLargeCollection.cs" />
     <Compile Include="Linq\Extensions.cs" />
+    <Compile Include="Operations\MultipleCollection.cs" />
+    <Compile Include="Operations\SortedEnumerator.cs" />
     <Compile Include="Resources\MultipleResource.cs" />
     <Compile Include="Storage\BufferedItemReader.cs" />
     <Compile Include="Storage\BufferedItemWriter.cs" />
@@ -62,7 +65,7 @@
     <Compile Include="ILargeCollection.cs" />
     <Compile Include="Collections\InMemoryAccumulator.cs" />
     <Compile Include="Collections\InMemoryLargeCollection.cs" />
-    <Compile Include="IReferenceCountedResource.cs" />
+    <Compile Include="Resources\IReferenceCountedResource.cs" />
     <Compile Include="ISinglePassCollection.cs" />
     <Compile Include="Operations\ISortedMerge.cs" />
     <Compile Include="LargeCollectionExtensions.cs" />

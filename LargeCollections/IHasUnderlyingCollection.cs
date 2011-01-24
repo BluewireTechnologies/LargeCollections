@@ -2,8 +2,8 @@
 
 namespace LargeCollections
 {
-    public interface IHasUnderlyingCollection
+    public interface IHasUnderlying<T>
     {
-        IEnumerable UnderlyingCollection { get; }
+        T Underlying { get; }
     }
 }

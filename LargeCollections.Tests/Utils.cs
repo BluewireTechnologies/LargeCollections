@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using LargeCollections.Resources;
+using MbUnit.Framework;
 
 namespace LargeCollections.Tests
 {
@@ -14,8 +16,8 @@ namespace LargeCollections.Tests
 
         public static void AssertReferencesDisposed()
         {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            var resources = ReferenceCountedResource.GetLeakedResources();
+            Assert.IsEmpty(resources);
         }
     }
 }

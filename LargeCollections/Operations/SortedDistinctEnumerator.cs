@@ -1,15 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace LargeCollections.Operations
 {
-    public class SortedDistinctEnumerator<T> : IEnumerator<T>
+    public class SortedDistinctEnumerator<T> : IEnumerator<T>, ISortedCollection<T>
     {
         private readonly IEnumerator<T> enumerator;
 
         public SortedDistinctEnumerator(IEnumerator<T> enumerator)
         {
+            if (!(enumerator is ISortedCollection<T>))
+            {
+                Debug.Fail("Underlying enumerator must be sorted in order for SortedDistinctEnumerator to operate");
+                throw new InvalidOperationException("Underlying enumerator must be sorted in order for SortedDistinctEnumerator to operate");
+            }
             this.enumerator = enumerator;
+            SortOrder = ((ISortedCollection<T>) enumerator).SortOrder;
         }
 
         public void Dispose()
@@ -44,5 +52,7 @@ namespace LargeCollections.Operations
         {
             get { return Current; }
         }
+
+        public IComparer<T> SortOrder { get; private set; }
     }
 }

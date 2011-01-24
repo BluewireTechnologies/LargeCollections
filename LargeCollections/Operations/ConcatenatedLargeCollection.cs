@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LargeCollections.Linq;
 using LargeCollections.Resources;
 
 namespace LargeCollections.Operations
@@ -58,16 +59,13 @@ namespace LargeCollections.Operations
         }
     }
 
-    public class ConcatenatedLargeCollection<T> : ILargeCollection<T>, IHasBackingStore<IReferenceCountedResource>
+    public class ConcatenatedLargeCollection<T> : MultipleCollection<T>, ILargeCollection<T>
     {
         private readonly ILargeCollection<T>[] collections;
-        private IDisposable resourceReference;
-
-        public ConcatenatedLargeCollection(params ILargeCollection<T>[] collections)
+        
+        public ConcatenatedLargeCollection(params ILargeCollection<T>[] collections) : base(collections)
         {
             this.collections = collections;
-            BackingStore = collections.CollectResources();
-            resourceReference = BackingStore.Acquire();
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -80,16 +78,9 @@ namespace LargeCollections.Operations
             return GetEnumerator();
         }
 
-        public void Dispose()
-        {
-            resourceReference.Dispose();
-        }
-
         public long Count
         {
             get { return collections.Sum(c => c.Count); }
         }
-
-        public IReferenceCountedResource BackingStore { get; private set; }
     }
 }

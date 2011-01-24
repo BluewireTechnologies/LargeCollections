@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LargeCollections.Collections
 {
-    public class SinglePassCollection<T> : ISinglePassCollection<T>, IHasUnderlyingCollection
+    public class SinglePassCollection<T> : ISinglePassCollection<T>, IHasUnderlying<IEnumerable>
     {
         private readonly ILargeCollection<T> collection;
         private IEnumerator<T> enumerator;
@@ -57,7 +57,7 @@ namespace LargeCollections.Collections
             get { return collection.Count; }
         }
 
-        public IEnumerable UnderlyingCollection
+        public IEnumerable Underlying
         {
             get { return collection; }
         }

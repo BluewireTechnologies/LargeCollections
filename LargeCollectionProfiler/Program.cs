@@ -6,6 +6,7 @@ using System.Text;
 using System.Timers;
 using LargeCollections;
 using LargeCollections.Collections;
+using LargeCollections.Linq;
 using LargeCollections.Operations;
 using NConsoler;
 
@@ -161,30 +162,14 @@ namespace LargeCollectionProfiler
 
         private static ILargeCollection<Guid> LargeCollectionDifference(IEnumerable<Guid> setA, IEnumerable<Guid> setB)
         {
-            var largeSetA = Load(setA);
-            var largeSetB = Load(setB);
+            var operations = new LargeCollectionOperations(accumulatorSelector);
 
-            var sorter = new LargeCollectionSorter(accumulatorSelector);
-            using (var sorted = sorter.Sort(largeSetA))
+            using (var largeSetA = operations.Buffer(setA))
             {
-                largeSetA = new SinglePassCollection<Guid>(sorted);
-            }
-
-            using (var sorted = sorter.Sort(largeSetB))
-            {
-                largeSetB = new SinglePassCollection<Guid>(sorted);
-            }
-
-            using (var accumulator = accumulatorSelector.GetAccumulator<Guid>(Math.Max(largeSetA.Count, largeSetB.Count)))
-            {
-                using (var difference = new SortedEnumeratorMerger<Guid>(new List<IEnumerator<Guid>> { largeSetA, largeSetB }, Comparer<Guid>.Default, new SetDifferenceMerge<Guid>()))
+                using (var largeSetB = operations.Buffer(setB))
                 {
-                    while (difference.MoveNext())
-                    {
-                        accumulator.Add(difference.Current);
-                    }
+                    return operations.Difference(largeSetA.AsSinglePass(), largeSetB.AsSinglePass()).Buffer();
                 }
-                return accumulator.Complete();
             }
         }
 

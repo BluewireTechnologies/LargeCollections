@@ -29,58 +29,55 @@ namespace LargeCollections.Operations
             this.minBatchSize = minBatchSize;
         }
 
-        private const long MIN_BATCH_SIZE = 10000;
-
-        public ILargeCollection<T> Sort<T>(ISinglePassCollection<T> source)
+        private const int MIN_BATCH_SIZE = 10000;
+        private int GetBatchSize<T>(IEnumerator<T> source)
         {
-            return Sort(source, Comparer<T>.Default);
+            var countable = source.GetUnderlying<ICountable>();
+            return (int)(countable == null ? minBatchSize : Math.Max(Math.Sqrt(countable.Count), minBatchSize));
         }
 
-        public ILargeCollection<T> Sort<T>(ISinglePassCollection<T> source, IComparer<T> comparison)
+        public IEnumerator<T> Sort<T>(IEnumerator<T> source, IComparer<T> comparison)
         {
+            if(source is ISortedCollection<T>)
+            {
+                if(((ISortedCollection<T>)source).SortOrder == comparison)
+                {
+                    // already sorted
+                    return source;
+                }
+            }
+
             using (source)
             {
-                if (source.Count == 0) return InMemoryAccumulator<T>.Empty();
-
-                var batchSize = (int) Math.Max(Math.Sqrt(source.Count), minBatchSize);
+                var batchSize = GetBatchSize(source);
                 // prepare to read the source set in batches.
                 using (var batches = source.Batch(batchSize))
                 {
-                    // for each batch, sort it and store as an ILargeCollection.
-                    var sortedBatches = SortBatches(batches, comparison, () => accumulatorSelector.GetAccumulator<T>(source.Count)).ToList();
-                    if (batches.Count == 1)
-                    {
-                        // just one batch. return it.
-                        return sortedBatches.Single();
-                    }
-                    return Merge(sortedBatches, comparison, source.Count);
+                    // for each batch, sort it.
+                    var sortedBatches = SortBatches(batches, comparison, () => accumulatorSelector.GetAccumulator<T>(source)).ToList();
+                    if (!sortedBatches.Any()) return Enumerable.Empty<T>().GetEnumerator();
+                    return Merge(sortedBatches);
                 }
             }
         }
 
-        private ILargeCollection<T> Merge<T>(IEnumerable<ILargeCollection<T>> sortedBatches, IComparer<T> comparison, long totalSize)
+        private IEnumerator<T> Merge<T>(IEnumerable<IEnumerator<T>> sortedBatches)
         {
-            using(var sortedBatchList = new DisposableList<ILargeCollection<T>>(sortedBatches))
-            {
-                using (var accumulator = accumulatorSelector.GetAccumulator<T>(totalSize))
-                {
-                    foreach (var item in new SortedEnumerableMerger<T>(sortedBatchList.Cast<IEnumerable<T>>().ToList(), comparison, new SetUnionSortPreservingMerge<T>()))
-                    {
-                        accumulator.Add(item);
-                    }
-                    return accumulator.Complete();
-                }
-            }
+            
+            return new SortedEnumeratorMerger<T>(sortedBatches.ToList(), new SetUnionSortPreservingMerge<T>());
         }
 
-        private IEnumerable<ILargeCollection<T>> SortBatches<T>(ISinglePassCollection<IEnumerable<T>> batches, IComparer<T> comparison, Func<IAccumulator<T>> getBatchAccumulator)
+        private IEnumerable<IEnumerator<T>> SortBatches<T>(IEnumerator<IEnumerable<T>> batches, IComparer<T> comparison, Func<IAccumulator<T>> getBatchAccumulator)
         {
             while(batches.MoveNext())
             {
                 using (var accumulator = getBatchAccumulator())
                 {
                     accumulator.AddRange(batches.Current.OrderBy(i => i, comparison));
-                    yield return accumulator.Complete();
+                    using(var collection = accumulator.Complete())
+                    {
+                        yield return new SortedEnumerator<T>(new SinglePassCollection<T>(collection), comparison);
+                    }
                 }
             }
         }

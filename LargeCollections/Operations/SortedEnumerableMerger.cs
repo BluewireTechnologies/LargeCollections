@@ -1,36 +1,43 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using LargeCollections.Resources;
 
 namespace LargeCollections.Operations
 {
-    public class SortedEnumerableMerger<T> : IEnumerable<T>
+    public class SortedEnumerableMerger<T> : MultipleCollection<T>, IEnumerable<T>, ISortedCollection<T>
     {
         private readonly IList<IEnumerable<T>> enumerables;
         private readonly IComparer<T> comparison;
         private readonly ISortedMerge<T> merger;
 
-        public SortedEnumerableMerger(IList<IEnumerable<T>> enumerables, IComparer<T> comparison, ISortedMerge<T> merger)
+        public SortedEnumerableMerger(IList<IEnumerable<T>> enumerables, ISortedMerge<T> merger) : base(enumerables.ToArray())
         {
+            this.comparison = enumerables.GetCommonSortOrder();
             this.enumerables = enumerables;
-            this.comparison = comparison;
+            
             this.merger = merger;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return new SortedEnumeratorMerger<T>(enumerables.Select(e => e.GetEnumerator()).ToList(), comparison, merger);
+            return new SortedEnumeratorMerger<T>(enumerables.Select(e => e.GetEnumerator()).ToList(), merger);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
+
+        public IComparer<T> SortOrder
+        {
+            get { return comparison; }
+        }
     }
 
-    public class SortedEnumeratorMerger<T> : IEnumerator<T>
+    public class SortedEnumeratorMerger<T> : IEnumerator<T>, ISortedCollection<T>
     {
         private readonly DisposableList<IEnumerator<T>> enumerators;
         private readonly IComparer<T> comparison;
@@ -38,8 +45,9 @@ namespace LargeCollections.Operations
         private readonly List<IEnumerator<T>> batchesByHeadValue;
         private bool first = true;
 
-        public SortedEnumeratorMerger(IList<IEnumerator<T>> enumerators, IComparer<T> comparison, ISortedMerge<T> merger)
+        public SortedEnumeratorMerger(IList<IEnumerator<T>> enumerators, ISortedMerge<T> merger)
         {
+            this.comparison = enumerators.GetCommonSortOrder();
             this.enumerators = new DisposableList<IEnumerator<T>>(enumerators);
             this.comparison = comparison;
             this.merger = merger;
@@ -125,9 +133,14 @@ namespace LargeCollections.Operations
         {
             throw new NotSupportedException();
         }
+
+        public IComparer<T> SortOrder
+        {
+            get { return comparison; }
+        }
     }
 
-    class SortedEnumeratorList<T> : IEnumerable<IEnumerator<T>>
+    /*class SortedEnumeratorList<T> : IEnumerable<IEnumerator<T>>
     {
         public IComparer<T> Comparison { get; private set; }
         private LinkedList<SortedItemSource> sortedList = new LinkedList<SortedItemSource>();
@@ -191,5 +204,5 @@ namespace LargeCollections.Operations
         {
             return GetEnumerator();
         }
-    }
+    }*/
 }
