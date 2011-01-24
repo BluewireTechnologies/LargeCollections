@@ -52,14 +52,29 @@ namespace LargeCollections.Operations
             // initialise the list.
             foreach (var queue in enumerators.Select(e => merger.WrapSource(e)).Where(e => e.MoveNext()))
             {
-                batchesByHeadValue.Insert(GetInsertionIndex(0, batchesByHeadValue, queue), queue);
+                batchesByHeadValue.Insert(GetInsertionIndex(batchesByHeadValue, queue), queue);
             }
         }
 
-        private int GetInsertionIndex(int start, List<IEnumerator<T>> orderedList, IEnumerator<T> queue)
+        class EnumeratorComparer : IComparer<IEnumerator<T>>
         {
-            var index = orderedList.FindIndex(start, t => comparison.Compare(t.Current, queue.Current) >= 0);
-            if (index < 0) return orderedList.Count;
+            private readonly IComparer<T> comparison;
+
+            public EnumeratorComparer(IComparer<T> comparison)
+            {
+                this.comparison = comparison;
+            }
+
+            public int Compare(IEnumerator<T> x, IEnumerator<T> y)
+            {
+                return comparison.Compare(x.Current, y.Current);
+            }
+        }
+
+        private int GetInsertionIndex(List<IEnumerator<T>> orderedList, IEnumerator<T> queue)
+        {
+            var index = orderedList.BinarySearch(queue, new EnumeratorComparer(comparison));
+            if (index < 0) return ~index;
             return index;
         }
 
@@ -92,7 +107,7 @@ namespace LargeCollections.Operations
             {
                 batchesByHeadValue.Remove(enumerator);
                 // more items in that queue.
-                var insertionIndex = GetInsertionIndex(0, batchesByHeadValue, enumerator);
+                var insertionIndex = GetInsertionIndex(batchesByHeadValue, enumerator);
                 // if the next item is not the lowest current value, move the queue to the right location.
                 batchesByHeadValue.Insert(insertionIndex, enumerator);
                 return true;
