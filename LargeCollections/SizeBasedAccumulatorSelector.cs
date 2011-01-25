@@ -68,7 +68,7 @@ namespace LargeCollections
         /// <returns></returns>
         public IAccumulator<T> GetAccumulator<T>(IEnumerator source)
         {
-            var countable = source.GetUnderlying<ICountable>();
+            var countable = source.GetUnderlying<ICounted>();
             if(countable != null)
             {
                 return GetAccumulator<T>(countable.Count);

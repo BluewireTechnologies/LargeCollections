@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using LargeCollections.Resources;
 
 namespace LargeCollections.Operations
 {
-    public class SortedEnumerableMerger<T> : MultipleCollection<T>, IEnumerable<T>, ISortedCollection<T>
+    public class SortedEnumerableMerger<T> : MultipleCollection<T>, IEnumerable<T>, ISorted<T>
     {
         private readonly IList<IEnumerable<T>> enumerables;
         private readonly IComparer<T> comparison;
@@ -37,7 +36,7 @@ namespace LargeCollections.Operations
         }
     }
 
-    public class SortedEnumeratorMerger<T> : IEnumerator<T>, ISortedCollection<T>
+    public class SortedEnumeratorMerger<T> : IEnumerator<T>, ISorted<T>
     {
         private readonly DisposableList<IEnumerator<T>> enumerators;
         private readonly IComparer<T> comparison;
@@ -47,12 +46,19 @@ namespace LargeCollections.Operations
 
         public SortedEnumeratorMerger(IList<IEnumerator<T>> enumerators, ISortedMerge<T> merger)
         {
-            this.comparison = enumerators.GetCommonSortOrder();
             this.enumerators = new DisposableList<IEnumerator<T>>(enumerators);
-            this.comparison = comparison;
-            this.merger = merger;
-            batchesByHeadValue = new List<IEnumerator<T>>();
-
+            try
+            {
+                this.comparison = enumerators.GetCommonSortOrder();
+                this.enumerators = new DisposableList<IEnumerator<T>>(enumerators);
+                this.merger = merger;
+                batchesByHeadValue = new List<IEnumerator<T>>();
+            }
+            catch
+            {
+                this.enumerators.Dispose();
+                throw;
+            }
         }
 
         private void MoveFirst()

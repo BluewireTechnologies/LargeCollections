@@ -5,19 +5,19 @@ using System.Diagnostics;
 
 namespace LargeCollections.Operations
 {
-    public class SortedDistinctEnumerator<T> : IEnumerator<T>, ISortedCollection<T>
+    public class SortedDistinctEnumerator<T> : IEnumerator<T>, ISorted<T>
     {
         private readonly IEnumerator<T> enumerator;
 
         public SortedDistinctEnumerator(IEnumerator<T> enumerator)
         {
-            if (!(enumerator is ISortedCollection<T>))
+            if (!(enumerator is ISorted<T>))
             {
                 Debug.Fail("Underlying enumerator must be sorted in order for SortedDistinctEnumerator to operate");
                 throw new InvalidOperationException("Underlying enumerator must be sorted in order for SortedDistinctEnumerator to operate");
             }
             this.enumerator = enumerator;
-            SortOrder = ((ISortedCollection<T>) enumerator).SortOrder;
+            SortOrder = ((ISorted<T>) enumerator).SortOrder;
         }
 
         public void Dispose()

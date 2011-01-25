@@ -32,10 +32,9 @@ namespace LargeCollections.Tests.Operations
             var sorter = GetSorter(10, MockSelector().Object);
             using (var collection = InMemoryAccumulator<int>.From(new int[0]))
             {
-                using (var singlePassCollection = new SinglePassCollection<int>(collection))
+                using(var sorted = sorter.Sort(collection.AsSinglePass(), Comparer<int>.Default).Buffer())
                 {
-                    var sorted = sorter.Sort(singlePassCollection, Comparer<int>.Default);
-                    Assert.IsEmpty(sorted.Buffer());
+                    Assert.IsEmpty(sorted);
                 }
             }
         }
@@ -46,10 +45,9 @@ namespace LargeCollections.Tests.Operations
             var sorter = GetSorter(10, MockSelector().Object);
             using(var collection = InMemoryAccumulator<int>.From(new[] {5, 2, 3, 1, 4}))
             {
-                using(var singlePassCollection = new SinglePassCollection<int>(collection))
+                using (var sorted = sorter.Sort(collection.AsSinglePass(), Comparer<int>.Default).Buffer())
                 {
-                    var sorted = sorter.Sort(singlePassCollection, Comparer<int>.Default);
-                    AssertSorted(collection, sorted.Buffer());
+                    AssertSorted(collection, sorted);
                 }
             }
         }
@@ -67,10 +65,9 @@ namespace LargeCollections.Tests.Operations
             var sorter = GetSorter(5, MockSelector().Object);
             using (var collection = InMemoryAccumulator<int>.From(new[] { 7, 5, 2, 12, 9, 3, 8, 10, 1, 6, 4, 11 }))
             {
-                using (var singlePassCollection = new SinglePassCollection<int>(collection))
+                using (var sorted = sorter.Sort(collection.AsSinglePass(), Comparer<int>.Default).Buffer())
                 {
-                    var sorted = sorter.Sort(singlePassCollection, Comparer<int>.Default);
-                    AssertSorted(collection, sorted.Buffer());
+                    AssertSorted(collection, sorted);
                 }
             }
         }
@@ -88,12 +85,73 @@ namespace LargeCollections.Tests.Operations
             var sorter = GetSorter(batchSize, selector.Object);
             using (var collection = InMemoryAccumulator<int>.From(new[] { 7, 5, 2, 12, 9, 3, 8, 10, 1, 6, 4, 11 }))
             {
-                using (var singlePassCollection = new SinglePassCollection<int>(collection))
-                {
-                    sorter.Sort(singlePassCollection, Comparer<int>.Default);
-                }
+                sorter.Sort(collection.AsSinglePass(), Comparer<int>.Default).Dispose();
             }
             selector.Verify(s => s.GetAccumulator<int>(batchSize), Times.Never());
+        }
+
+        [Test]
+        public void IfCollectionAlreadySortedCorrectly_Returns_SameObject()
+        {
+            var sorter = GetSorter(10, MockSelector().Object);
+            using (var collection = InMemoryAccumulator<int>.From(new[] {1, 2, 3, 4, 5}))
+            {
+                var sortedInput = collection.UsesSortOrder(Comparer<int>.Default).GetEnumerator();
+                using(var sortedOutput = sorter.Sort(sortedInput, Comparer<int>.Default))
+                {
+                    Assert.AreSame(sortedInput, sortedOutput);
+                }
+            }
+        }
+
+        [Test]
+        public void IfUnderlyingCollectionAlreadySortedCorrectly_Returns_SameObject()
+        {
+            var sorter = GetSorter(10, MockSelector().Object);
+            using (var collection = InMemoryAccumulator<int>.From(new[] { 1, 2, 3, 4, 5 }))
+            {
+                var sortedInput = new EnumeratorDecorator(collection.UsesSortOrder(Comparer<int>.Default).GetEnumerator());
+                using (var sortedOutput = sorter.Sort(sortedInput, Comparer<int>.Default))
+                {
+                    Assert.AreSame(sortedInput, sortedOutput);
+                }
+            }
+        }
+
+        class EnumeratorDecorator : IEnumerator<int>, IHasUnderlying
+        {
+            private readonly IEnumerator<int> enumerator;
+            public void Dispose()
+            {
+                this.enumerator.Dispose();
+            }
+
+            public bool MoveNext()
+            {
+                return this.enumerator.MoveNext();
+            }
+
+            public void Reset()
+            {
+                this.enumerator.Reset();
+            }
+
+            public int Current
+            {
+                get { return this.enumerator.Current; }
+            }
+
+            public EnumeratorDecorator(IEnumerator<int> enumerator)
+            {
+                this.enumerator = enumerator;
+            }
+
+            object IEnumerator.Current
+            {
+                get { return Current; }
+            }
+
+            public object Underlying { get { return enumerator; } }
         }
 
         [TearDown]

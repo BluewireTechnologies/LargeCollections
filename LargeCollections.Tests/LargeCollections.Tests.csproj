@@ -62,6 +62,7 @@
     <Compile Include="BatchedSinglePassCollectionTests.cs" />
     <Compile Include="DiskBasedLargeCollectionTests.cs" />
     <Compile Include="DisposableListTests.cs" />
+    <Compile Include="Resources\ReferenceCountedResourceTests.cs" />
     <Compile Include="Storage\BufferedItemWriterTests.cs" />
     <Compile Include="Storage\GuidBatchSerialiserTests.cs" />
     <Compile Include="InMemoryLargeCollectionTests.cs" />

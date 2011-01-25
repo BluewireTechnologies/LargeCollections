@@ -11,9 +11,9 @@ namespace LargeCollections.Resources
         IDisposable Acquire();
     }
 
-    public abstract class ReferenceCountedResource : IReferenceCountedResource
+    public class ReferenceCountedResource : IReferenceCountedResource
     {
-        protected ReferenceCountedResource()
+        public ReferenceCountedResource()
         {
             Trace = CaptureTrace();
         }
@@ -50,7 +50,9 @@ namespace LargeCollections.Resources
     
         public string Trace { get; private set; }
 
-        protected abstract void CleanUp();
+        protected virtual void CleanUp()
+        {
+        }
 
         private IList<IDisposable> references = new List<IDisposable>();
         private static List<IReferenceCountedResource> leakedResources = new List<IReferenceCountedResource>();

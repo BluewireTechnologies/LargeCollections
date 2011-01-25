@@ -7,13 +7,6 @@ using LargeCollections.Resources;
 
 namespace LargeCollections.Operations
 {
-    public interface ISortOrder<T> : IEquatable<ISortOrder<T>>, IComparer<T>
-    {
-        bool Reversed { get; }
-
-        IEnumerable<T> Sort(IEnumerable<T> set);
-    }
-
     public class LargeCollectionSorter
     {
         private readonly IAccumulatorSelector accumulatorSelector;
@@ -32,19 +25,17 @@ namespace LargeCollections.Operations
         private const int MIN_BATCH_SIZE = 10000;
         private int GetBatchSize<T>(IEnumerator<T> source)
         {
-            var countable = source.GetUnderlying<ICountable>();
+            var countable = source.GetUnderlying<ICounted>();
             return (int)(countable == null ? minBatchSize : Math.Max(Math.Sqrt(countable.Count), minBatchSize));
         }
 
         public IEnumerator<T> Sort<T>(IEnumerator<T> source, IComparer<T> comparison)
         {
-            if(source is ISortedCollection<T>)
+            var sortedSource = source.GetUnderlying<ISorted<T>>();
+            if(sortedSource != null && sortedSource.SortOrder == comparison)
             {
-                if(((ISortedCollection<T>)source).SortOrder == comparison)
-                {
-                    // already sorted
-                    return source;
-                }
+                // already sorted
+                return source;
             }
 
             using (source)
@@ -73,11 +64,12 @@ namespace LargeCollections.Operations
             {
                 using (var accumulator = getBatchAccumulator())
                 {
-                    accumulator.AddRange(batches.Current.OrderBy(i => i, comparison));
-                    using(var collection = accumulator.Complete())
-                    {
-                        yield return new SortedEnumerator<T>(new SinglePassCollection<T>(collection), comparison);
-                    }
+                    yield return 
+                        batches.Current
+                            .OrderBy(i => i, comparison)
+                            .GetEnumerator()
+                            .BufferOnce(accumulator)
+                            .UsesSortOrder(comparison);
                 }
             }
         }

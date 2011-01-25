@@ -12,25 +12,16 @@ namespace LargeCollections
     {
         public static T GetBackingStore<T>(this IEnumerable collection)
         {
-            if(collection is IHasBackingStore<T>)
-            {
-                return ((IHasBackingStore<T>)collection).BackingStore;
-            }
-            if (collection is IHasUnderlying<IEnumerable>)
-            {
-                var underlying = ((IHasUnderlying<IEnumerable>) collection).Underlying;
-                if(underlying != null) return underlying.GetBackingStore<T>();
-            }
-            return default(T);
+            var underlying = collection.GetUnderlying<IHasBackingStore<T>>();
+            if (underlying == null) return default(T);
+            return underlying.BackingStore;
         }
 
         public static T GetBackingStore<T>(this IEnumerator enumerator)
         {
-            if (enumerator is IHasUnderlying<IEnumerable>)
-            {
-                return ((IHasUnderlying<IEnumerable>)enumerator).Underlying.GetBackingStore<T>();
-            }
-            return default(T);
+            var underlying = enumerator.GetUnderlying<IHasBackingStore<T>>();
+            if (underlying == null) return default(T);
+            return underlying.BackingStore;
         }
 
 
@@ -58,38 +49,17 @@ namespace LargeCollections
             }
         }
 
-        public static ISinglePassCollection<T> SinglePass<T>(this IAccumulatorSelector accumulatorSelector, Action<IAccumulator<T>> func)
-        {
-            using(var accumulator = accumulatorSelector.GetAccumulator<T>())
-            {
-                func(accumulator);
-                using(var set = accumulator.Complete())
-                {
-                    return new SinglePassCollection<T>(set);
-                }
-            }
-        }
-
-        private static TInterface GetUnderlying<TInterface, TCollection>(TCollection item) where TInterface : class where TCollection : class
+        public static TInterface GetUnderlying<TInterface>(this object item) where TInterface : class
         {   
             if(item is TInterface)
             {
                 return item as TInterface;
             }
-            var wrappingItem = item as IHasUnderlying<TCollection>;
+            var wrappingItem = item as IHasUnderlying;
             if (wrappingItem == null) return null;
-            return GetUnderlying<TInterface, TCollection>(wrappingItem.Underlying);
+            return GetUnderlying<TInterface>(wrappingItem.Underlying);
         }
-
-        public static T GetUnderlying<T>(this IEnumerable item) where T : class
-        {
-            return GetUnderlying<T, IEnumerable>(item);
-        }
-        public static T GetUnderlying<T>(this IEnumerator item) where T : class
-        {
-            return GetUnderlying<T, IEnumerator>(item);
-        }
-
+        
         public static T GetOperator<T>(this IAccumulatorSelector accumulatorSelector, Func<T> createDefault)
         {
             if(accumulatorSelector is IOperatorCache)
@@ -99,7 +69,7 @@ namespace LargeCollections
             return createDefault();
         }
 
-        private static IEnumerable<ISortedCollection<T>> AssertAllSorted<T>(IEnumerable<ISortedCollection<T>> sortedEnumerables)
+        private static IEnumerable<ISorted<T>> AssertAllSorted<T>(IEnumerable<ISorted<T>> sortedEnumerables)
         {
             Debug.Assert(sortedEnumerables.Any(), "Collection was empty");
             if (sortedEnumerables.All(e => e != null))
@@ -113,7 +83,7 @@ namespace LargeCollections
             throw new InvalidOperationException("All input collections must be sorted.");
         }
 
-        private static IComparer<T> GetSingleSortOrder<T>(IEnumerable<ISortedCollection<T>> enumerables)
+        private static IComparer<T> GetSingleSortOrder<T>(IEnumerable<ISorted<T>> enumerables)
         {
             var sortOrders = enumerables.Select(c => c.SortOrder).Distinct();
             if(sortOrders.Count() != 1)
@@ -126,12 +96,12 @@ namespace LargeCollections
 
         public static IComparer<T> GetCommonSortOrder<T>(this IList<IEnumerable<T>> enumerables)
         {
-            return GetSingleSortOrder(AssertAllSorted(enumerables.Select(GetUnderlying<ISortedCollection<T>, IEnumerable<T>>)));
+            return GetSingleSortOrder(AssertAllSorted(enumerables.Select(GetUnderlying<ISorted<T>>)));
         }
 
         public static IComparer<T> GetCommonSortOrder<T>(this IList<IEnumerator<T>> enumerators)
         {
-            return GetSingleSortOrder(AssertAllSorted<T>(enumerators.Select(GetUnderlying<ISortedCollection<T>, IEnumerator<T>>)));
+            return GetSingleSortOrder(AssertAllSorted(enumerators.Select(GetUnderlying<ISorted<T>>)));
         }
     }
 }

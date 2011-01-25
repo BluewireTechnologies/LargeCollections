@@ -1,4 +1,5 @@
-﻿using MbUnit.Framework;
+﻿using LargeCollections.Resources;
+using MbUnit.Framework;
 
 namespace LargeCollections.Tests
 {
@@ -30,7 +31,7 @@ namespace LargeCollections.Tests
         {
             using (var collection = GetCollection(3, new[] { 1, 2, 3 }))
             {
-                Assert.IsNull(collection.GetBackingStore<object>());
+                Assert.IsNull(collection.GetBackingStore<FileReference>());
             }
         }
 

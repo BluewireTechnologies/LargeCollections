@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LargeCollections.Linq;
 using LargeCollections.Operations;
 using MbUnit.Framework;
 
@@ -30,7 +31,7 @@ namespace LargeCollections.Tests.Operations
 
         private IEnumerable<int> Sorted(params int[] items)
         {
-            return new SortedEnumerable<int>(items, Comparer<int>.Default);
+            return items.UsesSortOrder(Comparer<int>.Default);
         }
 
         [Test]

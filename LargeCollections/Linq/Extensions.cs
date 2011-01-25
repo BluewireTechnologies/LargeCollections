@@ -40,23 +40,19 @@ namespace LargeCollections.Linq
 
         public ILargeCollection<T> Buffer<T>(IEnumerator<T> enumerator)
         {
-            var countable = enumerator.GetUnderlying<ICountable>();
+            var countable = enumerator.GetUnderlying<ICounted>();
             if (countable != null)
             {
-                return Buffer(enumerator, accumulatorSelector.GetAccumulator<T>(countable.Count));
+                return enumerator.Buffer(accumulatorSelector.GetAccumulator<T>(countable.Count));
             }
-            return Buffer(enumerator, accumulatorSelector.GetAccumulator<T>());
+            return enumerator.Buffer(accumulatorSelector.GetAccumulator<T>());
         }
 
-        private ILargeCollection<T> Buffer<T>(IEnumerator<T> enumerator, IAccumulator<T> accumulator)
+        public ISinglePassCollection<T> BufferOnce<T>(IEnumerator<T> enumerator)
         {
-            using (accumulator)
+            using(var collection = Buffer(enumerator))
             {
-                while (enumerator.MoveNext())
-                {
-                    accumulator.Add(enumerator.Current);
-                }
-                return accumulator.Complete();
+                return collection.AsSinglePass();
             }
         }
 
@@ -79,12 +75,12 @@ namespace LargeCollections.Linq
     {
         public static IEnumerator<IEnumerable<T>> Batch<T>(this IEnumerator<T> enumerator, int batchSize)
         {
-            return new BatchedSinglePassCollection<T>(enumerator, batchSize);
+            return new BatchedSinglePassCollection<T>(enumerator, batchSize).InheritsCount(enumerator);
         }
 
         public static IEnumerator<IEnumerable<T>> Batch<T>(this ILargeCollection<T> collection, int batchSize)
         {
-            return new BatchedSinglePassCollection<T>(collection.AsSinglePass(), batchSize);
+            return new BatchedSinglePassCollection<T>(collection.AsSinglePass(), batchSize).InheritsCount(collection);
         }
 
         
@@ -105,13 +101,26 @@ namespace LargeCollections.Linq
 
         public static ILargeCollection<T> Buffer<T>(this IEnumerator<T> enumerator)
         {
-            using (var accumulator = new InMemoryAccumulator<T>())
+            return enumerator.Buffer(new InMemoryAccumulator<T>());
+        }
+
+        public static ILargeCollection<T> Buffer<T>(this IEnumerator<T> enumerator, IAccumulator<T> accumulator)
+        {
+            using (accumulator)
             {
                 while (enumerator.MoveNext())
                 {
                     accumulator.Add(enumerator.Current);
                 }
                 return accumulator.Complete();
+            }
+        }
+
+        public static ISinglePassCollection<T> BufferOnce<T>(this IEnumerator<T> enumerator, IAccumulator<T> accumulator)
+        {
+            using (var collection = enumerator.Buffer(accumulator))
+            {
+                return collection.AsSinglePass();
             }
         }
     }

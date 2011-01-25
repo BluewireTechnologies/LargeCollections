@@ -42,11 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IOperatorCache.cs" />
+    <Compile Include="Linq\CountInheritance.cs" />
     <Compile Include="Operations\BatchedSinglePassCollection.cs" />
     <Compile Include="Operations\ConcatenatedLargeCollection.cs" />
     <Compile Include="Linq\Extensions.cs" />
     <Compile Include="Operations\MultipleCollection.cs" />
-    <Compile Include="Operations\SortedEnumerator.cs" />
+    <Compile Include="Linq\SortOrderInheritance.cs" />
     <Compile Include="Resources\MultipleResource.cs" />
     <Compile Include="Storage\BufferedItemReader.cs" />
     <Compile Include="Storage\BufferedItemWriter.cs" />
@@ -59,7 +60,7 @@
     <Compile Include="IAccumulator.cs" />
     <Compile Include="IAccumulatorSelector.cs" />
     <Compile Include="IAppendable.cs" />
-    <Compile Include="ICountable.cs" />
+    <Compile Include="ICounted.cs" />
     <Compile Include="IHasBackingStore.cs" />
     <Compile Include="IHasUnderlyingCollection.cs" />
     <Compile Include="ILargeCollection.cs" />
@@ -79,7 +80,9 @@
     <Compile Include="Operations\SortedDistinctEnumerator.cs" />
     <Compile Include="Operations\SortedEnumerableMerger.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="readme.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetDir)$(TargetName).* $(SolutionDir)..\CommonLibraries</PostBuildEvent>

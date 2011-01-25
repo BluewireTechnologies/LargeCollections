@@ -13,7 +13,7 @@ namespace LargeCollections.Operations
     /// similar to IDataReader.
     /// </remarks>
     /// <typeparam name="T"></typeparam>
-    public class BatchedSinglePassCollection<T> : IEnumerator<IEnumerable<T>>, IHasUnderlying<IEnumerator>
+    public class BatchedSinglePassCollection<T> : IEnumerator<IEnumerable<T>>, IMappedCount
     {
         private readonly IEnumerator<T> source;
         private readonly int batchSize;
@@ -22,16 +22,6 @@ namespace LargeCollections.Operations
         public BatchedSinglePassCollection(IEnumerator<T> source, int batchSize)
         {
             this.source = source;
-            var countable = source.GetUnderlying<ICountable>();
-            if(countable != null)
-            {
-                Underlying = new CountedEnumerator(this, ((countable.Count - 1) / batchSize) + 1);
-            }
-            else
-            {
-                Underlying = this;
-            }
-
             this.batchSize = batchSize;
             batch = new List<T>(batchSize);
             Current = batch;
@@ -45,7 +35,7 @@ namespace LargeCollections.Operations
             Current = null;
         }
 
-        object System.Collections.IEnumerator.Current
+        object IEnumerator.Current
         {
             get { return Current; }
         }
@@ -73,34 +63,9 @@ namespace LargeCollections.Operations
             throw new NotSupportedException();
         }
 
-        public IEnumerator Underlying { get; private set; }
-
-        class CountedEnumerator : IEnumerator, ICountable, IHasUnderlying<IEnumerator>
+        long IMappedCount.MapCount(long sourceCount)
         {
-            public CountedEnumerator(IEnumerator underlying, long count)
-            {
-                Underlying = underlying;
-                Count = count;
-            }
-
-            public object  Current
-            {
-                get { return Underlying.Current; }
-            }
-
-            public bool  MoveNext()
-            {
-                return Underlying.MoveNext();
-            }
-
-            public void  Reset()
-            {
-                Underlying.Reset();
-            }
-
-            public long Count { get; private set; }
-
-            public IEnumerator Underlying { get; private set; }
+            return ((sourceCount - 1)/batchSize) + 1;
         }
     }
 }

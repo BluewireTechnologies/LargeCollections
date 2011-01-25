@@ -9,7 +9,7 @@ namespace LargeCollections
     /// Implementations of this interface must release their resources when MoveNext() returns false.
     /// </remarks>
     /// <typeparam name="T"></typeparam>
-    public interface ISinglePassCollection<T> : IEnumerator<T>, ICountable
+    public interface ISinglePassCollection<T> : IEnumerator<T>, ICounted
     {
     }
 }

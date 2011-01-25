@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LargeCollections
 {
-    public interface ICountable
+    public interface ICounted
     {
         /// <summary>
         /// Total number of items in the collection.
@@ -11,7 +11,12 @@ namespace LargeCollections
         long Count { get; }
     }
 
-    public interface ISortedCollection<T>
+    public interface IMappedCount
+    {
+        long MapCount(long sourceCount);
+    }
+
+    public interface ISorted<T>
     {
         IComparer<T> SortOrder { get; }
     }

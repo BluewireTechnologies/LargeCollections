@@ -173,19 +173,6 @@ namespace LargeCollectionProfiler
             }
         }
 
-        private static ISinglePassCollection<Guid> Load(IEnumerable<Guid> set)
-        {
-            using (var accumulator = accumulatorSelector.GetAccumulator<Guid>())
-            {
-                accumulator.AddRange(set);
-                using (var collection = accumulator.Complete())
-                {
-                    return new SinglePassCollection<Guid>(collection);
-                }
-            }
-        }
-
-
         private static IEnumerable<Guid> EnumerableDifference(IEnumerable<Guid> index, IEnumerable<Guid> source)
         {
             var inIndex = new HashSet<Guid>(index);
