@@ -13,16 +13,6 @@ namespace LargeCollections.Tests.Resources
     public class ReferenceCountedResourceTests
     {
         [Test]
-        public void CanDetectLeakedUnusedResources()
-        {
-            var resource = new WeakReference(new ReferenceCountedResource(), true);
-
-            var leakedResources = ReferenceCountedResource.GetLeakedResources();
-            Assert.Count(1, leakedResources);
-            Assert.AreSame(resource.Target, leakedResources.Single());
-        }
-
-        [Test]
         public void CanDetectLeakedReferencedResources()
         {
             var instance = new ReferenceCountedResource();
@@ -33,6 +23,44 @@ namespace LargeCollections.Tests.Resources
             var leakedResources = ReferenceCountedResource.GetLeakedResources();
             Assert.Count(1, leakedResources);
             Assert.AreSame(resource.Target, leakedResources.Single());
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception), "can't construct")]
+        public void ExceptionInDerivedConstructor_DoesNotCauseCleanup()
+        {
+            new UnconstructableResource(Assert.Fail);
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception), "can't construct")]
+        public void ExceptionInDerivedConstructor_DoesNotCauseLeak()
+        {
+            try
+            {
+                new UnconstructableResource(() => { });
+            }
+            finally
+            {
+                var leakedResources = ReferenceCountedResource.GetLeakedResources();
+                Assert.IsEmpty(leakedResources);
+            }
+        }
+
+        class UnconstructableResource : ReferenceCountedResource
+        {
+            private readonly Action onCleanup;
+
+            public UnconstructableResource(Action onCleanup)
+            {
+                this.onCleanup = onCleanup;
+                throw new Exception("can't construct");
+            }
+
+            protected override void CleanUp()
+            {
+                onCleanup();
+            }
         }
     }
 }

@@ -17,12 +17,20 @@ namespace LargeCollections.Collections
         public FileAccumulator(string file, IItemSerialiser<T> serialiser)
         {
             FileName = file;
-            fileResource = new FileReference(file);
-            
-            if (fileResource.File.Exists && fileResource.File.Length > 0) throw new InvalidOperationException("File already exists: " + FileName);
-            this.serialiser = serialiser;
-            this.writer = new BufferedItemWriter<T>(File.OpenWrite(file), serialiser);
+
+            fileResource = new TemporaryFileReference(file);
             reference = fileResource.Acquire();
+            try
+            {
+                this.serialiser = serialiser;
+
+                this.writer = new BufferedItemWriter<T>(File.OpenWrite(file), serialiser);
+            }
+            catch
+            {
+                reference.Dispose();
+                throw;
+            }
         }
 
         public void Add(T item)

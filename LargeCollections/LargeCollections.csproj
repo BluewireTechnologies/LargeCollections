@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
@@ -43,12 +46,15 @@
   <ItemGroup>
     <Compile Include="IOperatorCache.cs" />
     <Compile Include="Linq\CountInheritance.cs" />
+    <Compile Include="Linq\LargeCollectionOperations.cs" />
     <Compile Include="Operations\BatchedSinglePassCollection.cs" />
     <Compile Include="Operations\ConcatenatedLargeCollection.cs" />
     <Compile Include="Linq\Extensions.cs" />
     <Compile Include="Operations\MultipleCollection.cs" />
     <Compile Include="Linq\SortOrderInheritance.cs" />
     <Compile Include="Resources\MultipleResource.cs" />
+    <Compile Include="Resources\ReferenceCountedResource.cs" />
+    <Compile Include="Resources\TemporaryFileReference.cs" />
     <Compile Include="Storage\BufferedItemReader.cs" />
     <Compile Include="Storage\BufferedItemWriter.cs" />
     <Compile Include="Storage\DefaultItemSerialiser.cs" />
@@ -82,6 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
