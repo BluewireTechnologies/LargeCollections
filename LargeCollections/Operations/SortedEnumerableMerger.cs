@@ -50,7 +50,6 @@ namespace LargeCollections.Operations
             try
             {
                 this.comparison = enumerators.GetCommonSortOrder();
-                this.enumerators = new DisposableList<IEnumerator<T>>(enumerators);
                 this.merger = merger;
                 batchesByHeadValue = new List<IEnumerator<T>>();
             }
@@ -64,7 +63,7 @@ namespace LargeCollections.Operations
         private void MoveFirst()
         {
             // initialise the list.
-            foreach (var queue in enumerators.Select(e => merger.WrapSource(e)).Where(e => e.MoveNext()))
+            foreach (var queue in enumerators.Select(e => new CachingEnumerator<T>(merger.WrapSource(e))).Where(e => e.MoveNext()))
             {
                 batchesByHeadValue.Insert(GetInsertionIndex(batchesByHeadValue, queue), queue);
             }

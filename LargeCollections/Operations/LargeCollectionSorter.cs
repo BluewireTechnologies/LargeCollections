@@ -26,7 +26,7 @@ namespace LargeCollections.Operations
         private int GetBatchSize<T>(IEnumerator<T> source)
         {
             var countable = source.GetUnderlying<ICounted>();
-            return (int)(countable == null ? minBatchSize : Math.Max(Math.Sqrt(countable.Count), minBatchSize));
+            return (int)(countable == null ? minBatchSize : Math.Max(Math.Pow(countable.Count, 0.7), minBatchSize));
         }
 
         public IEnumerator<T> Sort<T>(IEnumerator<T> source, IComparer<T> comparison)

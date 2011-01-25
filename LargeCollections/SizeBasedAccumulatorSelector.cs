@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using LargeCollections.Collections;
 using LargeCollections.Storage;
 
@@ -19,17 +18,21 @@ namespace LargeCollections
 
         private static readonly SerialiserSelector serialisers = new SerialiserSelector();
 
+
+        public TemporaryFileProvider TemporaryFileProvider { get; set; }
+
+
         public SizeBasedAccumulatorSelector() : this(DEFAULT_BACKING_STORE_THRESHOLD)
         {
-            
         }
 
         public SizeBasedAccumulatorSelector(long backingStoreThreshold)
         {
+            TemporaryFileProvider = new TemporaryFileProvider();
             this.backingStoreThreshold = backingStoreThreshold;
         }
 
-        private const long DEFAULT_BACKING_STORE_THRESHOLD = 100000;
+        private const long DEFAULT_BACKING_STORE_THRESHOLD = 10000;
 
         /// <summary>
         /// Get an accumulator suitable for a set of the specified size.
@@ -41,7 +44,7 @@ namespace LargeCollections
         {
             if(totalSizeOfCollection > backingStoreThreshold)
             {
-                var file = Path.GetTempFileName();
+                var file = TemporaryFileProvider.GetTempFile();
                 return new FileAccumulator<T>(file, serialisers.Get<T>());
             }
             else
@@ -57,7 +60,7 @@ namespace LargeCollections
         /// <returns></returns>
         public IAccumulator<T> GetAccumulator<T>()
         {
-            return new HybridAccumulator<T>(backingStoreThreshold);
+            return new HybridAccumulator<T>(TemporaryFileProvider, backingStoreThreshold);
         }
 
 
@@ -73,18 +76,20 @@ namespace LargeCollections
             {
                 return GetAccumulator<T>(countable.Count);
             }
-            return new HybridAccumulator<T>(backingStoreThreshold);
+            return new HybridAccumulator<T>(TemporaryFileProvider, backingStoreThreshold);
         }
 
 
         class HybridAccumulator<T> : IAccumulator<T>
         {
+            private readonly TemporaryFileProvider temporaryFileProvider;
             private readonly long backingStoreThreshold;
             private InMemoryAccumulator<T> inMemoryAccumulator;
             private IAccumulator<T> accumulator;
 
-            public HybridAccumulator(long backingStoreThreshold)
+            public HybridAccumulator(TemporaryFileProvider temporaryFileProvider, long backingStoreThreshold)
             {
+                this.temporaryFileProvider = temporaryFileProvider;
                 this.backingStoreThreshold = backingStoreThreshold;
                 accumulator = inMemoryAccumulator = new InMemoryAccumulator<T>();
             }
@@ -98,7 +103,7 @@ namespace LargeCollections
             {
                 if(Count == backingStoreThreshold && inMemoryAccumulator != null)
                 {
-                    var file = Path.GetTempFileName();
+                    var file = temporaryFileProvider.GetTempFile();
                     accumulator = new FileAccumulator<T>(file, serialisers.Get<T>());
                     accumulator.AddRange(inMemoryAccumulator.GetBuffer());
                     inMemoryAccumulator.Dispose();

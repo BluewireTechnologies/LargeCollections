@@ -83,10 +83,7 @@ namespace LargeCollections.Linq
             }
 
 
-            public T Current
-            {
-                get { return enumerator.Current; }
-            }
+            public T Current { get { return enumerator.Current; } }
 
             public void Dispose()
             {
