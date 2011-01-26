@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LargeCollections.Operations;
 
 namespace LargeCollections.Linq
@@ -51,6 +52,24 @@ namespace LargeCollections.Linq
             }
         }
 
+        /// <summary>
+        /// Buffers the output of an operation if it is not the same object as the input.
+        /// </summary>
+        /// <remarks>
+        /// Used to efficiently buffer the output of operations which may return their argument unchanged, eg. sorts.
+        /// </remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerator">Enumerator to process</param>
+        /// <param name="operation">Operation which may return the input enumerator</param>
+        /// <returns></returns>
+        public IEnumerator<T> BufferOnceIfDifferent<T>(IEnumerator<T> enumerator, Func<IEnumerator<T>, IEnumerator<T>> operation)
+        {
+            var output = operation(enumerator);
+            if (ReferenceEquals(enumerator, output)) return output;
+
+            return BufferOnce(output);
+        }
+
         public IEnumerator<T> Difference<T>(IEnumerator<T> first, IEnumerator<T> second)
         {
             return Difference(first, second, Comparer<T>.Default);
@@ -58,8 +77,8 @@ namespace LargeCollections.Linq
 
         public IEnumerator<T> Difference<T>(IEnumerator<T> first, IEnumerator<T> second, IComparer<T> comparison)
         {
-            var setA = Sort(first, comparison);
-            var setB = Sort(second, comparison);
+            var setA = BufferOnceIfDifferent(first, e => Sort(e, comparison));
+            var setB = BufferOnceIfDifferent(second, e => Sort(e, comparison));
             return new SortedEnumeratorMerger<T>(new List<IEnumerator<T>> { setA, setB }, new SetDifferenceMerge<T>());
         }
 

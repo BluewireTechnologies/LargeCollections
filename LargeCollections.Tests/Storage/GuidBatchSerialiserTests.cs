@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LargeCollections.Storage;
@@ -10,9 +11,9 @@ namespace LargeCollections.Tests.Storage
     public class GuidBatchSerialiserTests
     {
         private GuidBatchSerialiser serialiser = new GuidBatchSerialiser();
-        private void Write(Stream stream, params Guid[][] batches)
+        private void Write(Stream stream, params Guid[] items)
         {
-            foreach (var batch in batches)
+            foreach (var batch in items)
             {
                 serialiser.Write(stream, batch);
             }
@@ -31,7 +32,20 @@ namespace LargeCollections.Tests.Storage
         }
 
         [Test]
-        public void CanDeserialiseGuidArray()
+        public void CanDeserialiseGuid()
+        {
+            var id = Guid.NewGuid();
+            using (var stream = new MemoryStream())
+            {
+                Write(stream, id);
+
+                stream.Position = 0;
+                Assert.AreEqual(id, serialiser.Read(stream));
+            }
+        }
+
+        [Test]
+        public void CanRoundTripMultipleGuids()
         {
             var ids = 50.Times(Guid.NewGuid).ToArray();
             using (var stream = new MemoryStream())
@@ -39,26 +53,9 @@ namespace LargeCollections.Tests.Storage
                 Write(stream, ids);
 
                 stream.Position = 0;
-                Guid[] deserialised = null;
-                serialiser.Read(stream, ref deserialised);
-                Assert.AreElementsEqual(ids, deserialised);
-            }
-        }
-
-        [Test]
-        public void CanRoundTripMultipleGuidArrays()
-        {
-            var ids = 20.Times(() => 20.Times(Guid.NewGuid).ToArray()).ToArray();
-            using (var stream = new MemoryStream())
-            {
-                Write(stream, ids);
-
-                stream.Position = 0;
                 foreach (var batch in ids)
                 {
-                    Guid[] deserialised = null;
-                    serialiser.Read(stream, ref deserialised);
-                    Assert.AreElementsEqual(batch, deserialised);
+                    Assert.AreEqual(batch, serialiser.Read(stream));
                 }
             }
         }
@@ -78,11 +75,14 @@ namespace LargeCollections.Tests.Storage
                     streamA.Position = 0;
                     streamB.Position = 0;
 
-                    Guid[] readSetA = null;
-                    Guid[] readSetB = null;
-                    serialiser.Read(streamA, ref readSetA);
-                    serialiser.Read(streamB, ref readSetB);
-                    
+                    var readSetA = new List<Guid>();
+                    var readSetB = new List<Guid>();
+                    for (var i = 0; i < 20; i++)
+                    {
+                        readSetA.Add(serialiser.Read(streamA));
+                        readSetB.Add(serialiser.Read(streamB));
+                    }
+
                     Assert.AreElementsEqual(setA, readSetA);
                     Assert.AreElementsEqual(setB, readSetB);
                 }

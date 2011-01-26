@@ -8,29 +8,15 @@ namespace LargeCollections.Storage
         private readonly Stream stream;
         private readonly IItemSerialiser<T> serialiser;
 
-        private int ptr = 0;
-        private T[] buffer;
-        private int recordCount;
-
         public BufferedItemReader(Stream stream, IItemSerialiser<T> serialiser)
         {
-            this.stream = stream;
+            this.stream = new BufferedStream(stream);
             this.serialiser = serialiser;
         }
 
         public T Read()
         {
-            if (buffer == null || ptr >= recordCount)
-            {
-                Load();
-            }
-            return buffer[ptr++];
-        }
-
-        private void Load()
-        {
-            recordCount = serialiser.Read(stream, ref buffer);
-            ptr = 0;
+            return serialiser.Read(stream);
         }
 
         public void Dispose()

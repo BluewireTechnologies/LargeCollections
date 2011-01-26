@@ -5,32 +5,28 @@ namespace LargeCollections.Storage
 {
     public interface IItemSerialiser<T>
     {
-        void Write(Stream stream, T[] item);
+        void Write(Stream stream, T item);
         /// <summary>
-        /// Reads a block of data into buffer and returns the number of records read.
+        /// Reads an item from the stream.
         /// </summary>
-        /// <remarks>
-        /// The buffer array may be reused between calls. If it is not large enough to contain the data, the method implementation should resize it.
-        /// </remarks>
         /// <param name="stream"></param>
         /// <param name="buffer"></param>
         /// <returns></returns>
-        int Read(Stream stream, ref T[] buffer);
+        T Read(Stream stream);
     }
 
     public class DefaultItemSerialiser<T> : IItemSerialiser<T>
     {
         private readonly BinaryFormatter serializer = new BinaryFormatter();
 
-        public void Write(Stream stream, T[] item)
+        public void Write(Stream stream, T item)
         {
             serializer.Serialize(stream, item);
         }
 
-        public int Read(Stream stream, ref T[] buffer)
+        public T Read(Stream stream)
         {
-            buffer = (T[])serializer.Deserialize(stream);
-            return buffer.Length;
+            return (T)serializer.Deserialize(stream);
         }
     }
 }

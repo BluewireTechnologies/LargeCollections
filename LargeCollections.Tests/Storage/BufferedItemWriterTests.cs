@@ -13,10 +13,10 @@ namespace LargeCollections.Tests.Storage
     public class BufferedItemWriterTests
     {
         [Test]
-        public void SingleValueIsWrittenAsSingleElementArray()
+        public void SingleValueCanBeWritten()
         {
             var serialiser = new Mock<IItemSerialiser<int>>();
-            serialiser.Setup(s => s.Write(It.IsAny<Stream>(), It.IsAny<int[]>()));
+            serialiser.Setup(s => s.Write(It.IsAny<Stream>(), It.IsAny<int>()));
             
             using(var stream = new MemoryStream())
             {
@@ -24,10 +24,8 @@ namespace LargeCollections.Tests.Storage
                 {
                     writer.Write(1);
                 }
-                serialiser.Verify(s => s.Write(stream, new [] { 1 }));
+                serialiser.Verify(s => s.Write(It.IsAny<Stream>(), 1));
             }
-
-            
         }
     }
 }
