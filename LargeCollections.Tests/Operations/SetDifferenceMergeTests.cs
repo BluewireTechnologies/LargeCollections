@@ -121,7 +121,7 @@ namespace LargeCollections.Tests.Operations
             return operations.Difference(
                     operations.BufferOnce(setA.GetEnumerator()),
                     operations.BufferOnce(setB.GetEnumerator()))
-                .Buffer();
+                .BufferInMemory();
         }
 
 

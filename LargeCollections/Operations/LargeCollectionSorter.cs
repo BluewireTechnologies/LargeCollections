@@ -10,25 +10,20 @@ namespace LargeCollections.Operations
     public class LargeCollectionSorter
     {
         private readonly IAccumulatorSelector accumulatorSelector;
-        private readonly long minBatchSize;
+        private readonly BatchingPolicy batchingPolicy;
 
-        public LargeCollectionSorter(IAccumulatorSelector accumulatorSelector) : this(accumulatorSelector, MIN_BATCH_SIZE)
-        {
-        }
-
-        public LargeCollectionSorter(IAccumulatorSelector accumulatorSelector, long minBatchSize)
+        public LargeCollectionSorter(IAccumulatorSelector accumulatorSelector)
         {
             this.accumulatorSelector = accumulatorSelector;
-            this.minBatchSize = minBatchSize;
+            batchingPolicy = new BatchingPolicy();
         }
 
-        private const int MIN_BATCH_SIZE = 10000;
-        private int GetBatchSize<T>(IEnumerator<T> source)
+        public LargeCollectionSorter(IAccumulatorSelector accumulatorSelector, int minBatchSize) : this(accumulatorSelector)
         {
-            var countable = source.GetUnderlying<ICounted>();
-            return (int)(countable == null ? minBatchSize : Math.Max(Math.Pow(countable.Count, 0.7), minBatchSize));
+            this.batchingPolicy = new BatchingPolicy(minBatchSize);
         }
 
+        
         public IEnumerator<T> Sort<T>(IEnumerator<T> source, IComparer<T> comparison)
         {
             var sortedSource = source.GetUnderlying<ISorted<T>>();
@@ -40,7 +35,7 @@ namespace LargeCollections.Operations
 
             using (source)
             {
-                var batchSize = GetBatchSize(source);
+                var batchSize = batchingPolicy.GetBatchSize(source);
                 // prepare to read the source set in batches.
                 using (var batches = source.Batch(batchSize))
                 {

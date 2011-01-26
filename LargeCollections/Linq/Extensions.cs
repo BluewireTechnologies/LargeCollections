@@ -32,7 +32,7 @@ namespace LargeCollections.Linq
             return new ConcatenatedEnumerator<T>(first, second).InheritsCount(first, second);
         }
 
-        public static IDisposableEnumerable<T> Buffer<T>(this IEnumerator<T> enumerator)
+        public static IDisposableEnumerable<T> BufferInMemory<T>(this IEnumerator<T> enumerator)
         {
             return enumerator.Buffer(new InMemoryAccumulator<T>());
         }

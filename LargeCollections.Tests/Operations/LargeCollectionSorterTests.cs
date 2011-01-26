@@ -35,7 +35,7 @@ namespace LargeCollections.Tests.Operations
             var sorter = GetSorter(10, MockSelector().Object);
             using (var collection = InMemoryAccumulator<int>.From(new int[0]))
             {
-                using (var sorted = sorter.Sort(collection.GetEnumerator(), Comparer<int>.Default).Buffer())
+                using (var sorted = sorter.Sort(collection.GetEnumerator(), Comparer<int>.Default).BufferInMemory())
                 {
                     Assert.IsEmpty(sorted);
                 }
@@ -48,7 +48,7 @@ namespace LargeCollections.Tests.Operations
             var sorter = GetSorter(10, MockSelector().Object);
             using(var collection = InMemoryAccumulator<int>.From(new[] {5, 2, 3, 1, 4}))
             {
-                using (var sorted = sorter.Sort(collection.GetEnumerator(), Comparer<int>.Default).Buffer())
+                using (var sorted = sorter.Sort(collection.GetEnumerator(), Comparer<int>.Default).BufferInMemory())
                 {
                     AssertSorted(collection, sorted);
                 }
@@ -68,7 +68,7 @@ namespace LargeCollections.Tests.Operations
             var sorter = GetSorter(5, MockSelector().Object);
             using (var collection = InMemoryAccumulator<int>.From(new[] { 7, 5, 2, 12, 9, 3, 8, 10, 1, 6, 4, 11 }))
             {
-                using (var sorted = sorter.Sort(collection.GetEnumerator(), Comparer<int>.Default).Buffer())
+                using (var sorted = sorter.Sort(collection.GetEnumerator(), Comparer<int>.Default).BufferInMemory())
                 {
                     AssertSorted(collection, sorted);
                 }

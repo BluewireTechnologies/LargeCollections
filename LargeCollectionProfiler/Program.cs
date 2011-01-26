@@ -260,13 +260,11 @@ namespace LargeCollectionProfiler
         {
             var operations = new LargeCollectionOperations(accumulatorSelector);
 
-            using (var largeSetA = operations.Buffer(setA))
-            {
-                using (var largeSetB = operations.Buffer(setB))
-                {
-                    return operations.Difference(largeSetA.GetEnumerator(), largeSetB.GetEnumerator()).Buffer();
-                }
-            }
+            return 
+                operations.Buffer(
+                    operations.Difference(
+                    setA.GetEnumerator(),
+                    setB.GetEnumerator()));
         }
 
         private static IEnumerable<Guid> EnumerableDifference(IEnumerable<Guid> index, IEnumerable<Guid> source)
