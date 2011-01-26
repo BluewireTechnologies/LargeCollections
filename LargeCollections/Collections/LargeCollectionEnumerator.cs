@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 namespace LargeCollections.Collections
 {
-    public class SinglePassCollection<T> : ISinglePassCollection<T>, IHasUnderlying
+    public class LargeCollectionEnumerator<T> : IEnumerator<T>, ICounted, IHasUnderlying
     {
         private readonly ILargeCollection<T> collection;
         private IEnumerator<T> enumerator;
         private IDisposable resource;
 
-        public SinglePassCollection(ILargeCollection<T> collection)
+        public LargeCollectionEnumerator(ILargeCollection<T> collection, IEnumerator<T> underlyingEnumerator)
         {
             this.collection = collection;
-            enumerator = collection.GetEnumerator();
+            enumerator = underlyingEnumerator;
             resource = collection.Acquire();
         }
 

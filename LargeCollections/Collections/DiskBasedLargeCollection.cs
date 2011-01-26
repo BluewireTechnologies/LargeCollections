@@ -18,7 +18,7 @@ namespace LargeCollections.Collections
             reference = BackingStore.Acquire();
         }
 
-        public IEnumerator<T> GetEnumerator()
+        private IEnumerator<T> GetEnumeratorImplementation()
         {
             if(disposed) throw new ObjectDisposedException("DiskBasedLargeCollection");
             using(var reader = new BufferedItemReader<T>(File.OpenRead(BackingStore.File.FullName), serialiser))
@@ -28,6 +28,11 @@ namespace LargeCollections.Collections
                     yield return reader.Read();
                 }
             }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return new LargeCollectionEnumerator<T>(this, GetEnumeratorImplementation());
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

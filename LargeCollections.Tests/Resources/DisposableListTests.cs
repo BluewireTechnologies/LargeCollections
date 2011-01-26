@@ -4,9 +4,9 @@ using LargeCollections.Resources;
 using MbUnit.Framework;
 using Moq;
 
-namespace LargeCollections.Tests
+namespace LargeCollections.Tests.Resources
 {
-    [TestFixture]
+    [TestFixture, CheckResources]
     public class DisposableListTests
     {
         [Test]

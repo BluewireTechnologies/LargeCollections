@@ -21,12 +21,12 @@ namespace LargeCollections.Collections
 
         public IEnumerator<T> GetEnumerator()
         {
-            return @internal.GetEnumerator();
+            return new LargeCollectionEnumerator<T>(this, @internal.GetEnumerator());
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return @internal.GetEnumerator();
+            return GetEnumerator();
         }
 
         public void Dispose()

@@ -9,7 +9,7 @@ using Moq;
 
 namespace LargeCollections.Tests.Storage
 {
-    [TestFixture]
+    [TestFixture, CheckResources]
     public class BufferedItemWriterTests
     {
         [Test]

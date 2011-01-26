@@ -44,27 +44,27 @@ namespace LargeCollections.Operations
                 // prepare to read the source set in batches.
                 using (var batches = source.Batch(batchSize))
                 {
+
                     // for each batch, sort it.
-                    var sortedBatches = SortBatches(batches, comparison, () => accumulatorSelector.GetAccumulator<T>(source)).ToList();
+                    var sortedBatches = SortBatches(batches, comparison, () => accumulatorSelector.GetAccumulator<T>(source)).EvaluateSafely();
                     if (!sortedBatches.Any()) return Enumerable.Empty<T>().GetEnumerator();
-                    return Merge(sortedBatches);
+                    return MergeBatches(sortedBatches);
                 }
             }
         }
 
-        private IEnumerator<T> Merge<T>(IEnumerable<IEnumerator<T>> sortedBatches)
+        private static IEnumerator<T> MergeBatches<T>(IList<IEnumerator<T>> sortedBatches)
         {
-            
-            return new SortedEnumeratorMerger<T>(sortedBatches.ToList(), new SetUnionSortPreservingMerge<T>());
+            return new SortedEnumeratorMerger<T>(sortedBatches, new SetUnionSortPreservingMerge<T>());
         }
 
         private IEnumerable<IEnumerator<T>> SortBatches<T>(IEnumerator<IEnumerable<T>> batches, IComparer<T> comparison, Func<IAccumulator<T>> getBatchAccumulator)
         {
-            while(batches.MoveNext())
+            while (batches.MoveNext())
             {
                 using (var accumulator = getBatchAccumulator())
                 {
-                    yield return 
+                    yield return
                         batches.Current
                             .OrderBy(i => i, comparison)
                             .GetEnumerator()

@@ -5,10 +5,10 @@ using LargeCollections.Resources;
 using MbUnit.Framework;
 using Moq;
 
-namespace LargeCollections.Tests
+namespace LargeCollections.Tests.Collections
 {
-    [TestFixture]
-    public class SinglePassCollectionTests
+    [TestFixture, CheckResources]
+    public class LargeCollectionEnumeratorTests
     {
         [Test]
         public void AcquiresReferenceCountedUnderlyingResourceWhenConstructed()
@@ -17,7 +17,7 @@ namespace LargeCollections.Tests
             var resource = MockResource();
             underlying.As<IHasBackingStore<IReferenceCountedResource>>().SetupGet(b => b.BackingStore).Returns(resource);
 
-            using (new SinglePassCollection<int>(underlying.Object))
+            using (new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
             {
                 Assert.AreEqual(1, resource.RefCount);
             }
@@ -30,7 +30,7 @@ namespace LargeCollections.Tests
             var resource = MockResource();
 
             underlying.As<IHasBackingStore<IReferenceCountedResource>>().SetupGet(b => b.BackingStore).Returns(resource);
-            using(new SinglePassCollection<int>(underlying.Object))
+            using (new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
             {
             }
             Assert.AreEqual(0, resource.RefCount);
@@ -44,7 +44,7 @@ namespace LargeCollections.Tests
             using (resource.Acquire())
             {
                 underlying.As<IHasBackingStore<IReferenceCountedResource>>().SetupGet(b => b.BackingStore).Returns(resource);
-                using (var collection = new SinglePassCollection<int>(underlying.Object))
+                using (var collection = new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
                 {
                     collection.Dispose();
                     collection.Dispose();
@@ -62,7 +62,7 @@ namespace LargeCollections.Tests
             var resource = MockResource();
 
             underlying.As<IHasBackingStore<IReferenceCountedResource>>().SetupGet(b => b.BackingStore).Returns(resource);
-            using (var collection = new SinglePassCollection<int>(underlying.Object))
+            using (var collection = new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
             {
                 while (collection.MoveNext()) ;
                 Assert.AreEqual(0, resource.RefCount);
@@ -75,12 +75,12 @@ namespace LargeCollections.Tests
         {
             return new Mock<ReferenceCountedResource>().Object;
         }
-        
+
         [Test]
         public void DoesNotDisposeUnderlyingCollection()
         {
             var underlying = MockUnderlyingCollection();
-            var collection = new SinglePassCollection<int>(underlying.Object);
+            var collection = new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator());
 
             collection.Dispose();
 
@@ -92,7 +92,7 @@ namespace LargeCollections.Tests
         public void DoesNotSupportReset()
         {
             var underlying = MockUnderlyingCollection();
-            using (var collection = new SinglePassCollection<int>(underlying.Object))
+            using (var collection = new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
             {
                 collection.Reset();
             }
@@ -103,7 +103,7 @@ namespace LargeCollections.Tests
         public void CanGetCount()
         {
             var underlying = MockUnderlyingCollection();
-            using (var collection = new SinglePassCollection<int>(underlying.Object))
+            using (var collection = new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
             {
                 Assert.AreEqual(underlying.Object.Count, collection.Count);
             }
@@ -113,8 +113,8 @@ namespace LargeCollections.Tests
         public void CanIterate()
         {
             var underlying = MockUnderlyingCollection();
-            
-            using (var collection = new SinglePassCollection<int>(underlying.Object))
+
+            using (var collection = new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
             {
                 Assert.IsTrue(collection.MoveNext());
                 Assert.IsTrue(collection.MoveNext());
@@ -129,9 +129,9 @@ namespace LargeCollections.Tests
             var resource = MockResource();
             underlying.As<IHasBackingStore<IReferenceCountedResource>>().SetupGet(b => b.BackingStore).Returns(resource);
 
-            using (var collection1 = new SinglePassCollection<int>(underlying.Object))
+            using (var collection1 = new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
             {
-                using (var collection2 = new SinglePassCollection<int>(underlying.Object))
+                using (var collection2 = new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
                 {
                     Assert.AreEqual(2, resource.RefCount);
                 }
@@ -150,12 +150,12 @@ namespace LargeCollections.Tests
             underlying.As<IHasBackingStore<IReferenceCountedResource>>().SetupGet(b => b.BackingStore).Returns(resource);
 
             // take and release resource.
-            using (new SinglePassCollection<int>(underlying.Object))
+            using (new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
             {
             }
 
             // refcount has gone positive and back to zero, so this fails:
-            using (new SinglePassCollection<int>(underlying.Object))
+            using (new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
             {
             }
         }
@@ -163,7 +163,6 @@ namespace LargeCollections.Tests
         private Mock<ILargeCollection<int>> MockUnderlyingCollection()
         {
             var underlying = new Mock<ILargeCollection<int>>();
-            underlying.Setup(u => u.GetEnumerator()).Returns(MockEnumerator);
             underlying.SetupGet(u => u.Count).Returns(2);
             underlying.Setup(u => u.Dispose());
             return underlying;
@@ -173,12 +172,6 @@ namespace LargeCollections.Tests
         {
             yield return 1;
             yield return 2;
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Utils.AssertReferencesDisposed();
         }
     }
 }

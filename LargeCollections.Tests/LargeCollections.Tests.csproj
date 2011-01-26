@@ -59,18 +59,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BatchedSinglePassCollectionTests.cs" />
-    <Compile Include="DiskBasedLargeCollectionTests.cs" />
-    <Compile Include="DisposableListTests.cs" />
+    <Compile Include="Linq\BufferTests.cs" />
+    <Compile Include="Linq\ExtensionsTests.cs" />
+    <Compile Include="Operations\BatchedSinglePassCollectionTests.cs" />
+    <Compile Include="Collections\DiskBasedLargeCollectionTests.cs" />
+    <Compile Include="Operations\ConcatenatedEnumeratorTests.cs" />
+    <Compile Include="CheckResourcesAttribute.cs" />
+    <Compile Include="Resources\DisposableListTests.cs" />
     <Compile Include="Resources\ReferenceCountedResourceTests.cs" />
     <Compile Include="Storage\BufferedItemWriterTests.cs" />
     <Compile Include="Storage\GuidBatchSerialiserTests.cs" />
-    <Compile Include="InMemoryLargeCollectionTests.cs" />
+    <Compile Include="Collections\InMemoryLargeCollectionTests.cs" />
     <Compile Include="Operations\LargeCollectionSorterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Operations\SetDifferenceMergeTests.cs" />
     <Compile Include="Operations\SetUnionSortPreservingMergeTests.cs" />
-    <Compile Include="SinglePassCollectionTests.cs" />
+    <Compile Include="Collections\LargeCollectionEnumeratorTests.cs" />
     <Compile Include="SizeBasedAccumulatorSelectorTests.cs" />
     <Compile Include="Operations\SortedDistinctEnumeratorTests.cs" />
     <Compile Include="Utils.cs" />

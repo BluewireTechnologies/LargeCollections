@@ -3,7 +3,11 @@ using System.Collections.Generic;
 
 namespace LargeCollections
 {
-    public interface ILargeCollection<T> : IEnumerable<T>, IDisposable, ICounted
+    public interface IDisposableEnumerable<T> : IEnumerable<T>, IDisposable
+    {
+    }
+
+    public interface ILargeCollection<T> : IDisposableEnumerable<T>, ICounted
     {
     }
 }

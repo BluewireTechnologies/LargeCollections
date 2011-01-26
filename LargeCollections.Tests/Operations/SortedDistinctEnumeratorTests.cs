@@ -7,7 +7,7 @@ using MbUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
-    [TestFixture]
+    [TestFixture, CheckResources]
     public class SortedDistinctEnumeratorTests
     {
         [Test]

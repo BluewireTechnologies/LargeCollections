@@ -9,7 +9,7 @@ using MbUnit.Framework.ContractVerifiers;
 
 namespace LargeCollections.Tests.Resources
 {
-    [TestFixture]
+    [TestFixture, CheckResources]
     public class ReferenceCountedResourceTests
     {
         [Test]

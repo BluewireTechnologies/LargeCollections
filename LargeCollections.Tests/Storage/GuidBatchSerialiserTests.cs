@@ -6,7 +6,7 @@ using MbUnit.Framework;
 
 namespace LargeCollections.Tests.Storage
 {
-    [TestFixture]
+    [TestFixture, CheckResources]
     public class GuidBatchSerialiserTests
     {
         private GuidBatchSerialiser serialiser = new GuidBatchSerialiser();

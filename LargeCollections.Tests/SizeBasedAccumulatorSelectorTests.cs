@@ -3,7 +3,7 @@ using MbUnit.Framework;
 
 namespace LargeCollections.Tests
 {
-    [TestFixture]
+    [TestFixture, CheckResources]
     public class SizeBasedAccumulatorSelectorTests
     {
         private static ILargeCollection<int> GetCollection(long threshold, int[] values)
@@ -33,12 +33,6 @@ namespace LargeCollections.Tests
             {
                 Assert.IsNull(collection.GetBackingStore<FileReference>());
             }
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Utils.AssertReferencesDisposed();
         }
     }
 }

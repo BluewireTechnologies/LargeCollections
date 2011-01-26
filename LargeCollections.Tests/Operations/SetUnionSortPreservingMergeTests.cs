@@ -7,7 +7,7 @@ using MbUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
-    [TestFixture]
+    [TestFixture, CheckResources]
     public class SetUnionSortPreservingMergeTests
     {
         [Test]
@@ -47,11 +47,18 @@ namespace LargeCollections.Tests.Operations
             Assert.Sorted(merged, SortOrder.Increasing);
         }
 
-        [TearDown]
-        public void TearDown()
+        [Test]
+        public void RetainsSortOrderMetaInformation()
         {
-            Utils.AssertReferencesDisposed();
-        }
+            var itemSets = new[] {
+                Sorted(2, 4, 6, 7, 9, 12),
+                Sorted(1, 3, 4, 7),
+                Sorted(5, 8, 10, 11),
+            };
+            var merged = new SortedEnumerableMerger<int>(itemSets, new SetUnionSortPreservingMerge<int>());
 
+            Assert.IsNotNull(merged.GetUnderlying<ISorted<int>>());
+            Assert.AreEqual(Comparer<int>.Default, merged.GetUnderlying<ISorted<int>>().SortOrder);
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace LargeCollections.Linq
         }
 
 
-        public ILargeCollection<T> Buffer<T>(IEnumerable<T> enumerable)
+        public IDisposableEnumerable<T> Buffer<T>(IEnumerable<T> enumerable)
         {
             using(var enumerator = enumerable.GetEnumerator())
             {
@@ -33,7 +33,7 @@ namespace LargeCollections.Linq
             }
         }
 
-        public ILargeCollection<T> Buffer<T>(IEnumerator<T> enumerator)
+        public IDisposableEnumerable<T> Buffer<T>(IEnumerator<T> enumerator)
         {
             var countable = enumerator.GetUnderlying<ICounted>();
             if (countable != null)
@@ -43,11 +43,11 @@ namespace LargeCollections.Linq
             return enumerator.Buffer(accumulatorSelector.GetAccumulator<T>());
         }
 
-        public ISinglePassCollection<T> BufferOnce<T>(IEnumerator<T> enumerator)
+        public IEnumerator<T> BufferOnce<T>(IEnumerator<T> enumerator)
         {
             using(var collection = Buffer(enumerator))
             {
-                return collection.AsSinglePass();
+                return collection.GetEnumerator();
             }
         }
 

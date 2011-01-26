@@ -9,10 +9,10 @@ namespace LargeCollections.Linq
 {
     public static class CountInheritance
     {
-        public static IEnumerable<T> InheritsCount<T>(this IEnumerable<T> collection, object source)
+        public static IDisposableEnumerable<T> InheritsCount<T>(this IEnumerable<T> collection, object source)
         {
             var count = TryGetCount(collection, source);
-            if (count == null) return collection;
+            if (count == null) return collection.AsDisposable();
             return new CountedEnumerable<T>(collection, count.Value);
         }
 
@@ -32,39 +32,29 @@ namespace LargeCollections.Linq
             return count;
         }
 
-        public static IEnumerator<T> InheritsCount<T>(this IEnumerator<T> enumerator, object source)
+        public static IEnumerator<T> InheritsCount<T>(this IEnumerator<T> enumerator, params object[] sources)
         {
-            var count = TryGetCount(enumerator, source);
-            if (count == null) return enumerator;
-            return new CountedEnumerator<T>(enumerator, count.Value);
+            var counts = sources.Select(s => TryGetCount(enumerator, s)).ToArray();
+            if (counts.All(c => c.HasValue))
+            {
+                return new CountedEnumerator<T>(enumerator, counts.Sum(c => c.Value));
+            }
+            return enumerator;
         }
 
-        class CountedEnumerable<T> : IEnumerable<T>, ICounted, IHasUnderlying
+        class CountedEnumerable<T> : DisposableEnumerable<T>, ICounted
         {
-            private readonly IEnumerable<T> underlying;
-
-            public CountedEnumerable(IEnumerable<T> underlying, long count)
+            public CountedEnumerable(IEnumerable<T> underlying, long count) : base(underlying)
             {
                 Count = count;
-                this.underlying = underlying;
             }
 
-            public IEnumerator<T> GetEnumerator()
+            public override IEnumerator<T> GetEnumerator()
             {
-                return new CountedEnumerator<T>(underlying.GetEnumerator(), Count);
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
+                return new CountedEnumerator<T>(base.GetEnumerator(), Count);
             }
 
             public long Count { get; private set; }
-
-            public object Underlying
-            {
-                get { return underlying; }
-            }
         }
 
         class CountedEnumerator<T> : IEnumerator<T>, ICounted, IHasUnderlying

@@ -49,6 +49,7 @@
     <Compile Include="Linq\LargeCollectionOperations.cs" />
     <Compile Include="Operations\BatchedSinglePassCollection.cs" />
     <Compile Include="Operations\CachingEnumerator.cs" />
+    <Compile Include="Operations\ConcatenatedEnumerator.cs" />
     <Compile Include="Operations\ConcatenatedLargeCollection.cs" />
     <Compile Include="Linq\Extensions.cs" />
     <Compile Include="Operations\MultipleCollection.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="Collections\InMemoryAccumulator.cs" />
     <Compile Include="Collections\InMemoryLargeCollection.cs" />
     <Compile Include="Resources\IReferenceCountedResource.cs" />
-    <Compile Include="ISinglePassCollection.cs" />
     <Compile Include="Operations\ISortedMerge.cs" />
     <Compile Include="LargeCollectionExtensions.cs" />
     <Compile Include="Operations\LargeCollectionSorter.cs" />
@@ -82,7 +82,7 @@
     <Compile Include="Storage\SerialiserSelector.cs" />
     <Compile Include="Operations\SetDifferenceMerge.cs" />
     <Compile Include="Operations\SetUnionSortPreservingMerge.cs" />
-    <Compile Include="Collections\SinglePassCollection.cs" />
+    <Compile Include="Collections\LargeCollectionEnumerator.cs" />
     <Compile Include="SizeBasedAccumulatorSelector.cs" />
     <Compile Include="Operations\SortedDistinctEnumerator.cs" />
     <Compile Include="Operations\SortedEnumerableMerger.cs" />

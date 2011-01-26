@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using LargeCollections.Collections;
-using LargeCollections.Linq;
 using LargeCollections.Operations;
 using MbUnit.Framework;
 
-namespace LargeCollections.Tests
+namespace LargeCollections.Tests.Operations
 {
-    [TestFixture]
+    [TestFixture, CheckResources]
     public class BatchedSinglePassCollectionTests
     {
-        private static ISinglePassCollection<int> GetCollection(params int[] items)
+        private static IEnumerator<int> GetCollection(params int[] items)
         {
             using(var collection = InMemoryAccumulator<int>.From(items))
             {
-                return new SinglePassCollection<int>(collection);
+                return collection.GetEnumerator();
             }
         }
 
@@ -64,12 +63,5 @@ namespace LargeCollections.Tests
             }
             Assert.AreElementsEqual(new []{ 1, 2, 3, 4, 5 }, batches);
         }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Utils.AssertReferencesDisposed();
-        }
-
     }
 }

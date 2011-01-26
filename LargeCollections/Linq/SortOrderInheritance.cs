@@ -6,7 +6,7 @@ namespace LargeCollections.Linq
 {
     public static class SortOrderInheritance
     {
-        public static IEnumerable<T> UsesSortOrder<T>(this IEnumerable<T> collection, IComparer<T> sortOrder)
+        public static IDisposableEnumerable<T> UsesSortOrder<T>(this IEnumerable<T> collection, IComparer<T> sortOrder)
         {
             return new SortedEnumerable<T>(collection, sortOrder);
         }
@@ -16,10 +16,10 @@ namespace LargeCollections.Linq
             return new SortedEnumerator<T>(enumerator, sortOrder);
         }
 
-        public static IEnumerable<T> InheritsSortOrder<T>(this IEnumerable<T> collection, object source)
+        public static IDisposableEnumerable<T> InheritsSortOrder<T>(this IEnumerable<T> collection, object source)
         {
             var sortOrder = TryGetSortOrder<T>(collection, source);
-            if (sortOrder == null) return collection;
+            if (sortOrder == null) return collection.AsDisposable();
             return new SortedEnumerable<T>(collection, sortOrder);
         }
 
@@ -39,37 +39,19 @@ namespace LargeCollections.Linq
             return new SortedEnumerator<T>(enumerator, sortOrder);
         }
 
-        class SortedEnumerable<T> : IEnumerable<T>, ISorted<T>, IDisposable, IHasUnderlying
+        class SortedEnumerable<T> : DisposableEnumerable<T>, ISorted<T>
         {
-            private IEnumerable<T> enumerable;
-
-            public SortedEnumerable(IEnumerable<T> enumerable, IComparer<T> order)
+            public SortedEnumerable(IEnumerable<T> enumerable, IComparer<T> order) : base(enumerable)
             {
-                this.enumerable = enumerable;
                 SortOrder = order;
             }
 
-            public IEnumerator<T> GetEnumerator()
+            public override IEnumerator<T> GetEnumerator()
             {
-                return new SortedEnumerator<T>(enumerable.GetEnumerator(), SortOrder);
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
+                return new SortedEnumerator<T>(base.GetEnumerator(), SortOrder);
             }
 
             public IComparer<T> SortOrder { get; private set; }
-
-            public void Dispose()
-            {
-                if (enumerable is IDisposable) ((IDisposable)enumerable).Dispose();
-            }
-
-            public object Underlying
-            {
-                get { return enumerable; }
-            }
         }
 
         class SortedEnumerator<T> : IEnumerator<T>, ISorted<T>, IHasUnderlying

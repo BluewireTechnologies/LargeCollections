@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Threading;
 using LargeCollections.Collections;
 using LargeCollections.Resources;
 using LargeCollections.Storage;
 using MbUnit.Framework;
 
-namespace LargeCollections.Tests
+namespace LargeCollections.Tests.Collections
 {
-    [TestFixture]
+    [TestFixture, CheckResources]
     public class DiskBasedLargeCollectionTests
     {
         private static ILargeCollection<int> GetCollection(IEnumerable<int> values)
@@ -113,12 +111,6 @@ namespace LargeCollections.Tests
                 collection.ToArray();
                 Assert.IsTrue(collection.GetBackingStore<FileReference>().File.Exists);
             }
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Utils.AssertReferencesDisposed();
         }
     }
 }

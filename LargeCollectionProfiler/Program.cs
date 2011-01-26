@@ -66,7 +66,7 @@ namespace LargeCollectionProfiler
             const long thousand = 1000;
             const long million = thousand * thousand;
 
-            const long absurd = 2 * thousand * million;
+            const long absurd = 1 * thousand * million;
             const long large = 3 * million;
             const long midsize = 100 * thousand;
             const long small = 500;
@@ -249,13 +249,14 @@ namespace LargeCollectionProfiler
                     MemoryUsage = new MemoryUsage(monitor.GetMemoryAverage())
                 };
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
         }
 
-        private static ILargeCollection<Guid> LargeCollectionDifference(IEnumerable<Guid> setA, IEnumerable<Guid> setB)
+        private static IDisposableEnumerable<Guid> LargeCollectionDifference(IEnumerable<Guid> setA, IEnumerable<Guid> setB)
         {
             var operations = new LargeCollectionOperations(accumulatorSelector);
 
@@ -263,7 +264,7 @@ namespace LargeCollectionProfiler
             {
                 using (var largeSetB = operations.Buffer(setB))
                 {
-                    return operations.Difference(largeSetA.AsSinglePass(), largeSetB.AsSinglePass()).Buffer();
+                    return operations.Difference(largeSetA.GetEnumerator(), largeSetB.GetEnumerator()).Buffer();
                 }
             }
         }

@@ -8,7 +8,7 @@ using MbUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
-    [TestFixture]
+    [TestFixture, CheckResources]
     public class SetDifferenceMergeTests
     {
         private IEnumerable<int> Sorted(params int[] items)
@@ -42,7 +42,7 @@ namespace LargeCollections.Tests.Operations
 
             Assert.AreElementsEqual(new []{ 1, 2, 3, 5, 6, 8, 9, 10, 11, 12 }, merged);
         }
-        
+
         [Test]
         public void MultipleSortedEnumerablesDoYieldElementsOccurringMultipleTimesInAnEnumerable()
         {
@@ -65,7 +65,7 @@ namespace LargeCollections.Tests.Operations
             {
                 using (var setB = Unsorted(1, 3, 3, 4, 7))
                 {
-                    new SortedEnumeratorMerger<int>(new[] { setA.AsSinglePass(), setB.AsSinglePass() }, new SetDifferenceMerge<int>());
+                    new SortedEnumeratorMerger<int>(new[] { setA.GetEnumerator(), setB.GetEnumerator() }, new SetDifferenceMerge<int>());
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace LargeCollections.Tests.Operations
             {
                 using (var setB = Unsorted(1, 3, 3, 4, 7))
                 {
-                    new SortedEnumeratorMerger<int>(new[] {setA.AsSinglePass(), setB.AsSinglePass()}, new SetDifferenceMerge<int>());
+                    new SortedEnumeratorMerger<int>(new[] { setA.GetEnumerator(), setB.GetEnumerator() }, new SetDifferenceMerge<int>());
                 }
             }
 
@@ -95,7 +95,7 @@ namespace LargeCollections.Tests.Operations
             }
         }
 
-        
+
 
         [Test]
         public void Fuzz_GuidSets_LargeCollectionProducesSameResultsAsEnumerables()
@@ -114,7 +114,7 @@ namespace LargeCollections.Tests.Operations
 
         private static IAccumulatorSelector accumulatorSelector = new SizeBasedAccumulatorSelector(0);
 
-        private static ILargeCollection<Guid> LargeCollectionDifference(IEnumerable<Guid> setA, IEnumerable<Guid> setB)
+        private static IDisposableEnumerable<Guid> LargeCollectionDifference(IEnumerable<Guid> setA, IEnumerable<Guid> setB)
         {
             var operations = new LargeCollectionOperations(accumulatorSelector);
 
@@ -156,12 +156,5 @@ namespace LargeCollections.Tests.Operations
             }
             return outputSet;
         }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Utils.AssertReferencesDisposed();
-        }
-
     }
 }
