@@ -98,7 +98,7 @@ namespace LargeCollections.Tests.Operations
         }
 
 
-        private static IEnumerable<Guid> EnumerableIntersection(IEnumerable<Guid> index, IEnumerable<Guid> source)
+        public static IEnumerable<Guid> EnumerableIntersection(IEnumerable<Guid> index, IEnumerable<Guid> source)
         {
             var inIndex = new HashSet<Guid>(index);
             var inIndexAndSource = new HashSet<Guid>(); // intersection

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using LargeCollections.Resources;
 using LargeCollections.Storage;
@@ -13,6 +14,7 @@ namespace LargeCollections.Collections
         private readonly IItemSerialiser<T> serialiser;
         private readonly BufferedItemWriter<T> writer;
         private IDisposable reference;
+        private bool completed = false;
 
         public FileAccumulator(string file, IItemSerialiser<T> serialiser)
         {
@@ -35,15 +37,18 @@ namespace LargeCollections.Collections
 
         public void Add(T item)
         {
+            if(completed) throw new ReadOnlyException();
             writer.Write(item);
             Count++;
         }
 
         public void AddRange(IEnumerable<T> items)
         {
+            if (completed) throw new ReadOnlyException();
             foreach (var item in items)
             {
-                Add(item);
+                writer.Write(item);
+                Count++;
             }
         }
 
@@ -51,6 +56,9 @@ namespace LargeCollections.Collections
 
         public ILargeCollection<T> Complete()
         {
+            if (completed) throw new InvalidOperationException();
+            completed = true;
+            writer.Dispose();
             return new DiskBasedLargeCollection<T>(fileResource, Count, serialiser);
         }
 

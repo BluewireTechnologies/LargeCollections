@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
@@ -22,6 +23,55 @@ namespace LargeCollections.Tests.Collections
                 return accumulator.Complete();
             }
         }
+
+        [Test]
+        [ExpectedException(typeof(ReadOnlyException))]
+        public void AccumulatorBecomesReadOnly_When_CollectionIsCreated()
+        {
+            var fileName = Path.GetTempFileName();
+            using (var accumulator = new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))
+            {
+                accumulator.Add(1);
+                using(accumulator.Complete())
+                {
+                    accumulator.Add(2);
+                }
+            }
+        }
+
+        [Test]
+        public void CanUseCollection_Before_AccumulatorIsDisposed()
+        {
+            var fileName = Path.GetTempFileName();
+            using (var accumulator = new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))
+            {
+                accumulator.Add(1);
+                accumulator.Add(2);
+                using (var collection = accumulator.Complete())
+                {
+                    collection.ToArray();
+                }
+            }
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CannotCompleteAccumulatorTwice()
+        {
+            var fileName = Path.GetTempFileName();
+            using (var accumulator = new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))
+            {
+                accumulator.Add(1);
+                accumulator.Add(2);
+                using (accumulator.Complete())
+                {
+                }
+                using (accumulator.Complete())
+                {
+                }
+            }
+        }
+
 
         [Test]
         public void AccumulatorCleansUpBackingStore_If_NoCollectionIsCreated()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using LargeCollections.Resources;
 
 namespace LargeCollections.Collections
@@ -18,6 +19,7 @@ namespace LargeCollections.Collections
             }
         }
 
+        private bool completed = false;
         private IDisposable reference;
         public InMemoryAccumulator()
         {
@@ -36,11 +38,13 @@ namespace LargeCollections.Collections
 
         public void Add(T item)
         {
+            if (completed) throw new ReadOnlyException();
             buffer.Add(item);
         }
 
         public void AddRange(IEnumerable<T> items)
         {
+            if(completed) throw new ReadOnlyException();
             buffer.AddRange(items);
         }
 
@@ -56,6 +60,8 @@ namespace LargeCollections.Collections
 
         public ILargeCollection<T> Complete()
         {
+            if (completed) throw new InvalidOperationException("Accumulator has already completed.");
+            completed = true;
             return new InMemoryLargeCollection<T>(buffer, BackingStore);
         }
 
