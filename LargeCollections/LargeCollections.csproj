@@ -57,6 +57,8 @@
     <Compile Include="Operations\SetIntersectionMerge.cs" />
     <Compile Include="Operations\MultipleCollection.cs" />
     <Compile Include="Linq\SortOrderInheritance.cs" />
+    <Compile Include="Operations\SortedEnumeratorList.cs" />
+    <Compile Include="Operations\SortPreservingMergeBase.cs" />
     <Compile Include="Resources\MultipleResource.cs" />
     <Compile Include="Resources\ReferenceCountedResource.cs" />
     <Compile Include="Resources\TemporaryFileReference.cs" />

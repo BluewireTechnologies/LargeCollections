@@ -4,33 +4,22 @@ using System.Linq;
 
 namespace LargeCollections.Operations
 {
-    public class SetUnionSortPreservingMerge<T> : ISortedMerge<T>
+    public class SetUnionSortPreservingMerge<T> : SortPreservingMergeBase<T>
     {
-        public bool MoveNext(IList<IEnumerator<T>> enumerators, Func<IEnumerator<T>, bool> advance)
+        protected override IEnumerator<T> MergeEnumerators(SortedEnumeratorList<T> sortedEnumerators)
         {
-            if (enumerators.Any())
+            using (sortedEnumerators)
             {
-                advance(enumerators[0]);
-                return enumerators.Any();
+                if (sortedEnumerators.AdvanceAll())
+                {
+                    do
+                    {
+                        var first = sortedEnumerators.First();
+                        yield return first.Current;
+                        sortedEnumerators.Advance(first);
+                    } while (sortedEnumerators.Any());
+                }
             }
-            return false;
-        }
-
-        public T GetCurrent(IList<IEnumerator<T>> enumerators)
-        {
-            return enumerators.First().Current;
-        }
-
-
-        public bool MoveFirst(IList<IEnumerator<T>> enumerators, Func<IEnumerator<T>, bool> advance)
-        {
-            return enumerators.Any();
-        }
-
-
-        public IEnumerator<T> WrapSource(IEnumerator<T> enumerator)
-        {
-            return enumerator;
         }
     }
 }

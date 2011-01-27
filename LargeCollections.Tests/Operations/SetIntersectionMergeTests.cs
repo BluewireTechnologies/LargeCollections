@@ -36,7 +36,7 @@ namespace LargeCollections.Tests.Operations
         {
             var itemSets = new[] {
                 Sorted(1, 2, 4, 5, 8, 9),
-                Sorted(1, 3, 4, 7, 9),
+                Sorted(1, 3, 4, 7, 9, 10),
                 Sorted(2, 4, 5, 6, 9)
             };
             var merged = new SortedEnumerableMerger<int>(itemSets, new SetIntersectionMerge<int>());
@@ -49,43 +49,12 @@ namespace LargeCollections.Tests.Operations
         {
             var itemSets = new[] {
                 Sorted(1, 2, 4, 4, 4, 5, 8, 9),
-                Sorted(1, 3, 7, 9),
+                Sorted(1, 3, 7, 9, 10),
                 Sorted(2, 5, 6, 9)
             };
             var merged = new SortedEnumerableMerger<int>(itemSets, new SetIntersectionMerge<int>());
 
             Assert.AreElementsEqual(new[] { 9 }, merged);
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void UnsortedInputSetsCauseAnException()
-        {
-            // not wrapped with an ISorted<int>, therefore 'unsorted'.
-            using (var setA = Unsorted(2, 4, 6, 7, 7, 9, 12))
-            {
-                using (var setB = Unsorted(1, 3, 3, 4, 7))
-                {
-                    new SortedEnumeratorMerger<int>(new[] { setA.GetEnumerator(), setB.GetEnumerator() }, new SetIntersectionMerge<int>());
-                }
-            }
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ExceptionDuringConstructionCausesDisposalOfEnumerators()
-        {
-            // not wrapped with an ISorted<int>, therefore 'unsorted'.
-            using (var setA = Unsorted(2, 4, 6, 7, 7, 9, 12))
-            {
-                using (var setB = Unsorted(1, 3, 3, 4, 7))
-                {
-                    new SortedEnumeratorMerger<int>(new[] { setA.GetEnumerator(), setB.GetEnumerator() }, new SetIntersectionMerge<int>());
-                }
-            }
-
-            // this happens in teardown anyway, but be explicit about it.
-            Utils.AssertReferencesDisposed();
         }
 
         private IEnumerable<Guid> GenerateGuids(int count)
@@ -99,6 +68,7 @@ namespace LargeCollections.Tests.Operations
 
 
         [Test]
+        [MultipleAsserts]
         public void Fuzz_GuidSets_LargeCollectionProducesSameResultsAsEnumerables()
         {
             var shared = GenerateGuids(100).ToArray();
@@ -108,8 +78,10 @@ namespace LargeCollections.Tests.Operations
             using (var largeCollection = LargeCollectionIntersection(setA, setB))
             {
                 var enumerable = EnumerableIntersection(setA, setB).ToArray();
+                var lc = largeCollection.ToArray();
 
-                Assert.AreElementsEqualIgnoringOrder(enumerable, largeCollection.ToArray());
+                Assert.AreElementsEqualIgnoringOrder(enumerable, lc);
+                Assert.AreEqual(enumerable.Length, lc.Length);
             }
         }
 

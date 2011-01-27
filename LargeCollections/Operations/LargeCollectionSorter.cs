@@ -50,7 +50,7 @@ namespace LargeCollections.Operations
 
         private static IEnumerator<T> MergeBatches<T>(IList<IEnumerator<T>> sortedBatches)
         {
-            return new SortedEnumeratorMerger<T>(sortedBatches, new SetUnionSortPreservingMerge<T>());
+            return new SetUnionSortPreservingMerge<T>().Merge(sortedBatches);
         }
 
         private IEnumerable<IEnumerator<T>> SortBatches<T>(IEnumerator<IEnumerable<T>> batches, IComparer<T> comparison, Func<IAccumulator<T>> getBatchAccumulator)

@@ -79,7 +79,7 @@ namespace LargeCollections.Linq
         {
             var setA = BufferOnceIfDifferent(first, e => Sort(e, comparison));
             var setB = BufferOnceIfDifferent(second, e => Sort(e, comparison));
-            return new SortedEnumeratorMerger<T>(new List<IEnumerator<T>> { setA, setB }, new SetDifferenceMerge<T>());
+            return new SetDifferenceMerge<T>().Merge(new List<IEnumerator<T>> { setA, setB });
         }
 
         public IEnumerator<T> Intersection<T>(IEnumerator<T> first, IEnumerator<T> second)
@@ -91,7 +91,7 @@ namespace LargeCollections.Linq
         {
             var setA = BufferOnceIfDifferent(first, e => Sort(e, comparison));
             var setB = BufferOnceIfDifferent(second, e => Sort(e, comparison));
-            return new SortedEnumeratorMerger<T>(new List<IEnumerator<T>> { setA, setB }, new SetIntersectionMerge<T>());
+            return new SetIntersectionMerge<T>().Merge(new List<IEnumerator<T>> { setA, setB });
         }
 
         

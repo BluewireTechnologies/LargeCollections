@@ -4,61 +4,30 @@ using System.Linq;
 
 namespace LargeCollections.Operations
 {
-    public class SetDifferenceMerge<T> : ISortedMerge<T>
+    public class SetDifferenceMerge<T> : SortPreservingMergeBase<T>
     {
-        public IEnumerator<T> WrapSource(IEnumerator<T> enumerator)
+        protected override IEnumerator<T> WrapSource(IEnumerator<T> source)
         {
-            return new SortedDistinctEnumerator<T>(enumerator);
+            return new SortedDistinctEnumerator<T>(source);
         }
 
-        public bool MoveNext(IList<IEnumerator<T>> enumerators, Func<IEnumerator<T>, bool> advance)
+        protected override IEnumerator<T> MergeEnumerators(SortedEnumeratorList<T> sortedEnumerators)
         {
-            if (enumerators.Any())
+            if (sortedEnumerators.AdvanceAll())
             {
-                var enumeratorsMatchingTheLowest = GetMatchingEnumerators(enumerators);
                 do
                 {
+                    var enumeratorsMatchingTheLowest = GetMatchingEnumerators(sortedEnumerators);
+                    if (enumeratorsMatchingTheLowest.Count() == 1)
+                    {
+                        yield return enumeratorsMatchingTheLowest.Single().Current;
+                    }
                     foreach (var enumerator in enumeratorsMatchingTheLowest)
                     {
-                        advance(enumerator);
+                        sortedEnumerators.Advance(enumerator);
                     }
-                    if (!enumerators.Any()) return false;
-                    enumeratorsMatchingTheLowest = GetMatchingEnumerators(enumerators);
-                } while (enumeratorsMatchingTheLowest.Count() > 1);
-                return true;
+                } while (sortedEnumerators.Any());
             }
-            return false;
-        }
-
-        private IEnumerator<T>[] GetMatchingEnumerators(IList<IEnumerator<T>> enumerators)
-        {
-            var current = enumerators.First().Current;
-            return enumerators.TakeWhile(e => Equals(e.Current, current)).ToArray();
-        }
-
-        public T GetCurrent(IList<IEnumerator<T>> enumerators)
-        {
-            return enumerators.First().Current;
-        }
-
-
-        public bool MoveFirst(IList<IEnumerator<T>> enumerators, Func<IEnumerator<T>, bool> advance)
-        {
-            if (enumerators.Any())
-            {
-                var enumeratorsMatchingTheLowest = GetMatchingEnumerators(enumerators);
-                while (enumeratorsMatchingTheLowest.Count() > 1)
-                {
-                    foreach (var enumerator in enumeratorsMatchingTheLowest)
-                    {
-                        advance(enumerator);
-                    }
-                    if (!enumerators.Any()) return false;
-                    enumeratorsMatchingTheLowest = GetMatchingEnumerators(enumerators);
-                }
-                return true;
-            }
-            return false;
         }
     }
 }

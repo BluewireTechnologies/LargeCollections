@@ -41,11 +41,14 @@ namespace LargeCollections.Linq
         {
             using (accumulator)
             {
-                while (enumerator.MoveNext())
+                using (enumerator)
                 {
-                    accumulator.Add(enumerator.Current);
+                    while (enumerator.MoveNext())
+                    {
+                        accumulator.Add(enumerator.Current);
+                    }
+                    return accumulator.Complete().InheritsSortOrder(enumerator);
                 }
-                return accumulator.Complete().InheritsSortOrder(enumerator);
             }
         }
 
@@ -73,6 +76,24 @@ namespace LargeCollections.Linq
                 var allEntries = list.ToArray();
                 list.Clear(); // prevent disposing, since we successfully evaluated the enumerable.
                 return allEntries;
+            }
+        }
+
+        public static IList<T> EvaluateSafely<T>(this IEnumerable<T> enumerable, Func<T, T> map)
+        {
+            using (var list = new DisposableList<T>())
+            {
+                var firstStageEvaluation = enumerable.EvaluateSafely();
+                list.AddRange(firstStageEvaluation);
+                var outputList = new List<T>();
+                foreach (var entry in firstStageEvaluation)
+                {
+                    var mapped = map(entry);
+                    list.Add(mapped);
+                    outputList.Add(mapped);
+                }
+                list.Clear(); // prevent disposing, since we successfully evaluated the enumerable.
+                return outputList;
             }
         }
     }

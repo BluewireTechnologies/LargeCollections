@@ -57,9 +57,12 @@ namespace LargeCollections.Tests.Operations
 
         private static void AssertSorted(ILargeCollection<int> original, IDisposableEnumerable<int> sorted)
         {
-            Assert.Count((int)original.Count, sorted);
-            Assert.AreElementsEqualIgnoringOrder(original, sorted);
-            Assert.Sorted(sorted, SortOrder.Increasing);
+            Assert.Multiple(() =>
+            {
+                Assert.Count((int) original.Count, sorted);
+                Assert.AreElementsEqualIgnoringOrder(original, sorted);
+                Assert.Sorted(sorted, SortOrder.Increasing);
+            });
         }
 
         [Test]

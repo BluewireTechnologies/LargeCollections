@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using LargeCollections.Linq;
 using MbUnit.Framework;
+using Moq;
 
 namespace LargeCollections.Tests.Linq
 {
@@ -64,6 +65,23 @@ namespace LargeCollections.Tests.Linq
             {
                 Assert.AreNotSame(enumerator, buffered);
                 Assert.AreNotSame(operationResult, buffered);
+            }
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Buffer_CleansUpResources_If_EnumeratorThrowsException()
+        {
+            var enumerator = new Mock<IEnumerator<int>>();
+            enumerator.Setup(e => e.MoveNext()).Throws(new InvalidOperationException());
+
+            try
+            {
+                var buffered = enumerator.Object.BufferInMemory();
+            }
+            finally
+            {
+                enumerator.Verify(e => e.Dispose());
             }
         }
     }
