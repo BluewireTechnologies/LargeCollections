@@ -96,6 +96,13 @@ namespace LargeCollections.Linq
                 return outputList;
             }
         }
+
+        public static long Count<T>(this IEnumerator<T> enumerator)
+        {
+            var counted = enumerator.GetUnderlying<ICounted>();
+            if(counted == null) throw new InvalidOperationException("Not a counted enumerator.");
+            return counted.Count;
+        }
     }
 
     public class DisposableEnumerable<T> : IDisposableEnumerable<T>, IHasUnderlying

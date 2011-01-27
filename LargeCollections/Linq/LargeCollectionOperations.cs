@@ -6,22 +6,22 @@ namespace LargeCollections.Linq
 {
     public class LargeCollectionOperations
     {
-        private readonly IAccumulatorSelector accumulatorSelector;
+        public IAccumulatorSelector AccumulatorSelector { get; private set; }
 
         public LargeCollectionOperations(IAccumulatorSelector accumulatorSelector)
         {
-            this.accumulatorSelector = accumulatorSelector;
+            this.AccumulatorSelector = accumulatorSelector;
         }
 
         public IEnumerator<T> Sort<T>(IEnumerator<T> enumerator)
         {
-            var sorter = accumulatorSelector.GetOperator(() => new LargeCollectionSorter(accumulatorSelector));
+            var sorter = this.AccumulatorSelector.GetOperator(() => new LargeCollectionSorter(this.AccumulatorSelector));
             return sorter.Sort(enumerator, Comparer<T>.Default);
         }
 
         public IEnumerator<T> Sort<T>(IEnumerator<T> enumerator, IComparer<T> comparison)
         {
-            var sorter = accumulatorSelector.GetOperator(() => new LargeCollectionSorter(accumulatorSelector));
+            var sorter = this.AccumulatorSelector.GetOperator(() => new LargeCollectionSorter(this.AccumulatorSelector));
             return sorter.Sort(enumerator, comparison);
         }
 
@@ -39,9 +39,9 @@ namespace LargeCollections.Linq
             var countable = enumerator.GetUnderlying<ICounted>();
             if (countable != null)
             {
-                return enumerator.Buffer(accumulatorSelector.GetAccumulator<T>(countable.Count));
+                return enumerator.Buffer(this.AccumulatorSelector.GetAccumulator<T>(countable.Count));
             }
-            return enumerator.Buffer(accumulatorSelector.GetAccumulator<T>());
+            return enumerator.Buffer(this.AccumulatorSelector.GetAccumulator<T>());
         }
 
         public IEnumerator<T> BufferOnce<T>(IEnumerator<T> enumerator)
@@ -109,7 +109,7 @@ namespace LargeCollections.Linq
         {
             var setA = BufferOnceIfDifferent(first, e => Sort(e, comparison));
             var setB = BufferOnceIfDifferent(second, e => Sort(e, comparison));
-            return new SetDifferenceAndIntersectionMerge<T>(accumulatorSelector).Merge(new List<IEnumerator<T>> { setA, setB });
+            return new SetDifferenceAndIntersectionMerge<T>(this.AccumulatorSelector).Merge(new List<IEnumerator<T>> { setA, setB });
         }
     }
 }
