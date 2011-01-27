@@ -3,7 +3,7 @@ using System.IO;
 
 namespace LargeCollections.Storage
 {
-    public class GuidBatchSerialiser : IItemSerialiser<Guid>
+    public class GuidSerialiser : IItemSerialiser<Guid>
     {
         public void Write(Stream stream, Guid item)
         {

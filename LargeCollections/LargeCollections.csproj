@@ -69,7 +69,7 @@
     <Compile Include="Resources\DisposableList.cs" />
     <Compile Include="Collections\FileAccumulator.cs" />
     <Compile Include="Resources\FileReference.cs" />
-    <Compile Include="Storage\GuidBatchSerialiser.cs" />
+    <Compile Include="Storage\GuidSerialiser.cs" />
     <Compile Include="IAccumulator.cs" />
     <Compile Include="IAccumulatorSelector.cs" />
     <Compile Include="IAppendable.cs" />

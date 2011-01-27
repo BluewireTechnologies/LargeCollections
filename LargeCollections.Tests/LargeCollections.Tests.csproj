@@ -70,7 +70,8 @@
     <Compile Include="Resources\DisposableListTests.cs" />
     <Compile Include="Resources\ReferenceCountedResourceTests.cs" />
     <Compile Include="Storage\BufferedItemWriterTests.cs" />
-    <Compile Include="Storage\GuidBatchSerialiserTests.cs" />
+    <Compile Include="Storage\DefaultItemSerialiserTests.cs" />
+    <Compile Include="Storage\GuidSerialiserTests.cs" />
     <Compile Include="Collections\InMemoryLargeCollectionTests.cs" />
     <Compile Include="Operations\LargeCollectionSorterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

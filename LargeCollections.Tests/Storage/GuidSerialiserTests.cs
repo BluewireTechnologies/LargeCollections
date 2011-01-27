@@ -8,9 +8,9 @@ using MbUnit.Framework;
 namespace LargeCollections.Tests.Storage
 {
     [TestFixture, CheckResources]
-    public class GuidBatchSerialiserTests
+    public class GuidSerialiserTests
     {
-        private GuidBatchSerialiser serialiser = new GuidBatchSerialiser();
+        private GuidSerialiser serialiser = new GuidSerialiser();
         private void Write(Stream stream, params Guid[] items)
         {
             foreach (var batch in items)

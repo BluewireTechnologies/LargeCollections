@@ -7,7 +7,7 @@ namespace LargeCollections.Storage
     {
         public SerialiserSelector()
         {
-            Add(new GuidBatchSerialiser());
+            Add(new GuidSerialiser());
         }
 
         private Dictionary<Type, object> serialisers = new Dictionary<Type, object>();
