@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using LargeCollections.Collections;
 using LargeCollections.Linq;
 using MbUnit.Framework;
 using Moq;
@@ -67,6 +68,39 @@ namespace LargeCollections.Tests.Linq
                 Assert.AreNotSame(operationResult, buffered);
             }
         }
+
+        [Test]
+        public void UncountedSourceEnumerator_AsCounted_ReturnsNewBufferedEnumerator()
+        {
+            var set = new[] { 1, 2, 3, 4 }.Cast<int>();
+            var operations = new LargeCollectionOperations(new DummyAccumulatorSelector());
+
+            // .NET enumerators are not ICounted.
+            var enumerator = set.GetEnumerator();
+
+            using (var buffered = operations.AsCounted(enumerator))
+            {
+                Assert.AreNotSame(enumerator, buffered);
+            }
+        }
+
+        [Test]
+        public void CountedSourceEnumerator_AsCounted_ReturnsSameEnumerator()
+        {
+            var operations = new LargeCollectionOperations(new DummyAccumulatorSelector());
+
+            using (var set = InMemoryAccumulator<int>.From(new[] { 1, 2, 3, 4 }))
+            {
+                var enumerator = set.GetEnumerator();
+
+                using (var buffered = operations.AsCounted(enumerator))
+                {
+                    Assert.AreSame(enumerator, buffered);
+                }
+            }
+        }
+
+
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]

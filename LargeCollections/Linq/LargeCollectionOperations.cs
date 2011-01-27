@@ -70,6 +70,12 @@ namespace LargeCollections.Linq
             return BufferOnce(output);
         }
 
+        public IEnumerator<T> AsCounted<T>(IEnumerator<T> enumerator)
+        {
+            if (enumerator.GetUnderlying<ICounted>() != null) return enumerator;
+            return BufferOnce(enumerator);
+        }
+
         public IEnumerator<T> Difference<T>(IEnumerator<T> first, IEnumerator<T> second)
         {
             return Difference(first, second, Comparer<T>.Default);
