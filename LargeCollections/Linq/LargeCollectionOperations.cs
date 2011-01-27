@@ -82,6 +82,18 @@ namespace LargeCollections.Linq
             return new SortedEnumeratorMerger<T>(new List<IEnumerator<T>> { setA, setB }, new SetDifferenceMerge<T>());
         }
 
+        public IEnumerator<T> Intersection<T>(IEnumerator<T> first, IEnumerator<T> second)
+        {
+            return Intersection(first, second, Comparer<T>.Default);
+        }
+
+        public IEnumerator<T> Intersection<T>(IEnumerator<T> first, IEnumerator<T> second, IComparer<T> comparison)
+        {
+            var setA = BufferOnceIfDifferent(first, e => Sort(e, comparison));
+            var setB = BufferOnceIfDifferent(second, e => Sort(e, comparison));
+            return new SortedEnumeratorMerger<T>(new List<IEnumerator<T>> { setA, setB }, new SetIntersectionMerge<T>());
+        }
+
         
     }
 }

@@ -54,6 +54,7 @@
     <Compile Include="Operations\ConcatenatedEnumerator.cs" />
     <Compile Include="Operations\ConcatenatedLargeCollection.cs" />
     <Compile Include="Linq\Extensions.cs" />
+    <Compile Include="Operations\SetIntersectionMerge.cs" />
     <Compile Include="Operations\MultipleCollection.cs" />
     <Compile Include="Linq\SortOrderInheritance.cs" />
     <Compile Include="Resources\MultipleResource.cs" />

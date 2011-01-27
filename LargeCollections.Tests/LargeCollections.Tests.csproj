@@ -65,6 +65,7 @@
     <Compile Include="Collections\DiskBasedLargeCollectionTests.cs" />
     <Compile Include="Operations\ConcatenatedEnumeratorTests.cs" />
     <Compile Include="CheckResourcesAttribute.cs" />
+    <Compile Include="Operations\SetIntersectionMergeTests.cs" />
     <Compile Include="Resources\DisposableListTests.cs" />
     <Compile Include="Resources\ReferenceCountedResourceTests.cs" />
     <Compile Include="Storage\BufferedItemWriterTests.cs" />
