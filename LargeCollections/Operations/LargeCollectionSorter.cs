@@ -42,7 +42,7 @@ namespace LargeCollections.Operations
 
                     // for each batch, sort it.
                     var sortedBatches = SortBatches(batches, comparison, () => accumulatorSelector.GetAccumulator<T>(source)).EvaluateSafely();
-                    if (!sortedBatches.Any()) return Enumerable.Empty<T>().GetEnumerator();
+                    if (!sortedBatches.Any()) return Enumerable.Empty<T>().GetEnumerator().UsesSortOrder(comparison);
                     return MergeBatches(sortedBatches);
                 }
             }

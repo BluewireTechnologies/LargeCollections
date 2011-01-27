@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DummyAccumulatorSelector.cs" />
     <Compile Include="IOperatorCache.cs" />
     <Compile Include="Linq\CountInheritance.cs" />
     <Compile Include="Linq\LargeCollectionOperations.cs" />

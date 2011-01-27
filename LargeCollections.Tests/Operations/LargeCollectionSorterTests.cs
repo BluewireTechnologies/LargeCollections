@@ -139,6 +139,21 @@ namespace LargeCollections.Tests.Operations
         }
 
         [Test]
+        public void ResultingEmptyEnumeratorHasSortOrderMetaInformation()
+        {
+            var sorter = GetSorter(5, MockSelector().Object);
+            using (var collection = InMemoryAccumulator<int>.From(new int[0]))
+            {
+                using (var sorted = sorter.Sort(collection.GetEnumerator(), Comparer<int>.Default))
+                {
+                    Assert.IsNotNull(sorted.GetUnderlying<ISorted<int>>());
+                    Assert.AreEqual(Comparer<int>.Default, sorted.GetUnderlying<ISorted<int>>().SortOrder);
+                }
+            }
+        }
+
+
+        [Test]
         [ExpectedException(typeof(IOException))]
         public void ResourcesAreCleanedUpCorrectly_If_ExceptionOccursDuringBatchBuffering()
         {
