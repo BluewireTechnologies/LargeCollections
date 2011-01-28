@@ -16,8 +16,14 @@ namespace LargeCollections.Tests
 
         public static void AssertReferencesDisposed()
         {
-            var resources = ReferenceCountedResource.GetLeakedResources();
-            Assert.IsEmpty(resources);
+            try
+            {
+                Assert.AreEqual(0, ReferenceCountedResource.Diagnostics.CountLeaks());
+            }
+            finally
+            {
+                ReferenceCountedResource.Diagnostics.Reset();
+            }
         }
     }
 }

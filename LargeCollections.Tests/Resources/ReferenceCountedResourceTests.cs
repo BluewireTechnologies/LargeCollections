@@ -20,9 +20,8 @@ namespace LargeCollections.Tests.Resources
             var resource = new WeakReference(instance, true);
             instance = null;
 
-            var leakedResources = ReferenceCountedResource.GetLeakedResources();
-            Assert.Count(1, leakedResources);
-            Assert.AreSame(resource.Target, leakedResources.Single());
+            Assert.AreEqual(1, ReferenceCountedResource.Diagnostics.CountLeaks());
+            ReferenceCountedResource.Diagnostics.Reset();
         }
 
         [Test]
@@ -42,8 +41,7 @@ namespace LargeCollections.Tests.Resources
             }
             finally
             {
-                var leakedResources = ReferenceCountedResource.GetLeakedResources();
-                Assert.IsEmpty(leakedResources);
+                Assert.AreEqual(0, ReferenceCountedResource.Diagnostics.CountLeaks());
             }
         }
 

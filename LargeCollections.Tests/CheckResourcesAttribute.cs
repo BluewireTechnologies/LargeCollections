@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Gallio.Common.Reflection;
 using Gallio.Framework.Pattern;
 using LargeCollections.Resources;
-using MbUnit.Framework;
 
 namespace LargeCollections.Tests
 {
@@ -17,7 +13,7 @@ namespace LargeCollections.Tests
             scope.TestBuilder.TestInstanceActions.DecorateChildTestChain.Before((state, actions) =>
             {
                 // cleanup leftovers from any previous tests.
-                actions.TestInstanceActions.SetUpTestInstanceChain.Before(_ => ReferenceCountedResource.GetLeakedResources());
+                actions.TestInstanceActions.SetUpTestInstanceChain.Before(_ => ReferenceCountedResource.Diagnostics.Reset());
 
                 actions.TestInstanceActions.TearDownTestInstanceChain.After(_ => Utils.AssertReferencesDisposed());
             });

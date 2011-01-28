@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using LargeCollections.Resources.Diagnostics;
 using log4net;
 
 namespace LargeCollections.Resources
@@ -11,7 +13,7 @@ namespace LargeCollections.Resources
 
         public ReferenceCountedResource()
         {
-            Trace = CaptureTrace();
+            Trace = Diagnostics.CaptureTrace();
             log.DebugFormat("Constructed resource : {0}", this);
         }
 
@@ -47,44 +49,30 @@ namespace LargeCollections.Resources
                 CleanUp();
             }
         }
-    
-        public string Trace { get; private set; }
+
+        public readonly string Trace;
 
         protected virtual void CleanUp()
         {
         }
 
         private IList<IDisposable> references = new List<IDisposable>();
-        private static List<IReferenceCountedResource> leakedResources = new List<IReferenceCountedResource>();
+        
 
-#if DEBUG
-        private static string CaptureTrace()
-        {
-            return new StackTrace(2).ToString();
-        }
+#if DEBUG || DEBUG_REFERENCE_COUNTS
+        public static ILeakedResourceCounter Diagnostics = new TracingLeakedResourceCounter();
 #else
-        private string CaptureTrace()
-        {
-            return null;
-        }
+        public static ILeakedResourceCounter Diagnostics = new NontracingLeakedResourceCounter();
 #endif
-        public static IEnumerable<IReferenceCountedResource> GetLeakedResources()
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            var resources = leakedResources.ToArray();
-            leakedResources.Clear();
-            return resources;
-        }
 
         ~ReferenceCountedResource()
         {
             if (!released)
             {
                 if (RefCount == 0) return; // construction failed.
-#if DEBUG
-                leakedResources.Add(this);
-#endif
+
+                Diagnostics.Leaked(this);
+
                 log.DebugFormat("Resource leaked : {0}", this);
                 // really unsafe:
                 CleanUp();
@@ -99,10 +87,10 @@ namespace LargeCollections.Resources
             public Reference(ReferenceCountedResource resource)
             {
                 this.resource = resource;
-                trace = CaptureTrace();
+                Trace = Diagnostics.CaptureTrace();
             }
 
-            private string trace;
+            public readonly string Trace;
 
             public void Dispose()
             {

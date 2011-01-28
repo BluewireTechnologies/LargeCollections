@@ -11,6 +11,8 @@
     <RootNamespace>LargeCollections</RootNamespace>
     <AssemblyName>LargeCollections</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <EproDirRelativePath>..\..\</EproDirRelativePath>
+    <EproDirPath>$(MSBuildProjectDirectory)\$(EproDirRelativePath)</EproDirPath>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -61,6 +63,9 @@
     <Compile Include="Linq\SortOrderInheritance.cs" />
     <Compile Include="Operations\SortedEnumeratorList.cs" />
     <Compile Include="Operations\SortPreservingMergeBase.cs" />
+    <Compile Include="Resources\Diagnostics\ILeakedResourceCounter.cs" />
+    <Compile Include="Resources\Diagnostics\NontracingLeakedResourceCounter.cs" />
+    <Compile Include="Resources\Diagnostics\TracingLeakedResourceCounter.cs" />
     <Compile Include="Resources\MultipleResource.cs" />
     <Compile Include="Resources\ReferenceCountedResource.cs" />
     <Compile Include="Resources\TemporaryFileReference.cs" />
@@ -101,15 +106,15 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+  <Import Project="$(EproDirPath)\EproBuild\Epro.Common.Tasks" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+       Other similar extension points exist, see Microsoft.Common.targets. -->
   <Target Name="BeforeBuild">
+    <CallTarget Targets="BeforeProjectBuild" />
   </Target>
+  <!--
   <Target Name="AfterBuild">
   </Target>
   -->
