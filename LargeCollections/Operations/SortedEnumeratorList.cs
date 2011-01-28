@@ -90,7 +90,7 @@ namespace LargeCollections.Operations
 
         public IEnumerator<IEnumerator<T>> GetEnumerator()
         {
-            return sortedList.ToArray().Cast<IEnumerator<T>>().GetEnumerator();
+            return sortedList.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

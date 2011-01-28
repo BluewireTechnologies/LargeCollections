@@ -16,7 +16,7 @@ namespace LargeCollections.Storage
         public Guid Read(Stream stream)
         {
             loadGuid = loadGuid ?? new byte[16];
-            if (stream.Read(loadGuid, 0, loadGuid.Length) <= 0)
+            if (stream.Read(loadGuid, 0, loadGuid.Length) < loadGuid.Length)
             {
                 throw new InvalidOperationException("Read past end of stream");
             }
