@@ -10,10 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LargeCollections.Tests</RootNamespace>
     <AssemblyName>LargeCollections.Tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-	<EproDirRelativePath>..\..\</EproDirRelativePath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <EproDirRelativePath>..\..\</EproDirRelativePath>
     <EproDirPath>$(MSBuildProjectDirectory)\$(EproDirRelativePath)</EproDirPath>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
