@@ -7,10 +7,12 @@ using LargeCollections.Storage;
 
 namespace LargeCollections.Collections
 {
-    public class FileAccumulator<T> : IAccumulator<T>
+    public class FileAccumulator<T> : IAccumulator<T>, IHasBackingStore<FileReference>
     {
         public string FileName { get; private set; }
         private readonly FileReference fileResource;
+        public FileReference BackingStore { get { return fileResource; } }
+
         private readonly IItemSerialiser<T> serialiser;
         private readonly BufferedItemWriter<T> writer;
         private IDisposable reference;

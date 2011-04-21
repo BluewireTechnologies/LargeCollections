@@ -91,6 +91,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\DatabaseTableAccumulator.cs" />
+    <Compile Include="Collections\DatabaseTableLargeCollection.cs" />
+    <Compile Include="Collections\LargeCollectionWithBackingStore.cs" />
     <Compile Include="DummyAccumulatorSelector.cs" />
     <Compile Include="IOperatorCache.cs" />
     <Compile Include="Linq\CountInheritance.cs" />
@@ -108,6 +111,7 @@
     <Compile Include="Linq\SortOrderInheritance.cs" />
     <Compile Include="Operations\SortedEnumeratorList.cs" />
     <Compile Include="Operations\SortPreservingMergeBase.cs" />
+    <Compile Include="Resources\DatabaseTableReference.cs" />
     <Compile Include="Resources\Diagnostics\ILeakedResourceCounter.cs" />
     <Compile Include="Resources\Diagnostics\NontracingLeakedResourceCounter.cs" />
     <Compile Include="Resources\Diagnostics\TracingLeakedResourceCounter.cs" />

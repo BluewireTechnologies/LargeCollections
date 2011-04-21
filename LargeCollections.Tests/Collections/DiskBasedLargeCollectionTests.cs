@@ -15,73 +15,29 @@ namespace LargeCollections.Tests.Collections
     [TestFixture, CheckResources]
     public class DiskBasedLargeCollectionTests
     {
-        private static ILargeCollection<int> GetCollection(IEnumerable<int> values)
+        class Harness : LargeCollectionTestHarness<FileReference>
         {
-            using(var accumulator = new FileAccumulator<int>(Path.GetTempFileName(), new DefaultItemSerialiser<int>()))
+            public override IAccumulator<int> GetAccumulator()
             {
-                accumulator.AddRange(values);
-                return accumulator.Complete();
+                var fileName = Path.GetTempFileName();
+                return new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>());
+            }
+
+            public override bool BackingStoreExists(IAccumulator<int> accumulator)
+            {
+                return File.Exists(((FileAccumulator<int>)accumulator).FileName);
+            }
+
+            public override bool BackingStoreExists(ILargeCollection<int> collection)
+            {
+                return collection.GetUnderlying<IHasBackingStore<FileReference>>().BackingStore.File.Exists;
             }
         }
 
-        [Test]
-        [ExpectedException(typeof(ReadOnlyException))]
-        public void AccumulatorBecomesReadOnly_When_CollectionIsCreated()
+        [DynamicTestFactory]
+        public IEnumerable<Test> BaselineTests()
         {
-            var fileName = Path.GetTempFileName();
-            using (var accumulator = new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))
-            {
-                accumulator.Add(1);
-                using(accumulator.Complete())
-                {
-                    accumulator.Add(2);
-                }
-            }
-        }
-
-        [Test]
-        public void CanUseCollection_Before_AccumulatorIsDisposed()
-        {
-            var fileName = Path.GetTempFileName();
-            using (var accumulator = new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))
-            {
-                accumulator.Add(1);
-                accumulator.Add(2);
-                using (var collection = accumulator.Complete())
-                {
-                    collection.ToArray();
-                }
-            }
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void CannotCompleteAccumulatorTwice()
-        {
-            var fileName = Path.GetTempFileName();
-            using (var accumulator = new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))
-            {
-                accumulator.Add(1);
-                accumulator.Add(2);
-                using (accumulator.Complete())
-                {
-                }
-                using (accumulator.Complete())
-                {
-                }
-            }
-        }
-
-
-        [Test]
-        public void AccumulatorCleansUpBackingStore_If_NoCollectionIsCreated()
-        {
-            var fileName = Path.GetTempFileName();
-            using (var accumulator = new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))
-            {
-                accumulator.Add(1);
-            }
-            Assert.IsFalse(File.Exists(fileName));
+            return new BaselineTestsForLargeCollectionWithBackingStore<FileReference>().GetTests(() => new Harness());
         }
 
         [Test]
@@ -127,39 +83,6 @@ namespace LargeCollections.Tests.Collections
             {
                 Assert.IsFalse(File.Exists(fileName));
                 Utils.AssertReferencesDisposed();
-            }
-        }
-
-        [Test]
-        public void CanSafelyDisposeMultipleTimes()
-        {
-            using (var collection = GetCollection(new[] { 1, 2, 3 }))
-            {
-                collection.Dispose();
-            }
-        }
-
-
-        [Test]
-        public void CleansUpBackingStore_WhenDisposed()
-        {
-            using (var collection =  GetCollection(new[] { 1, 2, 3 }))
-            {
-                Assert.IsTrue(collection.GetBackingStore<FileReference>().File.Exists);
-                collection.Dispose();
-                Assert.IsFalse(collection.GetBackingStore<FileReference>().File.Exists);
-            }
-        }
-
-
-        [Test]
-        public void DoesNotCleanUpBackingStore_WhenIterationIsComplete()
-        {
-            using (var collection = GetCollection(new[] { 1, 2, 3 }))
-            {
-                Assert.IsTrue(collection.GetBackingStore<FileReference>().File.Exists);
-                collection.ToArray();
-                Assert.IsTrue(collection.GetBackingStore<FileReference>().File.Exists);
             }
         }
     }

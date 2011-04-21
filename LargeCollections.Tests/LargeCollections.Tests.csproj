@@ -62,6 +62,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\LargeCollectionTestHarness.cs" />
+    <Compile Include="Collections\BaselineTestsForLargeCollectionWithBackingStore.cs" />
     <Compile Include="Linq\BufferTests.cs" />
     <Compile Include="Linq\ExtensionsTests.cs" />
     <Compile Include="Operations\BatchedSinglePassCollectionTests.cs" />
