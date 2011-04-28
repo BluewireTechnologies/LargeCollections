@@ -28,5 +28,10 @@ namespace LargeCollections.Resources
                 } 
             }
         }
+
+        public static implicit operator T[](DisposableList<T> list)
+        {
+            return list.ToArray();
+        }
     }
 }
