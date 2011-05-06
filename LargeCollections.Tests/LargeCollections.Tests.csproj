@@ -37,19 +37,19 @@
   <ItemGroup>
     <Reference Include="Gallio, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\CommonLibraries\Gallio\Gallio.dll</HintPath>
+      <HintPath>..\..\Lib\Gallio\Gallio.dll</HintPath>
     </Reference>
     <Reference Include="Gallio35, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\CommonLibraries\Gallio\Gallio35.dll</HintPath>
+      <HintPath>..\..\Lib\Gallio\Gallio35.dll</HintPath>
     </Reference>
     <Reference Include="MbUnit, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\CommonLibraries\Gallio\MbUnit.dll</HintPath>
+      <HintPath>..\..\Lib\Gallio\MbUnit.dll</HintPath>
     </Reference>
     <Reference Include="MbUnit35, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\CommonLibraries\Gallio\MbUnit35.dll</HintPath>
+      <HintPath>..\..\Lib\Gallio\MbUnit35.dll</HintPath>
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.3.1.416.3\lib\Moq.dll</HintPath>
