@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using LargeCollections.Operations;
 
 namespace LargeCollections.Linq
@@ -76,9 +77,25 @@ namespace LargeCollections.Linq
             return BufferOnce(enumerator);
         }
 
+        private IComparer<T> GetPreferredSortOrder<T>(params IEnumerator<T>[] enumerators)
+        {
+            var sortedEnumerators = enumerators .Select(e => e.GetUnderlying<ISorted<T>>()).Where(s => s != null).ToArray();
+            
+            var sortOrders = sortedEnumerators
+                .GroupBy(s => s.SortOrder)
+                .OrderByDescending(s => s.Count())
+                .ToArray();
+
+            if (!sortOrders.Any()) return Comparer<T>.Default;
+
+            var preferredOrder = sortOrders.First();
+
+            return preferredOrder.Key;
+        }
+
         public IEnumerator<T> Difference<T>(IEnumerator<T> first, IEnumerator<T> second)
         {
-            return Difference(first, second, Comparer<T>.Default);
+            return Difference(first, second, GetPreferredSortOrder(first, second));
         }
 
         public IEnumerator<T> Difference<T>(IEnumerator<T> first, IEnumerator<T> second, IComparer<T> comparison)

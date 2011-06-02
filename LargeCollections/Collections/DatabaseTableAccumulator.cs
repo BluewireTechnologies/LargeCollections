@@ -45,6 +45,7 @@ namespace LargeCollections.Collections
             completed = true;
             EndWrite();
             if (Count == 0) return new InMemoryLargeCollection<T>(new List<T>(), null);
+            tableReference.ApplyIndex();
             return new DatabaseTableLargeCollection<T>(tableReference, Count);
         }
 
