@@ -18,7 +18,9 @@ namespace LargeCollections.Tests.Collections
                 CanSafelyDisposeMultipleTimes,
                 AccumulatorCleansUpBackingStore_If_NoCollectionIsCreated,
                 CleansUpBackingStore_WhenDisposed,
-                DoesNotCleanUpBackingStore_WhenIterationIsComplete
+                CanCleanUpEmptyCollection,
+                DoesNotCleanUpBackingStore_WhenIterationIsComplete,
+                CanReadCompletedCollection
             }.Select(t => t(harness));
         }
 
@@ -118,6 +120,18 @@ namespace LargeCollections.Tests.Collections
             });
         }
 
+
+        private Test CanCleanUpEmptyCollection(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
+        {
+            return new TestCase("CanCleanUpEmptyCollection", () =>
+            {
+                using (var harness = getHarness())
+                using (harness.GetCollection(new int[] {}))
+                {
+                }
+            });
+        }
+
         private Test DoesNotCleanUpBackingStore_WhenIterationIsComplete(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
         {
             return new TestCase("DoesNotCleanUpBackingStore_WhenIterationIsComplete", () =>
@@ -132,5 +146,17 @@ namespace LargeCollections.Tests.Collections
             });
         }
 
+        private Test CanReadCompletedCollection(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
+        {
+            return new TestCase("CanReadCompletedCollection", () =>
+            {
+                var elements = new[] { 1, 2, 3 };
+                using (var harness = getHarness())
+                using (var collection = harness.GetCollection(elements))
+                {
+                    Assert.AreElementsEqualIgnoringOrder(elements, collection);
+                }
+            });
+        }
     }
 }

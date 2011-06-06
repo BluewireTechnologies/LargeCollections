@@ -19,6 +19,8 @@ namespace LargeCollections.Resources
             TableName = tableName;
         }
 
+        public string FieldName { get { return "value"; } }
+
         public virtual bool Exists()
         {
             throw new NotImplementedException();
@@ -33,14 +35,14 @@ namespace LargeCollections.Resources
     public class TemporaryDatabaseTableReference : DatabaseTableReference
     {
         public TemporaryDatabaseTableReference(SqlConnection connection)
-            : base(connection, "#temp_" + Guid.NewGuid().ToString("N"))
+            : base(connection, "##temp_" + Guid.NewGuid().ToString("N"))
         {
         }
 
         private bool exists;
         public void Create(SqlDbType columnType)
         {
-            var createSql = String.Format("CREATE TABLE [{0}]([value] [{1}])", TableName, columnType);
+            var createSql = String.Format("CREATE TABLE [{0}]([{1}] [{2}])", TableName, FieldName, columnType == SqlDbType.Variant ? "sql_variant" : columnType.ToString());
             using (var command = Connection.CreateCommand())
             {
                 command.CommandType = CommandType.Text;
@@ -52,7 +54,8 @@ namespace LargeCollections.Resources
 
         public void ApplyIndex()
         {
-            var createSql = String.Format("CREATE NONCLUSTERED INDEX [idx_{0}] ON [{1}]([value])", TableName.Substring(1), TableName);
+            if(!exists) throw new InvalidOperationException("Cannot create index. Table has not yet been created.");
+            var createSql = String.Format("CREATE NONCLUSTERED INDEX [idx_{0}] ON [{1}]([{2}])", TableName.Substring(1), TableName, FieldName);
             using (var command = Connection.CreateCommand())
             {
                 command.CommandType = CommandType.Text;
@@ -68,12 +71,15 @@ namespace LargeCollections.Resources
 
         protected override void CleanUp()
         {
-            using (var command = Connection.CreateCommand())
+            if (exists)
             {
-                command.CommandType = CommandType.Text;
-                command.CommandText = String.Format("DROP TABLE [{0}]", TableName);
-                command.ExecuteNonQuery();
-                exists = false;
+                using (var command = Connection.CreateCommand())
+                {
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = String.Format("DROP TABLE [{0}]", TableName);
+                    command.ExecuteNonQuery();
+                    exists = false;
+                }
             }
         }
     }
