@@ -3,40 +3,39 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using LargeCollections.Resources;
+using LargeCollections.Storage.Database;
 
 namespace LargeCollections.Collections
 {
-    public class DatabaseTableAccumulator<T> : IAccumulator<T>, IHasBackingStore<DatabaseTableReference>
+    public class DatabaseTableAccumulator<T> : IAccumulator<T>, IHasBackingStore<DatabaseTableReference<T>>
     {
         private readonly SqlDbType columnType;
-        private TemporaryDatabaseTableReference tableReference;
+        private TemporaryDatabaseTableReference<T> tableReference;
         private IDisposable reference;
         private bool completed;
 
         public DatabaseTableAccumulator(SqlConnection connection, SqlDbType columnType)
         {
             this.columnType = columnType;
-            tableReference = new TemporaryDatabaseTableReference(connection);
+            tableReference = new TemporaryDatabaseTableReference<T>(connection, new DatabaseTableSchema<T> { { "value", i => i, columnType } });
 
             reference = tableReference.Acquire();
         }
 
-        private SqlBulkCopy writer;
+        private TableWriter<T> writer;
 
         private void BeginWrite()
         {
             if (writer != null) return;
 
             // create temp table
-            tableReference.Create(columnType);
-            // create bulk copy object
-            writer = new SqlBulkCopy(tableReference.Connection) { DestinationTableName = tableReference.TableName };
+            writer = tableReference.Create();
         }
 
         private void EndWrite()
         {
             if (writer == null) return;
-            writer.Close();
+            writer.Dispose();
         }
 
         public ILargeCollection<T> Complete()
@@ -45,7 +44,7 @@ namespace LargeCollections.Collections
             completed = true;
             EndWrite();
             if (Count == 0) return new InMemoryLargeCollection<T>(new List<T>(), null);
-            tableReference.ApplyIndex();
+            tableReference.ApplyIndex("value");
             return new DatabaseTableLargeCollection<T>(tableReference, Count);
         }
 
@@ -58,7 +57,7 @@ namespace LargeCollections.Collections
         {
             if (completed) throw new ReadOnlyException();
             BeginWrite();
-            writer.WriteToServer(new BulkInsertableEnumerator<T>(items.GetEnumerator(), columnType, () => Count++));
+            Count += writer.Write(items);
         }
 
        
@@ -70,7 +69,7 @@ namespace LargeCollections.Collections
             reference.Dispose();
         }
 
-        public DatabaseTableReference BackingStore
+        public DatabaseTableReference<T> BackingStore
         {
             get { return tableReference; }
         }

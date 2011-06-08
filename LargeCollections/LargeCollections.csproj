@@ -117,9 +117,14 @@
     <Compile Include="Resources\Diagnostics\TracingLeakedResourceCounter.cs" />
     <Compile Include="Resources\MultipleResource.cs" />
     <Compile Include="Resources\ReferenceCountedResource.cs" />
+    <Compile Include="Resources\TemporaryDatabaseTableReference.cs" />
     <Compile Include="Resources\TemporaryFileReference.cs" />
     <Compile Include="Storage\BufferedItemReader.cs" />
     <Compile Include="Storage\BufferedItemWriter.cs" />
+    <Compile Include="Storage\Database\ColumnPropertyMapping.cs" />
+    <Compile Include="Storage\Database\DatabaseTableSchema.cs" />
+    <Compile Include="Storage\Database\IColumnPropertyMapping.cs" />
+    <Compile Include="Storage\Database\TableWriter.cs" />
     <Compile Include="Storage\DefaultItemSerialiser.cs" />
     <Compile Include="Collections\DiskBasedLargeCollection.cs" />
     <Compile Include="Resources\DisposableList.cs" />
@@ -140,6 +145,7 @@
     <Compile Include="LargeCollectionExtensions.cs" />
     <Compile Include="Operations\LargeCollectionSorter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Storage\Database\ObjectDataReader.cs" />
     <Compile Include="Storage\SerialiserSelector.cs" />
     <Compile Include="Operations\SetDifferenceMerge.cs" />
     <Compile Include="Operations\SetUnionSortPreservingMerge.cs" />
