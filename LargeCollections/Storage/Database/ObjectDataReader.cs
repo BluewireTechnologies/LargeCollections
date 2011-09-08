@@ -124,7 +124,7 @@ namespace LargeCollections.Storage.Database
 
         public Type GetFieldType(int i)
         {
-            return  typeof(T);
+            return columns[i].Type;
         }
 
         public float GetFloat(int i)

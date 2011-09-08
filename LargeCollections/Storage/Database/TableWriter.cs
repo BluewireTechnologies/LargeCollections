@@ -11,7 +11,16 @@ namespace LargeCollections.Storage.Database
         public TableWriter(SqlConnection cn, List<IColumnPropertyMapping<T>> columns, string tableName)
         {
             this.columns = columns;
-            bulkWriter = new SqlBulkCopy(cn) { DestinationTableName = tableName, BatchSize = 500};
+            bulkWriter = new SqlBulkCopy(cn)
+            {
+                DestinationTableName = tableName,
+                BatchSize = 500
+            };
+
+            for (var i = 0; i < columns.Count; i++)
+            {
+                bulkWriter.ColumnMappings.Add(i, columns[i].Name);
+            }
         }
 
         public TimeSpan Timeout
