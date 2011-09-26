@@ -69,7 +69,14 @@ namespace LargeCollections.Storage.Database
         public void Dispose()
         {
             queue.CompleteAdding();
-            bulkWriterTask.Wait();
+            try
+            {
+                bulkWriterTask.Wait();
+            }
+            catch(AggregateException ex) 
+            {
+                throw new ApplicationException("Could not complete bulk insert.", ex.InnerException);
+            }
         }
     }
 }
