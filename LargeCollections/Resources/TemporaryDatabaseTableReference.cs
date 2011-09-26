@@ -8,16 +8,19 @@ namespace LargeCollections.Resources
 {
     public class TemporaryDatabaseTableReference<T> : DatabaseTableReference<T>
     {
+        public SqlConnection Connection { get; private set; }
+
         public TemporaryDatabaseTableReference(SqlConnection connection, DatabaseTableSchema<T> schema)
-            : base(connection, schema, "##temp_" + Guid.NewGuid().ToString("N"))
+            : base(schema, "##temp_" + Guid.NewGuid().ToString("N"))
         {
+            Connection = connection;
         }
 
         private bool exists;
         public TableWriter<T> Create()
         {
             Schema.CreateTable(Connection, TableName);
-            var writer = new TableWriter<T>(Connection, Schema.ToList(), TableName);
+            var writer = Schema.GetWriter(Connection, TableName);
             exists = true;
             return writer;
         }

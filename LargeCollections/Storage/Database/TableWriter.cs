@@ -1,16 +1,15 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace LargeCollections.Storage.Database
 {
     public class TableWriter<T> : IDisposable
     {
-        List<IColumnPropertyMapping<T>> columns;
-
         public TableWriter(SqlConnection cn, List<IColumnPropertyMapping<T>> columns, string tableName)
         {
-            this.columns = columns;
             bulkWriter = new SqlBulkCopy(cn)
             {
                 DestinationTableName = tableName,
@@ -21,6 +20,14 @@ namespace LargeCollections.Storage.Database
             {
                 bulkWriter.ColumnMappings.Add(i, columns[i].Name);
             }
+
+            bulkWriterTask = Task.Factory.StartNew(() => {
+                using (var reader = new ObjectDataReader<T>(columns, queue.GetConsumingEnumerable().GetEnumerator()))
+                {
+                    bulkWriter.WriteToServer(reader);
+                }
+                bulkWriter.Close();
+            });
         }
 
         public TimeSpan Timeout
@@ -28,26 +35,41 @@ namespace LargeCollections.Storage.Database
             get { return TimeSpan.FromSeconds(bulkWriter.BulkCopyTimeout); }
             set { bulkWriter.BulkCopyTimeout = (int)value.TotalSeconds; }
         }
+        
+        private BlockingCollection<T> queue = new BlockingCollection<T>();
 
+        private Task bulkWriterTask;
         private SqlBulkCopy bulkWriter;
+        
+        private void CheckWriterIsLive()
+        {
+            if(bulkWriterTask.IsFaulted) bulkWriterTask.Wait();
+        }
 
         public int Write(IEnumerable<T> items)
         {
-            using (var reader = new ObjectDataReader<T>(columns, items.GetEnumerator()))
+            CheckWriterIsLive();
+            var count = 0;
+            foreach(var item in items)
             {
-                bulkWriter.WriteToServer(reader);
-                return reader.GetFinalCount();
+                queue.Add(item);
+                count++;
             }
+            return count;
+            
         }
 
         public int Write(T item)
         {
-            return Write(new [] {item});
+            CheckWriterIsLive();
+            queue.Add(item);
+            return 1;
         }
 
         public void Dispose()
         {
-            bulkWriter.Close();
+            queue.CompleteAdding();
+            bulkWriterTask.Wait();
         }
     }
 }

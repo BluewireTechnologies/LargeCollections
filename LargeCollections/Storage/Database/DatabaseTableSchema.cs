@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace LargeCollections.Storage.Database
 {
@@ -10,11 +11,15 @@ namespace LargeCollections.Storage.Database
     {
         void CreateTable(SqlConnection cn, string tableName);
         void AddIndex(SqlConnection cn, string tableName, string columnName);
+
+        TableWriter<T> GetWriter(SqlConnection cn, string tableName);
+
+        NameValueObjectFactory<T> GetRecordFactory();
     }
 
     public class DatabaseTableSchema<T> : IDatabaseTableSchema<T>
     {
-        public void Add<TProp>(string name, Func<T, TProp> get, SqlDbType type, int? width = null)
+        public void Add<TProp>(string name, Expression<Func<T, TProp>> get, SqlDbType type, int? width = null)
         {
             Add(new ColumnPropertyMapping<T, TProp>(name, get, type, width));
         }
@@ -97,6 +102,18 @@ namespace LargeCollections.Storage.Database
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return properties.GetEnumerator();
+        }
+
+
+        public TableWriter<T> GetWriter(SqlConnection cn, string tableName)
+        {
+            return new TableWriter<T>(cn, properties, tableName);
+        }
+
+
+        public NameValueObjectFactory<T> GetRecordFactory()
+        {
+            return new NameValueObjectFactory<T>(this);
         }
     }
 }

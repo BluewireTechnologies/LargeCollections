@@ -76,6 +76,7 @@
     <Compile Include="Resources\DisposableListTests.cs" />
     <Compile Include="Resources\ReferenceCountedResourceTests.cs" />
     <Compile Include="Storage\BufferedItemWriterTests.cs" />
+    <Compile Include="Storage\Database\NameValueObjectFactoryTests.cs" />
     <Compile Include="Storage\DefaultItemSerialiserTests.cs" />
     <Compile Include="Storage\GuidSerialiserTests.cs" />
     <Compile Include="Collections\InMemoryLargeCollectionTests.cs" />
@@ -97,6 +98,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(EproDirPath)\Build\Epro.Common.Tasks" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
