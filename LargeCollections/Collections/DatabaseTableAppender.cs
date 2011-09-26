@@ -21,12 +21,17 @@ namespace LargeCollections.Collections
 
         private TableWriter<T> writer;
 
+        protected virtual void OnWriterOpened(TableWriter<T> writer)
+        {
+        }
+
         protected void EnsureUnderlyingWriterIsOpen()
         {
             if (writer != null) return;
 
             // create temp table
             writer = this.TableReference.Create();
+            OnWriterOpened(writer);
         }
 
         private void EndWrite()
@@ -63,8 +68,21 @@ namespace LargeCollections.Collections
 
         public void Dispose()
         {
+            try
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+            finally
+            {
+                // This must be released last, and it MUST be released:
+                ReleaseReference();
+            }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
             EndWrite();
-            ReleaseReference();
         }
 
         public DatabaseTableReference<T> BackingStore

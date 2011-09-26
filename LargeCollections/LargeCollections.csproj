@@ -129,6 +129,7 @@
     <Compile Include="Resources\TemporaryFileReference.cs" />
     <Compile Include="Storage\BufferedItemReader.cs" />
     <Compile Include="Storage\BufferedItemWriter.cs" />
+    <Compile Include="Storage\Database\BackingStoreException.cs" />
     <Compile Include="Storage\Database\ColumnPropertyMapping.cs" />
     <Compile Include="Storage\Database\NameValueObjectFactory.cs" />
     <Compile Include="Storage\Database\TableReader.cs" />

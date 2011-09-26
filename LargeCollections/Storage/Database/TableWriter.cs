@@ -75,7 +75,7 @@ namespace LargeCollections.Storage.Database
             }
             catch(AggregateException ex) 
             {
-                throw new ApplicationException("Could not complete bulk insert.", ex.InnerException);
+                throw new BackingStoreException("Could not complete bulk insert.", ex.Flatten().InnerException);
             }
         }
     }
