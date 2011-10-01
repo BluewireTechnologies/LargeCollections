@@ -7,9 +7,9 @@ namespace LargeCollections.Storage.Database
     public class TableReader<T> : IEnumerator<T>
     {
         private readonly IDataReader reader;
-        private readonly NameValueObjectFactory<T> objectFactory;
+        private readonly NameValueObjectFactory<string, T> objectFactory;
 
-        public TableReader(IDataReader reader, NameValueObjectFactory<T> objectFactory)
+        public TableReader(IDataReader reader, NameValueObjectFactory<string, T> objectFactory)
         {
             this.reader = reader;
             this.objectFactory = objectFactory;
@@ -24,7 +24,7 @@ namespace LargeCollections.Storage.Database
             {
                 if(!loadedCurrent)
                 {
-                    current = objectFactory.ReadRecord(f => reader[f]);
+                    current = objectFactory.ReadRecord(f => reader[f.Name]);
                     loadedCurrent = true;
                 }
                 return current;

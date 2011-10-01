@@ -6,11 +6,19 @@ using System.Reflection;
 
 namespace LargeCollections.Storage.Database
 {
-    public class NameValueObjectFactory<TEntity>
+    public class NameValueObjectFactory<TSelector, TEntity> : NameValueObjectFactory<TSelector, TEntity, IPropertyMapping<TSelector, TEntity>>
+    {
+        public NameValueObjectFactory(IEnumerable<IPropertyMapping<TSelector, TEntity>> columns)
+            : base(columns)
+        {
+        }
+    }
+
+    public class NameValueObjectFactory<TSelector, TEntity, TMapping> where TMapping : IPropertyMapping<TSelector, TEntity>
     {
         private Factory factory;
 
-        public NameValueObjectFactory(IEnumerable<INamePropertyMapping<TEntity>> columns)
+        public NameValueObjectFactory(IEnumerable<TMapping> columns)
         {
             var columnsByProperty = columns.Where(c => c.PropertyName != null).ToDictionary(c => c.PropertyName, StringComparer.InvariantCultureIgnoreCase);
             this.factory = typeof(TEntity).GetConstructors().Select(c => TryCreateFactory(c, columnsByProperty)).FirstOrDefault();
@@ -21,62 +29,88 @@ namespace LargeCollections.Storage.Database
         class Factory
         {
             private readonly ConstructorInfo constructorInfo;
-            private readonly string[] constructorParamNames;
-            private readonly INamePropertyMapping<TEntity>[] remainingColumns;
+            private readonly TMapping[] constructorParams;
+            private readonly TMapping[] remainingColumns;
 
-            public Factory(ConstructorInfo constructorInfo, string[] constructorParamNames, INamePropertyMapping<TEntity>[] remainingColumns)
+            public Factory(ConstructorInfo constructorInfo, TMapping[] constructorParams, TMapping[] remainingColumns)
             {
                 this.constructorInfo = constructorInfo;
-                this.constructorParamNames = constructorParamNames;
+                this.constructorParams = constructorParams;
                 this.remainingColumns = remainingColumns;
             }
 
-            public TEntity Create(Func<string, object> get)
+            public TEntity Create(Action<TMapping, Action<object>> copy, Func<TMapping, object> get)
             {
-                var instance = (TEntity)constructorInfo.Invoke(constructorParamNames.Select(get).ToArray());
+                var instance = (TEntity)constructorInfo.Invoke(constructorParams.Select(get).ToArray());
                 foreach (var column in remainingColumns)
                 {
-                    column.Set(instance, get(column.Name));
+                    copy(column, v => column.Set(instance, v));
                 }
                 return instance;
             }
 
-            public IEnumerable<string> RequiredNames
+            public IEnumerable<TSelector> RequiredNames
             {
-                get { return constructorParamNames.Concat(remainingColumns.Select(c => c.Name)); }
+                get { return constructorParams.Concat(remainingColumns).Select(c => c.Name); }
             }
         }
 
-        private static Factory TryCreateFactory(ConstructorInfo constructorInfo, Dictionary<string, INamePropertyMapping<TEntity>> columns)
+        private static Factory TryCreateFactory(ConstructorInfo constructorInfo, Dictionary<string, TMapping> columns)
         {
-            var constructorParamColumnNames = TryGetConstructorParameterListColumns(constructorInfo, columns);
-            if(constructorParamColumnNames == null) return null;
+            var constructorParamColumns = TryGetConstructorParameterListColumns(constructorInfo, columns);
+            if (constructorParamColumns == null) return null;
 
-            var remainingColumns = columns.Values.Where(c => c.CanDeserialise && !constructorParamColumnNames.Contains(c.Name)).ToArray();
+            var remainingColumns = columns.Values.Except(constructorParamColumns).Where(c => c.CanDeserialise).ToArray();
 
-            return new Factory(constructorInfo, constructorParamColumnNames, remainingColumns);
+            return new Factory(constructorInfo, constructorParamColumns, remainingColumns);
         }
 
-        private static string[] TryGetConstructorParameterListColumns(ConstructorInfo constructorInfo, Dictionary<string, INamePropertyMapping<TEntity>> columns)
+        private static TMapping[] TryGetConstructorParameterListColumns(ConstructorInfo constructorInfo, Dictionary<string, TMapping> columns)
         {
             var parameters = constructorInfo.GetParameters();
-            var paramColumnNames = new List<string>();
+            var paramColumnNames = new List<TMapping>();
             foreach(var parameter in parameters)
             {
-                INamePropertyMapping<TEntity> mapping;
+                TMapping mapping;
                 if(!columns.TryGetValue(parameter.Name, out mapping)) return null;
                 if(mapping.Type != parameter.ParameterType) return null;
-                paramColumnNames.Add(mapping.Name);
+                paramColumnNames.Add(mapping);
             }
             return paramColumnNames.ToArray();
         }
 
-        public TEntity ReadRecord(Func<string, object> record)
+
+        public TEntity ReadRecord(Action<TMapping, Action<object>> copy)
         {
-            return factory.Create(record);
+            return factory.Create(copy, GetterFromCopier(copy));
         }
 
-        public IEnumerable<string> RequiredNames
+
+        public TEntity ReadRecord(Action<TMapping, Action<object>> copy, Func<TMapping, object> get)
+        {
+            return factory.Create(copy, get);
+        }
+
+
+        private static readonly object UNSET = new object();
+        private static Func<TMapping, object> GetterFromCopier(Action<TMapping, Action<object>> copier)
+        {
+            return c =>
+                {
+                    object value = UNSET;
+                    copier(c, v => value = v);
+                    if(ReferenceEquals(value, UNSET)) throw new InvalidOperationException(String.Format("Unable to read value for required property {0}", c.PropertyName));
+                    return value;
+                };
+        }
+
+
+        public TEntity ReadRecord(Func<TMapping, object> get)
+        {
+            return factory.Create((m, set) => set(get(m)), get);
+        }
+
+        public IEnumerable<TSelector> RequiredNames
         {
             get { return factory.RequiredNames; }
         }

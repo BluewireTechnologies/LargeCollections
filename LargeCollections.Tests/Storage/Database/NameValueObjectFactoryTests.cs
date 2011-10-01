@@ -49,7 +49,7 @@ namespace LargeCollections.Tests.Storage.Database
         public void CanDeserialiseWritableProperty()
         {   
             var mappings = new INamePropertyMapping<SimpleEntity>[] {  new ColumnPropertyMapping<SimpleEntity, string>("source", e => e.StringProperty,SqlDbType.Variant) };
-            var factory = new NameValueObjectFactory<SimpleEntity>(mappings);
+            var factory = new NameValueObjectFactory<string, SimpleEntity>(mappings);
             var entity = factory.ReadRecord(s => "Test Value");
 
             Assert.AreEqual("Test Value", entity.StringProperty);
@@ -59,7 +59,7 @@ namespace LargeCollections.Tests.Storage.Database
         public void CanDeserialiseWritableField()
         {   
             var mappings = new INamePropertyMapping<SimpleEntity>[] {  new ColumnPropertyMapping<SimpleEntity, int>("source", e => e.IntField, SqlDbType.Variant) };
-            var factory = new NameValueObjectFactory<SimpleEntity>(mappings);
+            var factory = new NameValueObjectFactory<string, SimpleEntity>(mappings);
             var entity = factory.ReadRecord(s => 1);
 
             Assert.AreEqual(1, entity.IntField);
@@ -69,7 +69,7 @@ namespace LargeCollections.Tests.Storage.Database
         public void CannotDeserialiseUnwritableField()
         {   
             var mappings = new INamePropertyMapping<SimpleEntity>[] {  new ColumnPropertyMapping<SimpleEntity, string>("source", e => e.ReadOnlyStringField, SqlDbType.Variant) };
-            var factory = new NameValueObjectFactory<SimpleEntity>(mappings);
+            var factory = new NameValueObjectFactory<string, SimpleEntity>(mappings);
             var entity = factory.ReadRecord(s => "Test Value");
 
             Assert.AreNotEqual("Test Value", entity.ReadOnlyStringField);
@@ -80,7 +80,7 @@ namespace LargeCollections.Tests.Storage.Database
         public void CannotDeserialiseUnwritableProperty()
         {   
             var mappings = new INamePropertyMapping<SimpleEntity>[] {  new ColumnPropertyMapping<SimpleEntity, int>("source", e => e.ReadOnlyIntProperty, SqlDbType.Variant) };
-            var factory = new NameValueObjectFactory<SimpleEntity>(mappings);
+            var factory = new NameValueObjectFactory<string, SimpleEntity>(mappings);
             var entity = factory.ReadRecord(s => 1);
 
             Assert.AreNotEqual(1, entity.ReadOnlyIntProperty);
@@ -90,7 +90,7 @@ namespace LargeCollections.Tests.Storage.Database
         public void CanDeserialiseWithConstructorParameterMatchingNameAndType()
         {   
             var mappings = new INamePropertyMapping<EntityWithConstructor>[] {  new ColumnPropertyMapping<EntityWithConstructor, int>("source", e => e.IntField, SqlDbType.Variant) };
-            var factory = new NameValueObjectFactory<EntityWithConstructor>(mappings);
+            var factory = new NameValueObjectFactory<string, EntityWithConstructor>(mappings);
             var entity = factory.ReadRecord(s => 1);
 
             Assert.AreEqual(1, entity.ConstructorIntField);
@@ -102,7 +102,7 @@ namespace LargeCollections.Tests.Storage.Database
         public void CannotDeserialiseWithConstructorParameterMatchingNameButNotType()
         {   
             var mappings = new INamePropertyMapping<EntityWithConstructor>[] {  new ColumnPropertyMapping<EntityWithConstructor, string>("source", e => e.StringProperty, SqlDbType.Variant) };
-            var factory = new NameValueObjectFactory<EntityWithConstructor>(mappings);
+            var factory = new NameValueObjectFactory<string, EntityWithConstructor>(mappings);
             var entity = factory.ReadRecord(s => "test");
         }
 
@@ -112,7 +112,7 @@ namespace LargeCollections.Tests.Storage.Database
         public void CannotDeserialiseWithoutAllConstructorParametersSatisfied()
         {   
             var mappings = new INamePropertyMapping<EntityWithUnsatisfiedConstructor>[] {  new ColumnPropertyMapping<EntityWithUnsatisfiedConstructor, int>("source", e => e.IntField, SqlDbType.Variant) };
-            var factory = new NameValueObjectFactory<EntityWithUnsatisfiedConstructor>(mappings);
+            var factory = new NameValueObjectFactory<string, EntityWithUnsatisfiedConstructor>(mappings);
             var entity = factory.ReadRecord(s => 1);
         }
     }

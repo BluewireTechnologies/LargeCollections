@@ -132,6 +132,7 @@
     <Compile Include="Storage\Database\BackingStoreException.cs" />
     <Compile Include="Storage\Database\ColumnPropertyMapping.cs" />
     <Compile Include="Storage\Database\NameValueObjectFactory.cs" />
+    <Compile Include="Storage\Database\PropertyMappingBase.cs" />
     <Compile Include="Storage\Database\TableReader.cs" />
     <Compile Include="Storage\Database\DatabaseTableSchema.cs" />
     <Compile Include="Storage\Database\IColumnPropertyMapping.cs" />

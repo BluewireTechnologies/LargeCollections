@@ -14,7 +14,7 @@ namespace LargeCollections.Storage.Database
 
         TableWriter<T> GetWriter(SqlConnection cn, string tableName);
 
-        NameValueObjectFactory<T> GetRecordFactory();
+        NameValueObjectFactory<string, T> GetRecordFactory();
     }
 
     public class DatabaseTableSchema<T> : IDatabaseTableSchema<T>
@@ -111,9 +111,9 @@ namespace LargeCollections.Storage.Database
         }
 
 
-        public NameValueObjectFactory<T> GetRecordFactory()
+        public NameValueObjectFactory<string, T> GetRecordFactory()
         {
-            return new NameValueObjectFactory<T>(this);
+            return new NameValueObjectFactory<string, T>(this);
         }
     }
 }
