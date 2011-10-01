@@ -12,10 +12,10 @@ namespace LargeCollections.Storage.Database
             this.get = get.Compile();
             this.set = set;
             var member = Utils.GetReferencedMemberOrNull(get);
-            if(member != null)
+            if (member != null)
             {
                 PropertyName = member.Name;
-                if(this.set == null)
+                if (this.set == null)
                 {
                     this.set = Utils.TryCreateSetter<T, TProp>(member);
                 }
@@ -31,18 +31,16 @@ namespace LargeCollections.Storage.Database
         }
 
         public Type Type { get { return typeof(TProp); } }
-        public string PropertyName {get; private set;}
+        public string PropertyName { get; private set; }
 
         public object Get(T source)
         {
             return get(source);
         }
-        
-        public TypeConverter TypeConverter { get; set; }
 
         public void Set(T target, object value)
         {
-            if(set == null) throw new ReadOnlyException(String.Format("Property mapping for '{0}' is read-only.", PropertyName));
+            if (set == null) throw new ReadOnlyException(String.Format("Property mapping for '{0}' is read-only.", PropertyName));
             set(target, (TProp)value);
         }
     }
