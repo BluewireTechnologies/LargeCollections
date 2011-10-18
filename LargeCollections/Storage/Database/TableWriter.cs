@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace LargeCollections.Storage.Database
 {
-    public class TableWriter<T> : IDisposable
+    public interface IEntityWriter<in T> : IDisposable
+    {
+        int Write(IEnumerable<T> items);
+        int Write(T item);
+    }
+
+    public class TableWriter<T> : IEntityWriter<T>
     {
         public TableWriter(SqlConnection cn, List<IColumnPropertyMapping<T>> columns, string tableName)
         {

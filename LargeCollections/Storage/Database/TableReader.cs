@@ -4,7 +4,19 @@ using System.Data;
 
 namespace LargeCollections.Storage.Database
 {
-    public class TableReader<T> : IEnumerator<T>
+    public interface IEntityReader<out T> : IEnumerator<T>
+    {
+        /// <summary>
+        /// Reads the entire resultset as an IEnumerable.
+        /// </summary>
+        /// <remarks>
+        /// BEWARE: This is reading a single-pass IEnumerator. Ensure that any operations applied to the IEnumerable do not perform multiple passes.
+        /// </remarks>
+        /// <returns></returns>
+        IEnumerable<T> ReadAll();
+    }
+
+    public class TableReader<T> : IEntityReader<T>
     {
         private readonly IDataReader reader;
         private readonly NameValueObjectFactory<string, T> objectFactory;
