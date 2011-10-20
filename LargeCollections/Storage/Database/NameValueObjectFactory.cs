@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Reflection;
 
@@ -20,10 +19,15 @@ namespace LargeCollections.Storage.Database
 
         public NameValueObjectFactory(IEnumerable<TMapping> columns)
         {
-            var columnsByProperty = columns.Where(c => c.PropertyName != null).ToDictionary(c => c.PropertyName, StringComparer.InvariantCultureIgnoreCase);
+            var propertyColumns = columns.Where(c => c.PropertyName != null);
+            var duplicateProperties = propertyColumns.GroupBy(c => c.PropertyName).Where(c => c.Count() > 1);
+            if (duplicateProperties.Any())
+            {
+                throw new ArgumentException(String.Format("Duplicate property mappings for type '{0}': {1}", typeof(TEntity), String.Join(", ", duplicateProperties.Select(p => p.Key).ToArray())));
+            }
+            var columnsByProperty = propertyColumns.ToDictionary(c => c.PropertyName, StringComparer.InvariantCultureIgnoreCase);
             this.factory = typeof(TEntity).GetConstructors().Select(c => TryCreateFactory(c, columnsByProperty)).FirstOrDefault();
-            if(factory == null) throw new InvalidOperationException("Could not generate a deserialiser for type '{0}'. No viable constructor could be found.");
-            
+            if(factory == null) throw new InvalidOperationException(String.Format("Could not generate a deserialiser for type '{0}'. No viable constructor could be found.", typeof(TEntity)));
         }
 
         class Factory
