@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;DEBUG_REFERENCE_COUNTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -52,10 +52,14 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
 <<<<<<< HEAD
+<<<<<<< HEAD
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
 =======
     <OutputPath>..\..\..\</OutputPath>
+=======
+    <OutputPath>bin\Release\</OutputPath>
+>>>>>>> Fixed LargeCollections projects to write binaries to the Lib directory correctly.
     <DefineConstants>TRACE;DEBUG_REFERENCE_COUNTS</DefineConstants>
 >>>>>>> Turned on reference count tracing in LargeCollections.
     <ErrorReport>prompt</ErrorReport>
@@ -182,8 +186,7 @@
   <Target Name="BeforeBuild">
     <CallTarget Targets="BeforeProjectBuild" />
   </Target>
-  <!--
   <Target Name="AfterBuild">
+	<CallTarget Targets="CopyCommonLibrary" />
   </Target>
-  -->
 </Project>

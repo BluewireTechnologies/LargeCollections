@@ -106,8 +106,7 @@
   <Target Name="BeforeBuild">
     <CallTarget Targets="BeforeProjectBuild" />
   </Target>
-  <!--
   <Target Name="AfterBuild">
+	<CallTarget Targets="CopyCommonLibrary" />
   </Target>
-  -->
 </Project>
