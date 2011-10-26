@@ -37,7 +37,14 @@ namespace LargeCollections.Collections
         private void EndWrite()
         {
             if (writer == null) return;
-            writer.Dispose();
+            try
+            {
+                writer.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw new BackingStoreException("Could not complete bulk insert.", ex);
+            }
         }
 
         protected void CloseUnderlyingWriter()
