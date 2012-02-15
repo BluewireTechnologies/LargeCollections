@@ -41,7 +41,21 @@ namespace LargeCollections.Storage.Database
         public void Set(T target, object value)
         {
             if (set == null) throw new ReadOnlyException(String.Format("Property mapping for '{0}' is read-only.", PropertyName));
-            set(target, (TProp)value);
+
+            set(target, HandleCastExceptions(value));
+        }
+
+        private TProp HandleCastExceptions(object value)
+        {
+            try
+            {
+                return (TProp)value;
+            }
+            catch (Exception ex)
+            {
+                var typeOfValue = ReferenceEquals(value, null) ? "<null>" : String.Format("object of type {0}", value.GetType());
+                throw new InvalidCastException(String.Format("Cannot cast {0} to {1}", typeOfValue, Type.Name), ex);
+            }
         }
     }
 }
