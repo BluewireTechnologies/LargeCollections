@@ -35,21 +35,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gallio, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lib\Gallio\Gallio.dll</HintPath>
+    <Reference Include="Gallio, Version=3.3.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <HintPath>..\packages\mbunit.3.3.454.0\lib\net40\Gallio.dll</HintPath>
     </Reference>
     <Reference Include="Gallio35, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Lib\Gallio\Gallio35.dll</HintPath>
     </Reference>
-    <Reference Include="MbUnit, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lib\Gallio\MbUnit.dll</HintPath>
+    <Reference Include="Gallio40, Version=3.3.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <HintPath>..\packages\mbunit.3.3.454.0\lib\net40\Gallio40.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit, Version=3.3.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <HintPath>..\packages\mbunit.3.3.454.0\lib\net40\MbUnit.dll</HintPath>
     </Reference>
     <Reference Include="MbUnit35, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Lib\Gallio\MbUnit35.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit40, Version=3.3.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <HintPath>..\packages\mbunit.3.3.454.0\lib\net40\MbUnit40.dll</HintPath>
     </Reference>
     <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
