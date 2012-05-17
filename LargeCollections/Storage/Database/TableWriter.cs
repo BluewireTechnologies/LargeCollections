@@ -100,7 +100,7 @@ namespace LargeCollections.Storage.Database
 
             public QueueConsumerFactory(SqlConnection cn, List<IColumnPropertyMapping<T>> columns, string tableName)
             {
-                this.BulkCopy = new SqlBulkCopy(cn)
+                this.BulkCopy = new SqlBulkCopy(cn, SqlBulkCopyOptions.TableLock, null)
                 {
                     DestinationTableName = tableName,
                     BatchSize = 500
