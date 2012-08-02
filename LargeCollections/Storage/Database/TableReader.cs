@@ -36,11 +36,21 @@ namespace LargeCollections.Storage.Database
             {
                 if(!loadedCurrent)
                 {
-                    current = objectFactory.ReadRecord(f => reader[f.Name]);
+                    current = objectFactory.ReadRecord(f => ReadValueAsClrType(f.Name));
                     loadedCurrent = true;
                 }
                 return current;
             }
+        }
+
+        private object ReadValueAsClrType(string fieldName)
+        {
+            var value = reader[fieldName];
+            if (value is DBNull)
+            {
+                return null;
+            }
+            return value;
         }
 
         object System.Collections.IEnumerator.Current
