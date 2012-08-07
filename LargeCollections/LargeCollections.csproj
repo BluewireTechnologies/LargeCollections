@@ -162,6 +162,8 @@
     <Compile Include="Operations\LargeCollectionSorter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\Database\ObjectDataReader.cs" />
+    <Compile Include="Storage\IItemSerialiser.cs" />
+    <Compile Include="Storage\SerialisedSizeEstimator.cs" />
     <Compile Include="Storage\SerialiserSelector.cs" />
     <Compile Include="Operations\SetDifferenceMerge.cs" />
     <Compile Include="Operations\SetUnionSortPreservingMerge.cs" />

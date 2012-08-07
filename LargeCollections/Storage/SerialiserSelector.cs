@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace LargeCollections.Storage
 {
-    class SerialiserSelector
+    public class SerialiserSelector : IEnumerable<Type>
     {
         public SerialiserSelector()
         {
@@ -11,7 +12,7 @@ namespace LargeCollections.Storage
         }
 
         private Dictionary<Type, object> serialisers = new Dictionary<Type, object>();
-        private void Add<TItem>(IItemSerialiser<TItem> instance)
+        public void Add<TItem>(IItemSerialiser<TItem> instance)
         {
             serialisers.Add(typeof(TItem), instance);
         }
@@ -23,6 +24,16 @@ namespace LargeCollections.Storage
                 return (IItemSerialiser<T>)serialisers[typeof (T)];
             }
             return new DefaultItemSerialiser<T>();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        IEnumerator<Type> IEnumerable<Type>.GetEnumerator()
+        {
+            return serialisers.Keys.GetEnumerator();
         }
     }
 }
