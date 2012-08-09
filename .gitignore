@@ -1,0 +1,10 @@
+[Oo]bj/
+[Oo]bj-3.5/
+[Bb]in/
+*.suo
+*.user
+_ReSharper.*
+*.ReSharper
+*.resharper.user
+VersionInfo.cs
+Visual Studio 2010
