@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using LargeCollections.Resources.Diagnostics;
@@ -56,7 +57,7 @@ namespace LargeCollections.Resources
         {
         }
 
-        private IList<IDisposable> references = new List<IDisposable>();
+        private IList<IDisposable> references = new SynchronizedCollection<IDisposable>();
         
 
 #if DEBUG || DEBUG_REFERENCE_COUNTS
