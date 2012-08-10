@@ -49,17 +49,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-<<<<<<< HEAD
-<<<<<<< HEAD
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-=======
-    <OutputPath>..\..\..\</OutputPath>
-=======
-    <OutputPath>bin\Release\</OutputPath>
->>>>>>> Fixed LargeCollections projects to write binaries to the Lib directory correctly.
     <DefineConstants>TRACE;DEBUG_REFERENCE_COUNTS</DefineConstants>
->>>>>>> Turned on reference count tracing in LargeCollections.
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
