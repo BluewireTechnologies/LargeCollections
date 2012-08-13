@@ -1,0 +1,3 @@
+[submodule "build/gallio"]
+	path = build/gallio
+	url = gitolite@git.epro.com:build.gallio.git
