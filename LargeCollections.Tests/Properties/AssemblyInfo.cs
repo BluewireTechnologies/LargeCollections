@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("LargeCollections.Tests")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Bluewire large collection test library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("n/a")]
+[assembly: AssemblyCompany("Bluewire Technologies Ltd")]
 [assembly: AssemblyProduct("LargeCollections.Tests")]
-[assembly: AssemblyCopyright("Copyright © n/a 2011")]
+[assembly: AssemblyCopyright("Copyright © Bluewire Technologies 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
