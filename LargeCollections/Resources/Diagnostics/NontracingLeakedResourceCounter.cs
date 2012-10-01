@@ -9,9 +9,14 @@ namespace LargeCollections.Resources.Diagnostics
 
         public int CountLeaks()
         {
+            GCBarrier();
+            return count;
+        }
+
+        private static void GCBarrier()
+        {
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            return count;
         }
 
         public IEnumerable<IReferenceCountedResource> GetLeaks()
@@ -31,6 +36,7 @@ namespace LargeCollections.Resources.Diagnostics
 
         public void Reset()
         {
+            GCBarrier();
             count = 0;
         }
     }

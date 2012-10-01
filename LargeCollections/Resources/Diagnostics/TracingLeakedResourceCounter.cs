@@ -7,12 +7,19 @@ namespace LargeCollections.Resources.Diagnostics
 {
     public class TracingLeakedResourceCounter : ILeakedResourceCounter
     {
-        private List<IReferenceCountedResource> leakedResources = new List<IReferenceCountedResource>();
+        private readonly List<IReferenceCountedResource> leakedResources = new List<IReferenceCountedResource>();
 
         public void Leaked(IReferenceCountedResource resource)
         {
             leakedResources.Add(resource);
         }
+
+        private static void GCBarrier()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
 
         public string CaptureTrace()
         {
@@ -26,13 +33,13 @@ namespace LargeCollections.Resources.Diagnostics
 
         public IEnumerable<IReferenceCountedResource> GetLeaks()
         {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            GCBarrier();
             return leakedResources.ToArray();
         }
 
         public void Reset()
         {
+            GCBarrier();
             leakedResources.Clear();
         }
     }
