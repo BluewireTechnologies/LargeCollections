@@ -12,6 +12,7 @@ namespace LargeCollections.Storage.Database
         void CreateTable(SqlConnection cn, string tableName);
         void AddIndex(SqlConnection cn, string tableName, string columnName);
 
+        string PrimaryKey { get; }
         TableWriter<T> GetWriter(SqlConnection cn, string tableName);
 
         NameValueObjectFactory<string, T> GetRecordFactory();
@@ -81,6 +82,11 @@ namespace LargeCollections.Storage.Database
                 command.CommandText = createSql;
                 command.ExecuteNonQuery();
             }
+        }
+
+        string  IDatabaseTableSchema<T>.PrimaryKey
+        {
+            get { return primaryKey; }
         }
 
         private string FormatType(SqlDbType type, int? width)

@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using LargeCollections.Resources;
+using LargeCollections.Storage.Database;
 
 namespace LargeCollections.Collections
 {
@@ -16,12 +17,12 @@ namespace LargeCollections.Collections
             this.connection = connection;
         }
 
-        protected override IEnumerator<T> GetEnumeratorImplementation()
+        private IEnumerator<T> GetSimpleEnumeratorImplementation(string fieldName)
         {
             using (var command = connection.CreateCommand())
             {
                 command.CommandType = CommandType.Text;
-                command.CommandText = String.Format("SELECT [{0}] FROM [{1}]", BackingStore.Schema.Single().Name, BackingStore.TableName);
+                command.CommandText = String.Format("SELECT [{0}] FROM [{1}]", fieldName, BackingStore.TableName);
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -31,6 +32,35 @@ namespace LargeCollections.Collections
                     }
                 }
             }
+        }
+
+        private IEnumerator<T> GetMultiColumnEnumeratorImplementation(NameValueObjectFactory<string,T> factory)
+        {
+            using (var command = connection.CreateCommand())
+            {
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = String.Format("SELECT [{0}] FROM [{1}]", String.Join("], [", factory.RequiredNames.ToArray()), BackingStore.TableName);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    using (var tableReader = new TableReader<T>(reader, factory))
+                    {
+                        while (tableReader.MoveNext())
+                        {
+                            yield return tableReader.Current;
+                        }
+                    }
+                }
+            }
+        }
+
+        protected override IEnumerator<T> GetEnumeratorImplementation()
+        {
+            var factory = BackingStore.Schema.GetRecordFactory();
+            if (factory.RequiredNames.Count() == 1) return GetSimpleEnumeratorImplementation(factory.RequiredNames.Single());
+
+            return GetMultiColumnEnumeratorImplementation(factory);
         }
     }
 }
