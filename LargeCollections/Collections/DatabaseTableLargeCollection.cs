@@ -12,9 +12,26 @@ namespace LargeCollections.Collections
     {
         private readonly SqlConnection connection;
 
+        private readonly bool readTableUsingCasts;
+
         public DatabaseTableLargeCollection(SqlConnection connection, DatabaseTableReference<T> reference, long itemCount) : base(reference, itemCount)
         {
+            readTableUsingCasts = ShouldUseCastsForReadingSingleColumn(reference.Schema);
             this.connection = connection;
+        }
+
+        private static bool ShouldUseCastsForReadingSingleColumn(IDatabaseTableSchema<T> schema)
+        {
+            var factory = schema.GetRecordFactory();
+            if(!factory.IsValid)
+            {
+                // A collection backed by a single-column table can try to cast instead of using a record factory, if
+                // the field mapping doesn't define deserialisation.
+                if (schema.Count() == 1 && !schema.Single().CanDeserialise) return true;
+
+                factory.Validate();
+            }
+            return false;
         }
 
         private IEnumerator<T> GetSimpleEnumeratorImplementation(string fieldName)
@@ -38,7 +55,6 @@ namespace LargeCollections.Collections
         {
             using (var command = connection.CreateCommand())
             {
-
                 command.CommandType = CommandType.Text;
                 command.CommandText = String.Format("SELECT [{0}] FROM [{1}]", String.Join("], [", factory.RequiredNames.ToArray()), BackingStore.TableName);
 
@@ -57,9 +73,12 @@ namespace LargeCollections.Collections
 
         protected override IEnumerator<T> GetEnumeratorImplementation()
         {
+            if (readTableUsingCasts)
+            {
+                return GetSimpleEnumeratorImplementation(BackingStore.Schema.Single().Name);
+            }
             var factory = BackingStore.Schema.GetRecordFactory();
-            if (factory.RequiredNames.Count() == 1) return GetSimpleEnumeratorImplementation(factory.RequiredNames.Single());
-
+            
             return GetMultiColumnEnumeratorImplementation(factory);
         }
     }

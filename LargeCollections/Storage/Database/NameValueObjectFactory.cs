@@ -15,7 +15,7 @@ namespace LargeCollections.Storage.Database
 
     public class NameValueObjectFactory<TSelector, TEntity, TMapping> where TMapping : IPropertyMapping<TSelector, TEntity>
     {
-        private Factory factory;
+        private readonly Factory factory;
 
         public NameValueObjectFactory(IEnumerable<TMapping> columns)
         {
@@ -27,8 +27,15 @@ namespace LargeCollections.Storage.Database
             }
             var columnsByProperty = propertyColumns.ToDictionary(c => c.PropertyName, StringComparer.InvariantCultureIgnoreCase);
             this.factory = typeof(TEntity).GetConstructors().Select(c => TryCreateFactory(c, columnsByProperty)).FirstOrDefault();
-            if(factory == null) throw new InvalidOperationException(String.Format("Could not generate a deserialiser for type '{0}'. No viable constructor could be found.", typeof(TEntity)));
         }
+
+        public void Validate()
+        {
+            if (factory == null) throw new InvalidOperationException(String.Format("Could not generate a deserialiser for type '{0}'. No viable constructor could be found.", typeof(TEntity)));
+        }
+
+        public bool IsValid { get { return factory != null; } }
+ 
 
         class Factory
         {
@@ -86,12 +93,14 @@ namespace LargeCollections.Storage.Database
 
         public TEntity ReadRecord(Action<TMapping, Action<object>> copy)
         {
+            Validate();
             return factory.Create(copy, GetterFromCopier(copy));
         }
 
 
         public TEntity ReadRecord(Action<TMapping, Action<object>> copy, Func<TMapping, object> get)
         {
+            Validate();
             return factory.Create(copy, get);
         }
 
@@ -111,12 +120,13 @@ namespace LargeCollections.Storage.Database
 
         public TEntity ReadRecord(Func<TMapping, object> get)
         {
+            Validate();
             return factory.Create((m, set) => set(get(m)), get);
         }
 
         public IEnumerable<TSelector> RequiredNames
         {
-            get { return factory.RequiredNames; }
+            get { return IsValid ? factory.RequiredNames : Enumerable.Empty<TSelector>(); }
         }
     }
 }

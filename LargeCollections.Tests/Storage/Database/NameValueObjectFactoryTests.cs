@@ -115,5 +115,22 @@ namespace LargeCollections.Tests.Storage.Database
             var factory = new NameValueObjectFactory<string, EntityWithUnsatisfiedConstructor>(mappings);
             var entity = factory.ReadRecord(s => 1);
         }
+
+        [Test]
+        public void CanConstructFactoryForTypeWithNoValidConstructor()
+        {
+            var mappings = new INamePropertyMapping<int>[] { new ColumnPropertyMapping<int, int>("source", e => e, SqlDbType.Variant) };
+            var factory = new NameValueObjectFactory<string, int>(mappings);
+            Assert.IsFalse(factory.IsValid);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CannotDeserialiseTypeWithNoValidConstructor()
+        {
+            var mappings = new INamePropertyMapping<int>[] { new ColumnPropertyMapping<int, int>("source", e => e, SqlDbType.Variant) };
+            var factory = new NameValueObjectFactory<string, int>(mappings);
+            factory.ReadRecord(s => 1);
+        }
     }
 }
