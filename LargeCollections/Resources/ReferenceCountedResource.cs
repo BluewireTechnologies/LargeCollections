@@ -125,10 +125,6 @@ namespace LargeCollections.Resources
                 {
                     resource.Release(this);
                 }
-                else
-                {
-                    throw new ObjectDisposedException("Reference already disposed.");
-                }
             }
         }
     }
