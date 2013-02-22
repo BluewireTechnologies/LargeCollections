@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using LargeCollections.Resources.Diagnostics;
 using log4net;
 
 namespace LargeCollections.Resources
 {
+    /// <summary>
+    /// Reference-counting marker for a resource.
+    /// Threadsafe, although instances returned from Acquire() are not.
+    /// </summary>
     public class ReferenceCountedResource : IReferenceCountedResource
     {
         private static ILog log = LogManager.GetLogger(typeof (ReferenceCountedResource));
@@ -22,10 +27,18 @@ namespace LargeCollections.Resources
 
         private bool released;
 
+        /// <summary>
+        /// Acquire an instance of this resource, for use on the calling thread.
+        /// DO NOT share instances between threads.
+        /// </summary>
+        /// <returns></returns>
         public IDisposable Acquire()
         {
-            if(released) throw new ObjectDisposedException(this.ToString(), "Resource has been released");
-            return AddReference(new Reference(this));
+            lock (this)
+            {
+                if (released) throw new ObjectDisposedException(this.ToString(), "Resource has been released");
+                return AddReference(new Reference(this));
+            }
         }
 
         private IDisposable AddReference(IDisposable reference)
@@ -38,17 +51,21 @@ namespace LargeCollections.Resources
 
         private void Release(IDisposable reference)
         {
-            if (released) throw new ObjectDisposedException(this.ToString(), "Resource has been released");
-            references.Remove(reference);
-            RefCount--;
-            log.DebugFormat("Released resource : {0}", this);
-            if (RefCount == 0)
+            lock (this)
             {
-                log.DebugFormat("Disposing resource : {0}", this);
-                released = true;
-                GC.SuppressFinalize(this);
-                CleanUp();
+                if (released) throw new ObjectDisposedException(this.ToString(), "Resource has been released");
+                references.Remove(reference);
+                RefCount--;
+                log.DebugFormat("Released resource : {0}", this);
+
+                if (RefCount != 0) return; // Reference is still live.
+
+                this.released = true;
             }
+            // This must be done out of the lock, since cleanup may take time.
+            log.DebugFormat("Disposing resource : {0}", this);
+            GC.SuppressFinalize(this);
+            CleanUp();
         }
 
         public readonly string Trace;
@@ -57,7 +74,7 @@ namespace LargeCollections.Resources
         {
         }
 
-        private IList<IDisposable> references = new SynchronizedCollection<IDisposable>();
+        private readonly IList<IDisposable> references = new SynchronizedCollection<IDisposable>();
         
 
 #if DEBUG || DEBUG_REFERENCE_COUNTS
@@ -81,10 +98,19 @@ namespace LargeCollections.Resources
             }
         }
 
+        /// <summary>
+        /// Reference to a Reference-Counted Resource.
+        /// NOT guaranteed threadsafe. These must NEVER be shared across threads.
+        /// </summary>
+        /// <remarks>
+        /// Actually this probably is threadsafe, but you're still not meant to share it
+        /// across threads because it makes it more difficult to ensure it's only disposed
+        /// once.
+        /// </remarks>
         class Reference : IDisposable
         {
             private readonly ReferenceCountedResource resource;
-            private bool disposed;
+            private int disposed;
             public Reference(ReferenceCountedResource resource)
             {
                 this.resource = resource;
@@ -95,10 +121,13 @@ namespace LargeCollections.Resources
 
             public void Dispose()
             {
-                if(!disposed)
+                if (Interlocked.Increment(ref disposed) == 1)
                 {
-                    disposed = true;
                     resource.Release(this);
+                }
+                else
+                {
+                    throw new ObjectDisposedException("Reference already disposed.");
                 }
             }
         }
