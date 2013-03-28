@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 
 namespace LargeCollections.Storage
 {
@@ -11,11 +12,10 @@ namespace LargeCollections.Storage
             stream.Write(bytes, 0, bytes.Length);
         }
 
-        [ThreadStatic]
-        private byte[] loadGuid;
+        private static readonly ThreadLocal<byte[]> perThreadByteArray = new ThreadLocal<byte[]>(() => new byte[16]);
         public Guid Read(Stream stream)
         {
-            loadGuid = loadGuid ?? new byte[16];
+            var loadGuid = perThreadByteArray.Value;
             if (stream.Read(loadGuid, 0, loadGuid.Length) < loadGuid.Length)
             {
                 throw new InvalidOperationException("Read past end of stream");

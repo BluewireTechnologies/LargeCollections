@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using LargeCollections.Collections;
 using LargeCollections.Storage;
 
@@ -132,15 +133,14 @@ namespace LargeCollections
         }
 
         // simplest way to make the cache threadsafe
-        [ThreadStatic]
-        private IDictionary<Type, object> operatorCache = new Dictionary<Type, object>();
+        private readonly ThreadLocal<IDictionary<Type, object>> operatorCache = new ThreadLocal<IDictionary<Type,object>>(() => new Dictionary<Type, object>());
         public T GetInstance<T>(Func<T> create)
         {
             object operatorInstance;
-            if (!operatorCache.TryGetValue(typeof(T), out operatorInstance))
+            if (!operatorCache.Value.TryGetValue(typeof(T), out operatorInstance))
             {
                 operatorInstance = create();
-                operatorCache[typeof (T)] = operatorInstance;
+                operatorCache.Value[typeof (T)] = operatorInstance;
             }
             return (T)operatorInstance;
         }

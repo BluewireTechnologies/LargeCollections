@@ -88,5 +88,29 @@ namespace LargeCollections.Tests.Storage
                 }
             }
         }
+
+        [Test, ThreadedRepeat(20)]
+        public void IsThreadsafe()
+        {
+            for (var i = 0; i < 50; i++)
+            {
+                AssertRoundTrippable(Guid.NewGuid());
+            }
+        }
+
+        private void AssertRoundTrippable(Guid guid)
+        {
+            Assert.AreEqual(guid, RoundTrip(guid));
+        }
+
+        private Guid RoundTrip(Guid guid)
+        {
+            using (var stream = new MemoryStream())
+            {
+                serialiser.Write(stream, guid);
+                stream.Position = 0;
+                return serialiser.Read(stream);
+            }
+        }
     }
 }
