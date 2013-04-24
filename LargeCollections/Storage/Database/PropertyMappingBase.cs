@@ -7,7 +7,7 @@ namespace LargeCollections.Storage.Database
 {
     public class PropertyMappingBase<T, TProp>
     {
-        public PropertyMappingBase(Expression<Func<T, TProp>> get, Action<T, TProp> set)
+        public PropertyMappingBase(Expression<Func<T, TProp>> get, Action<T, TProp> set, string propertyName = null)
         {
             this.get = get.Compile();
             this.set = set;
@@ -20,10 +20,11 @@ namespace LargeCollections.Storage.Database
                     this.set = Utils.TryCreateSetter<T, TProp>(member);
                 }
             }
+            if (propertyName != null) PropertyName = propertyName;
         }
 
-        private Func<T, TProp> get;
-        private Action<T, TProp> set;
+        private readonly Func<T, TProp> get;
+        private readonly Action<T, TProp> set;
 
         public bool CanDeserialise
         {
