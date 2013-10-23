@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using LargeCollections.Collections;
+using LargeCollections.Linq;
 using LargeCollections.Operations;
 using MbUnit.Framework;
 
@@ -10,10 +11,7 @@ namespace LargeCollections.Tests.Operations
     {
         private static IEnumerator<int> GetCollection(params int[] items)
         {
-            using(var collection = InMemoryAccumulator<int>.From(items))
-            {
-                return collection.GetEnumerator();
-            }
+            return InMemoryAccumulator<int>.From(items).UseSafely(c => c.GetEnumerator());
         }
 
         [Test]

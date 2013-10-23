@@ -12,4 +12,9 @@ Large Collections Library
    * If the class disposes the underlying collection, nothing else must do that, and the class must not live longer than the underlying collection.
       For example: using(var sorted = GetEnumerator().UsesSortOrder(Comparer<T>.Default)) { ... }
    * If the class does not dispose the underlying collection, it should acquire references to its resources and dispose them at the appropriate time.
-      For example: using(var collection = accumulator.Complete()) { return new SinglePassLargeCollection<T>(collection); }
+      For example: return accumulator.Complete().UseSafely(a => new SinglePassLargeCollection<T>(a));
+
+ * Be very wary of disjoint 'using' blocks. Returning a disposable instance from inside a 'using' block is generally unsafe since
+   the returned disposable will never be disposed if the 'used' instance's Dispose() method throws. This is obvious when one considers
+   how 'using' translates to try..finally.
+ * If you must return a disposable from a 'using' block, replace the block with a .UseSafely(u => ...) call instead.

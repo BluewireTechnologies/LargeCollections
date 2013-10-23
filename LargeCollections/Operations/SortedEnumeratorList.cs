@@ -28,7 +28,7 @@ namespace LargeCollections.Operations
                 Comparison = this.enumerators.GetCommonSortOrder();
                 SortOrder = new EnumeratorComparer(Comparison);
                 // initialise the list.
-                sortedList = new List<IEnumerator<T>>(this.enumerators.Select(e => new CachingEnumerator<T>(e)).Cast<IEnumerator<T>>());
+                sortedList = new List<IEnumerator<T>>(this.enumerators.Select(e => new CachingEnumerator<T>(e)));
             }
             catch
             {

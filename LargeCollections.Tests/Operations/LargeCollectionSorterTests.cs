@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using LargeCollections.Collections;
@@ -186,38 +187,85 @@ namespace LargeCollections.Tests.Operations
             }
         }
 
-        class EnumeratorDecorator : IEnumerator<int>, IHasUnderlying
+        [Test]
+        [ExpectedException(typeof(IOException))]
+        public void ResourcesAreCleanedUpCorrectly_If_ExceptionOccursDuringSourceDisposal()
         {
-            private readonly IEnumerator<int> enumerator;
-            public void Dispose()
+            var sorter = GetSorter(5, MockSelector().Object);
+
+            using (var collection = MultipleBatches())
+            {
+                try
+                {
+                    using (var result = sorter.Sort(new EnumeratorThrowsWhenDisposing<int>(collection.GetEnumerator()), Comparer<int>.Default))
+                    {
+                        result.MoveNext();
+                    }
+                }
+                finally
+                {
+                    Utils.AssertReferencesDisposed();
+                }
+            }
+        }
+
+        private class EnumeratorDecoratorBase<T> : IEnumerator<T>
+        {
+            private readonly IEnumerator<T> enumerator;
+
+            public EnumeratorDecoratorBase(IEnumerator<T> enumerator)
+            {
+                this.enumerator = enumerator;
+            }
+
+            public virtual void Dispose()
             {
                 this.enumerator.Dispose();
             }
 
-            public bool MoveNext()
+            public virtual bool MoveNext()
             {
                 return this.enumerator.MoveNext();
             }
 
-            public void Reset()
+            public virtual void Reset()
             {
                 this.enumerator.Reset();
             }
 
-            public int Current
+            public virtual T Current
             {
                 get { return this.enumerator.Current; }
-            }
-
-            public EnumeratorDecorator(IEnumerator<int> enumerator)
-            {
-                this.enumerator = enumerator;
             }
 
             object IEnumerator.Current
             {
                 get { return Current; }
             }
+        }
+
+
+        class EnumeratorThrowsWhenDisposing<T> : EnumeratorDecoratorBase<T>
+        {
+            public EnumeratorThrowsWhenDisposing(IEnumerator<T> enumerator) : base(enumerator)
+            {
+            }
+
+            public override void Dispose()
+            {
+                throw new IOException();
+            }
+        }
+
+        class EnumeratorDecorator : EnumeratorDecoratorBase<int>, IHasUnderlying
+        {
+            private readonly IEnumerator<int> enumerator;
+            
+            public EnumeratorDecorator(IEnumerator<int> enumerator) : base(enumerator)
+            {
+                this.enumerator = enumerator;
+            }
+
 
             public object Underlying { get { return enumerator; } }
         }

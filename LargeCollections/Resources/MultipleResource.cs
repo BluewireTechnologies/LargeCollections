@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using LargeCollections.Linq;
 
 namespace LargeCollections.Resources
 {
@@ -21,7 +22,7 @@ namespace LargeCollections.Resources
 
         public IDisposable Acquire()
         {
-            return new DisposableList<IDisposable>(resources.Select(r => r.Acquire()));
+            return new DisposableList<IDisposable>(resources.EvaluateSafely(r => r.Acquire()));
         }
     }
 }

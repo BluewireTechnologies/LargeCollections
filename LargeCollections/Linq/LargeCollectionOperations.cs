@@ -29,10 +29,7 @@ namespace LargeCollections.Linq
 
         public IDisposableEnumerable<T> Buffer<T>(IEnumerable<T> enumerable)
         {
-            using(var enumerator = enumerable.GetEnumerator())
-            {
-                return Buffer(enumerator);
-            }
+            return enumerable.GetEnumerator().UseSafely(Buffer);
         }
 
         public IDisposableEnumerable<T> Buffer<T>(IEnumerator<T> enumerator)
@@ -47,10 +44,7 @@ namespace LargeCollections.Linq
 
         public IEnumerator<T> BufferOnce<T>(IEnumerator<T> enumerator)
         {
-            using(var collection = Buffer(enumerator))
-            {
-                return collection.GetEnumerator();
-            }
+            return Buffer(enumerator).UseSafely(c => c.GetEnumerator());
         }
 
         /// <summary>

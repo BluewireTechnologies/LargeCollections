@@ -118,5 +118,22 @@ namespace LargeCollections.Tests.Linq
                 enumerator.Verify(e => e.Dispose());
             }
         }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Buffer_CleansUpResources_If_EnumeratorDisposalThrowsException()
+        {
+            var enumerator = new Mock<IEnumerator<int>>();
+            enumerator.Setup(e => e.Dispose()).Throws(new InvalidOperationException());
+
+            try
+            {
+                var buffered = enumerator.Object.BufferInMemory();
+            }
+            finally
+            {
+                enumerator.Verify(e => e.Dispose());
+            }
+        }
     }
 }

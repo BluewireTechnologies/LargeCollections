@@ -8,17 +8,14 @@ namespace LargeCollections.Operations
     {
         protected override IEnumerator<T> MergeEnumerators(SortedEnumeratorList<T> sortedEnumerators)
         {
-            using (sortedEnumerators)
+            if (sortedEnumerators.AdvanceAll())
             {
-                if (sortedEnumerators.AdvanceAll())
+                do
                 {
-                    do
-                    {
-                        var first = sortedEnumerators.First();
-                        yield return first.Current;
-                        sortedEnumerators.Advance(first);
-                    } while (sortedEnumerators.Any());
-                }
+                    var first = sortedEnumerators.First();
+                    yield return first.Current;
+                    sortedEnumerators.Advance(first);
+                } while (sortedEnumerators.Any());
             }
         }
     }

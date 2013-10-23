@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LargeCollections.Linq;
 
 namespace LargeCollections.Operations
 {
@@ -20,7 +21,7 @@ namespace LargeCollections.Operations
 
         public IEnumerator<T> GetEnumerator()
         {
-            return merger.Merge(enumerables.Select(e => e.GetEnumerator()));
+            return merger.Merge(enumerables.EvaluateSafely(e => e.GetEnumerator()));
         }
 
         IEnumerator IEnumerable.GetEnumerator()
