@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace LargeCollections.Resources.Diagnostics
 {
     public class TracingLeakedResourceCounter : ILeakedResourceCounter
     {
+        public void SetCrashLogDirectory(string crashLogDirectory)
+        {
+            crashLog = new CrashLog(crashLogDirectory);
+        }
+
+        private volatile CrashLog crashLog;
+
         private readonly List<IReferenceCountedResource> leakedResources = new List<IReferenceCountedResource>();
 
         public void Leaked(IReferenceCountedResource resource)
@@ -41,6 +49,21 @@ namespace LargeCollections.Resources.Diagnostics
         {
             GCBarrier();
             leakedResources.Clear();
+        }
+
+        public void OnFinalizerCrash(Exception exception, ReferenceCountedResource resource, IEnumerable<ITracedReference> references)
+        {
+            try
+            {
+                var log = crashLog;
+                if (log == null) return;
+                log.Log(exception, resource, references.ToArray());
+            }
+            catch(Exception ex)
+            {
+                // Already crashing if this was called.
+                Debug.Fail(String.Format("Failed to log crash details: {0}", ex.Message));
+            }
         }
     }
 }

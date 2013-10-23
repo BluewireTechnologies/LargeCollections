@@ -41,7 +41,7 @@ namespace LargeCollections.Resources
             }
         }
 
-        private IDisposable AddReference(IDisposable reference)
+        private IDisposable AddReference(Reference reference)
         {
             RefCount++;
             log.DebugFormat("Acquired resource : {0}", this);
@@ -49,7 +49,7 @@ namespace LargeCollections.Resources
             return reference;
         }
 
-        private void Release(IDisposable reference)
+        private void Release(Reference reference)
         {
             lock (this)
             {
@@ -74,7 +74,7 @@ namespace LargeCollections.Resources
         {
         }
 
-        private readonly IList<IDisposable> references = new SynchronizedCollection<IDisposable>();
+        private readonly IList<Reference> references = new SynchronizedCollection<Reference>();
         
 
 #if DEBUG || DEBUG_REFERENCE_COUNTS
@@ -93,8 +93,19 @@ namespace LargeCollections.Resources
 
                 log.DebugFormat("Resource leaked : {0}", this);
                 // really unsafe:
-                CleanUp();
-                Debug.Fail(String.Format("Resource was not released before finalisation. {0}", this));
+                try
+                {
+                    CleanUp();
+                }
+                catch (Exception ex)
+                {
+                    Diagnostics.OnFinalizerCrash(ex, this, references);
+                    throw; // Crash the application. This is intentional; shouldn't get here!
+                }
+                finally
+                {
+                    Debug.Fail(String.Format("Resource was not released before finalisation. {0}", this));
+                }
             }
         }
 
@@ -107,7 +118,7 @@ namespace LargeCollections.Resources
         /// across threads because it makes it more difficult to ensure it's only disposed
         /// once.
         /// </remarks>
-        class Reference : IDisposable
+        class Reference : IDisposable, ITracedReference
         {
             private readonly ReferenceCountedResource resource;
             private int disposed;
@@ -117,6 +128,7 @@ namespace LargeCollections.Resources
                 Trace = Diagnostics.CaptureTrace();
             }
 
+            // Public field, provided for VS debugger. Properties might be inaccessible on a finaliser thread.
             public readonly string Trace;
 
             public void Dispose()
@@ -125,6 +137,11 @@ namespace LargeCollections.Resources
                 {
                     resource.Release(this);
                 }
+            }
+
+            public string GetAcquisitionTrace()
+            {
+                return Trace;
             }
         }
     }

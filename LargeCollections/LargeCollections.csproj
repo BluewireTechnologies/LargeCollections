@@ -113,10 +113,12 @@
     <Compile Include="Operations\SortPreservingMergeBase.cs" />
     <Compile Include="Resources\DatabaseTable.cs" />
     <Compile Include="Resources\DatabaseTableReference.cs" />
+    <Compile Include="Resources\Diagnostics\CrashLog.cs" />
     <Compile Include="Resources\Diagnostics\ILeakedResourceCounter.cs" />
     <Compile Include="Resources\Diagnostics\NontracingLeakedResourceCounter.cs" />
     <Compile Include="Resources\Diagnostics\TracingLeakedResourceCounter.cs" />
     <Compile Include="Resources\DisposableResourceReference.cs" />
+    <Compile Include="Resources\IResourceReference.cs" />
     <Compile Include="Resources\MultipleResource.cs" />
     <Compile Include="Resources\ReferenceCountedResource.cs" />
     <Compile Include="Resources\TemporaryDatabaseTableReference.cs" />

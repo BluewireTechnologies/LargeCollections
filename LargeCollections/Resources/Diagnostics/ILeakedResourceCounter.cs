@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LargeCollections.Resources.Diagnostics
 {
@@ -10,5 +11,6 @@ namespace LargeCollections.Resources.Diagnostics
 
         string CaptureTrace();
         void Reset();
+        void OnFinalizerCrash(Exception exception, ReferenceCountedResource resource, IEnumerable<ITracedReference> references);
     }
 }
