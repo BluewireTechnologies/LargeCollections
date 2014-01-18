@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LargeCollections.Linq;
 using LargeCollections.Operations;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
@@ -20,11 +20,8 @@ namespace LargeCollections.Tests.Operations
             var maybeDifference = result.Take(difference.Length).ToArray();
             var maybeIntersection = result.Skip(difference.Length).ToArray();
 
-            Assert.Multiple(() =>
-            {
-                Assert.AreElementsEqualIgnoringOrder(difference, maybeDifference);
-                Assert.AreElementsEqualIgnoringOrder(intersection, maybeIntersection);
-            });
+            CollectionAssert.AreEquivalent(difference, maybeDifference);
+            CollectionAssert.AreEquivalent(intersection, maybeIntersection);
         }
 
         [Test]

@@ -1,5 +1,5 @@
 ﻿using LargeCollections.Resources;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests
 {

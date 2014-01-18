@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LargeCollections.Linq;
 using LargeCollections.Operations;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
@@ -11,12 +11,11 @@ namespace LargeCollections.Tests.Operations
     public class SortedDistinctEnumeratorTests
     {
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void SortedDistinctEnumeratorThrowsExceptionIfSetIsNotSorted()
         {
             var set = new List<int> { 1, 2, 2, 3, 5, 5, 5, 6, 7, 8, 9, 10, 10 };
 
-            new SortedDistinctEnumerator<int>(set.GetEnumerator());
+            Assert.Catch<InvalidOperationException>(() => new SortedDistinctEnumerator<int>(set.GetEnumerator()));
         }
 
         [Test]
@@ -33,7 +32,7 @@ namespace LargeCollections.Tests.Operations
                 }
             }
 
-            Assert.AreElementsEqual(distinctList, set.Distinct());
+            CollectionAssert.AreEqual(distinctList, set.Distinct());
         }
     }
 }

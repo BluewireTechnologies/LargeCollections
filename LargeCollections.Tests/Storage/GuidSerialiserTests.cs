@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using LargeCollections.Storage;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Storage
 {
     [TestFixture, CheckResources]
     public class GuidSerialiserTests
     {
-        private GuidSerialiser serialiser = new GuidSerialiser();
+        private readonly GuidSerialiser serialiser = new GuidSerialiser();
         private void Write(Stream stream, params Guid[] items)
         {
             foreach (var batch in items)
@@ -83,19 +84,26 @@ namespace LargeCollections.Tests.Storage
                         readSetB.Add(serialiser.Read(streamB));
                     }
 
-                    Assert.AreElementsEqual(setA, readSetA);
-                    Assert.AreElementsEqual(setB, readSetB);
+                    CollectionAssert.AreEqual(setA, readSetA);
+                    CollectionAssert.AreEqual(setB, readSetB);
                 }
             }
         }
 
-        [Test, ThreadedRepeat(20)]
+        [Test]
         public void IsThreadsafe()
         {
-            for (var i = 0; i < 50; i++)
+            var threads = 20.Times(() => new Thread(() =>
             {
-                AssertRoundTrippable(Guid.NewGuid());
-            }
+                for (var i = 0; i < 50; i++)
+                {
+                    AssertRoundTrippable(Guid.NewGuid());
+                }
+            })).ToArray();
+            
+            foreach (var t in threads) t.Start();
+
+            foreach (var t in threads) t.Join();
         }
 
         private void AssertRoundTrippable(Guid guid)

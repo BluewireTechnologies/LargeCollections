@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using LargeCollections.Collections;
 using LargeCollections.Resources;
 using LargeCollections.Storage;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Collections
 {
     [TestFixture, CheckResources]
-    public class DiskBasedLargeCollectionTests
+    public class DiskBasedLargeCollectionTests : BaselineTestsForLargeCollectionWithBackingStore<FileReference>
     {
         class Harness : LargeCollectionTestHarness<FileReference>
         {
@@ -33,30 +30,16 @@ namespace LargeCollections.Tests.Collections
                 return collection.GetUnderlying<IHasBackingStore<FileReference>>().BackingStore.File.Exists;
             }
         }
-
-        [DynamicTestFactory]
-        public IEnumerable<Test> BaselineTests()
-        {
-            return new BaselineTestsForLargeCollectionWithBackingStore<FileReference>().GetTests(() => new Harness());
-        }
-
+        
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void AccumulatorDoesNotOverwriteNonemptyExistingFile()
         {
             var fileName = Path.GetTempFileName();
             var content = "test";
             File.WriteAllText(fileName, content);
-            try
-            {
-                using(new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))
-                {
-                }
-            }
-            finally
-            {
-                Assert.AreEqual(content, File.ReadAllText(fileName));
-            }
+
+            Assert.Catch<InvalidOperationException>(() => new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()));
+            Assert.AreEqual(content, File.ReadAllText(fileName));
         }
 
         private string GetUnwritableTempFile()
@@ -69,21 +52,24 @@ namespace LargeCollections.Tests.Collections
         }
 
         [Test]
-        [ExpectedException(typeof(UnauthorizedAccessException))]
         public void AccumulatorDoesNotLeakResources_If_ExceptionOccursInConstructor()
         {
             var fileName = GetUnwritableTempFile();
-            try
+            
+            Assert.Catch<UnauthorizedAccessException>(() =>
             {
                 using (new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))
                 {
                 }
-            }
-            finally
-            {
-                Assert.IsFalse(File.Exists(fileName));
-                Utils.AssertReferencesDisposed();
-            }
+            });
+
+            Assert.IsFalse(File.Exists(fileName));
+            Utils.AssertReferencesDisposed();
+        }
+
+        protected override LargeCollectionTestHarness<FileReference> CreateHarness()
+        {
+            return new Harness();
         }
     }
 }

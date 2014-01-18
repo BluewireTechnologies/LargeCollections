@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using LargeCollections.Resources;
-using MbUnit.Framework;
+using NUnit.Framework;
 using Moq;
 
 namespace LargeCollections.Tests.Resources

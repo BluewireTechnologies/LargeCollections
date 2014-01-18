@@ -8,3 +8,4 @@ _ReSharper.*
 *.resharper.user
 VersionInfo.cs
 Visual Studio 2010
+_NCrunch*

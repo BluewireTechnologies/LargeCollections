@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using LargeCollections.Collections;
 using LargeCollections.Resources;
-using MbUnit.Framework;
+using NUnit.Framework;
 using Moq;
 
 namespace LargeCollections.Tests.Collections
@@ -88,13 +88,12 @@ namespace LargeCollections.Tests.Collections
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException))]
         public void DoesNotSupportReset()
         {
             var underlying = MockUnderlyingCollection();
             using (var collection = new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
             {
-                collection.Reset();
+                Assert.Catch<NotSupportedException>(() => collection.Reset());
             }
         }
 
@@ -142,7 +141,6 @@ namespace LargeCollections.Tests.Collections
         }
 
         [Test]
-        [ExpectedException(typeof(ObjectDisposedException))]
         public void CannotAcquireReleasedBackingStore()
         {
             var underlying = MockUnderlyingCollection();
@@ -155,9 +153,7 @@ namespace LargeCollections.Tests.Collections
             }
 
             // refcount has gone positive and back to zero, so this fails:
-            using (new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()))
-            {
-            }
+            Assert.Catch<ObjectDisposedException>(() => new LargeCollectionEnumerator<int>(underlying.Object, MockEnumerator()));
         }
 
         private Mock<ILargeCollection<int>> MockUnderlyingCollection()

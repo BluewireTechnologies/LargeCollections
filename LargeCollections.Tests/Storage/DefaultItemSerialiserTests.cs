@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LargeCollections.Storage;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Storage
 {
@@ -83,8 +83,8 @@ namespace LargeCollections.Tests.Storage
                         readSetB.Add(serialiser.Read(streamB));
                     }
 
-                    Assert.AreElementsEqual(setA, readSetA);
-                    Assert.AreElementsEqual(setB, readSetB);
+                    CollectionAssert.AreEqual(setA, readSetA);
+                    CollectionAssert.AreEqual(setB, readSetB);
                 }
             }
         }

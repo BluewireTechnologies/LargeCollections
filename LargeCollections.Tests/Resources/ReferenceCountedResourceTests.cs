@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Gallio.Framework;
 using LargeCollections.Resources;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Resources
 {
@@ -27,19 +25,18 @@ namespace LargeCollections.Tests.Resources
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), "can't construct")]
         public void ExceptionInDerivedConstructor_DoesNotCauseCleanup()
         {
-            new UnconstructableResource(Assert.Fail);
+            var exception = Assert.Catch<Exception>(() => new UnconstructableResource(Assert.Fail));
+            Assert.That(exception.Message, Is.StringContaining("can't construct"));
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), "can't construct")]
         public void ExceptionInDerivedConstructor_DoesNotCauseLeak()
         {
             try
             {
-                new UnconstructableResource(() => { });
+                Assert.Catch<Exception>(() => new UnconstructableResource(() => { }));
             }
             finally
             {
@@ -47,7 +44,7 @@ namespace LargeCollections.Tests.Resources
             }
         }
 
-        [Test, ThreadedRepeat(50)]
+        [Test]
         public void ReferenceCounterIsThreadSafe()
         {
             var cleanupCount = 0;

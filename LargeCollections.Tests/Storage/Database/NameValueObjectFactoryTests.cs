@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using Gallio.Framework;
 using LargeCollections.Storage.Database;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Storage.Database
 {
@@ -98,22 +93,20 @@ namespace LargeCollections.Tests.Storage.Database
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void CannotDeserialiseWithConstructorParameterMatchingNameButNotType()
         {   
             var mappings = new INamePropertyMapping<EntityWithConstructor>[] {  new ColumnPropertyMapping<EntityWithConstructor, string>("source", e => e.StringProperty, SqlDbType.Variant) };
             var factory = new NameValueObjectFactory<string, EntityWithConstructor>(mappings);
-            var entity = factory.ReadRecord(s => "test");
+            Assert.Catch<InvalidOperationException>(() => factory.ReadRecord(s => "test"));
         }
 
         
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void CannotDeserialiseWithoutAllConstructorParametersSatisfied()
         {   
             var mappings = new INamePropertyMapping<EntityWithUnsatisfiedConstructor>[] {  new ColumnPropertyMapping<EntityWithUnsatisfiedConstructor, int>("source", e => e.IntField, SqlDbType.Variant) };
             var factory = new NameValueObjectFactory<string, EntityWithUnsatisfiedConstructor>(mappings);
-            var entity = factory.ReadRecord(s => 1);
+            Assert.Catch<InvalidOperationException>(() => factory.ReadRecord(s => 1));
         }
 
         [Test]
@@ -125,12 +118,11 @@ namespace LargeCollections.Tests.Storage.Database
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void CannotDeserialiseTypeWithNoValidConstructor()
         {
             var mappings = new INamePropertyMapping<int>[] { new ColumnPropertyMapping<int, int>("source", e => e, SqlDbType.Variant) };
             var factory = new NameValueObjectFactory<string, int>(mappings);
-            factory.ReadRecord(s => 1);
+            Assert.Catch<InvalidOperationException>(() => factory.ReadRecord(s => 1));
         }
     }
 }

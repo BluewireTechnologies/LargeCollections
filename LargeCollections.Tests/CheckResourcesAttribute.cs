@@ -1,22 +1,26 @@
 ﻿using System;
-using Gallio.Common.Reflection;
-using Gallio.Framework.Pattern;
 using LargeCollections.Resources;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests
 {
-    [AttributeUsage(PatternAttributeTargets.TestType, AllowMultiple = true, Inherited = true)]
-    public class CheckResourcesAttribute : TestTypeDecoratorPatternAttribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+    public class CheckResourcesAttribute : Attribute, ITestAction
     {
-        protected override void DecorateTest(IPatternScope scope, ITypeInfo type)
+        public void AfterTest(TestDetails testDetails)
         {
-            scope.TestBuilder.TestInstanceActions.DecorateChildTestChain.Before((state, actions) =>
-            {
-                // cleanup leftovers from any previous tests.
-                actions.TestInstanceActions.SetUpTestInstanceChain.Before(_ => ReferenceCountedResource.Diagnostics.Reset());
+            Utils.AssertReferencesDisposed();
+        }
 
-                actions.TestInstanceActions.TearDownTestInstanceChain.After(_ => Utils.AssertReferencesDisposed());
-            });
+        public void BeforeTest(TestDetails testDetails)
+        {
+            // cleanup leftovers from any previous tests.
+            ReferenceCountedResource.Diagnostics.Reset();
+        }
+
+        public ActionTargets Targets
+        {
+            get { return ActionTargets.Test | ActionTargets.Suite; }
         }
     }
 }

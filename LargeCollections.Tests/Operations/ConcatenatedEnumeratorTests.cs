@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using LargeCollections.Collections;
 using LargeCollections.Linq;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
@@ -25,7 +25,7 @@ namespace LargeCollections.Tests.Operations
             var setB = new List<int> { 2, 4, 6, 8 };
             var concat = setA.GetEnumerator().Concat(setB.GetEnumerator());
 
-            Assert.AreElementsEqual(setA.Concat(setB), Evaluate(concat));
+            CollectionAssert.AreEqual(setA.Concat(setB), Evaluate(concat));
         }
 
         [Test]

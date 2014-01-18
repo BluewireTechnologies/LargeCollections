@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using LargeCollections.Collections;
 using LargeCollections.Linq;
 using LargeCollections.Operations;
-using MbUnit.Framework;
+using NUnit.Framework;
 using Moq;
 
 namespace LargeCollections.Tests.Operations
@@ -58,12 +59,9 @@ namespace LargeCollections.Tests.Operations
 
         private static void AssertSorted(ILargeCollection<int> original, IDisposableEnumerable<int> sorted)
         {
-            Assert.Multiple(() =>
-            {
-                Assert.Count((int) original.Count, sorted);
-                Assert.AreElementsEqualIgnoringOrder(original, sorted);
-                Assert.Sorted(sorted, SortOrder.Increasing);
-            });
+            Assert.AreEqual((int) original.Count, sorted.Count());
+            CollectionAssert.AreEquivalent(original, sorted);
+            CollectionAssert.IsOrdered(sorted, Comparer<int>.Default);
         }
 
         [Test]
@@ -158,7 +156,6 @@ namespace LargeCollections.Tests.Operations
 
 
         [Test]
-        [ExpectedException(typeof(IOException))]
         public void ResourcesAreCleanedUpCorrectly_If_ExceptionOccursDuringBatchBuffering()
         {
             var batchCount = 0;
@@ -174,38 +171,31 @@ namespace LargeCollections.Tests.Operations
 
             using (var collection = MultipleBatches())
             {
-                try
-                {
+                Assert.Catch<IOException>(() => {
                     using (sorter.Sort(collection.GetEnumerator(), Comparer<int>.Default))
                     {
                     }
-                }
-                finally
-                {
-                    Utils.AssertReferencesDisposed();
-                }
+                });
+
+                Utils.AssertReferencesDisposed();
             }
         }
 
         [Test]
-        [ExpectedException(typeof(IOException))]
         public void ResourcesAreCleanedUpCorrectly_If_ExceptionOccursDuringSourceDisposal()
         {
             var sorter = GetSorter(5, MockSelector().Object);
 
             using (var collection = MultipleBatches())
             {
-                try
-                {
+                Assert.Catch<IOException>(() => {
                     using (var result = sorter.Sort(new EnumeratorThrowsWhenDisposing<int>(collection.GetEnumerator()), Comparer<int>.Default))
                     {
                         result.MoveNext();
                     }
-                }
-                finally
-                {
-                    Utils.AssertReferencesDisposed();
-                }
+                });
+                
+                Utils.AssertReferencesDisposed();
             }
         }
 

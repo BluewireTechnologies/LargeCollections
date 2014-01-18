@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using LargeCollections.Collections;
 using LargeCollections.Linq;
-using MbUnit.Framework;
+using NUnit.Framework;
 using Moq;
 
 namespace LargeCollections.Tests.Linq
@@ -103,37 +103,25 @@ namespace LargeCollections.Tests.Linq
 
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void Buffer_CleansUpResources_If_EnumeratorThrowsException()
         {
             var enumerator = new Mock<IEnumerator<int>>();
             enumerator.Setup(e => e.MoveNext()).Throws(new InvalidOperationException());
 
-            try
-            {
-                var buffered = enumerator.Object.BufferInMemory();
-            }
-            finally
-            {
-                enumerator.Verify(e => e.Dispose());
-            }
+            Assert.Catch<InvalidOperationException>(() => enumerator.Object.BufferInMemory());
+
+            enumerator.Verify(e => e.Dispose());
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void Buffer_CleansUpResources_If_EnumeratorDisposalThrowsException()
         {
             var enumerator = new Mock<IEnumerator<int>>();
             enumerator.Setup(e => e.Dispose()).Throws(new InvalidOperationException());
 
-            try
-            {
-                var buffered = enumerator.Object.BufferInMemory();
-            }
-            finally
-            {
-                enumerator.Verify(e => e.Dispose());
-            }
+            Assert.Catch<InvalidOperationException>(() => enumerator.Object.BufferInMemory());
+
+            enumerator.Verify(e => e.Dispose());
         }
     }
 }

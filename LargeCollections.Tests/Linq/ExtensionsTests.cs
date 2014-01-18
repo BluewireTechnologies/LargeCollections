@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using LargeCollections.Linq;
-using MbUnit.Framework;
+using NUnit.Framework;
 using Moq;
 
 namespace LargeCollections.Tests.Linq
@@ -28,26 +28,21 @@ namespace LargeCollections.Tests.Linq
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void SafelyEvaluatingEnumerable_DisposesEverything_IfExceptionIsThrown()
         {
             var a = MockDisposable();
             var b = MockDisposable();
 
-            try
-            {
+            Assert.Catch<InvalidOperationException>(() =>
                 CreateEnumerableThrowingException(
                     a.Object,
                     new object(),
                     b.Object,
                     new InvalidOperationException()
-                ).EvaluateSafely();
-            }
-            finally
-            {
-                a.Verify(d => d.Dispose());
-                b.Verify(d => d.Dispose());
-            }
+                ).EvaluateSafely());
+
+            a.Verify(d => d.Dispose());
+            b.Verify(d => d.Dispose());
         }
 
         [Test]
@@ -83,37 +78,30 @@ namespace LargeCollections.Tests.Linq
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void SafelyEvaluatingMappedEnumerable_DisposesEverything_IfExceptionIsThrownBySourceEnumeration()
         {
             var a = MockDisposable();
             var b = MockDisposable();
             var mapped = MockDisposable();
 
-            try
-            {
+            Assert.Catch<InvalidOperationException>(() =>
                 CreateEnumerableThrowingException(
                     a.Object,
                     new InvalidOperationException(),
                     b.Object
-                ).EvaluateSafely(e => mapped.Object);
-            }
-            finally
-            {
-                a.Verify(d => d.Dispose());
-            }
+                ).EvaluateSafely(e => mapped.Object));
+            
+            a.Verify(d => d.Dispose());
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void SafelyEvaluatingMappedEnumerable_DisposesEverything_IncludingMappedValues_IfExceptionIsThrownByMapping()
         {
             var a = MockDisposable();
             var b = MockDisposable();
             var mapped = MockDisposable();
-
-            try
-            {
+            
+            Assert.Catch<InvalidOperationException>(() =>
                 CreateEnumerableThrowingException(
                     a.Object,
                     new object(),
@@ -122,14 +110,11 @@ namespace LargeCollections.Tests.Linq
                     {
                         if (e is IDisposable) return mapped.Object;
                         throw new InvalidOperationException();
-                    });
-            }
-            finally
-            {
-                a.Verify(d => d.Dispose());
-                b.Verify(d => d.Dispose());
-                mapped.Verify(d => d.Dispose());
-            }
+                    }));
+
+            a.Verify(d => d.Dispose());
+            b.Verify(d => d.Dispose());
+            mapped.Verify(d => d.Dispose());
         }
     }
 }

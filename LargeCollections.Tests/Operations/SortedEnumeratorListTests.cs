@@ -1,7 +1,7 @@
 ﻿using System;
 using LargeCollections.Collections;
 using LargeCollections.Operations;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
@@ -14,7 +14,6 @@ namespace LargeCollections.Tests.Operations
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnsortedInputSetsCauseAnException()
         {
             // not wrapped with an ISorted<int>, therefore 'unsorted'.
@@ -22,13 +21,13 @@ namespace LargeCollections.Tests.Operations
             {
                 using (var setB = Unsorted(1, 3, 3, 4, 7))
                 {
-                    new SortedEnumeratorList<int>(new[] { setA.GetEnumerator(), setB.GetEnumerator() });
+                    Assert.Catch<InvalidOperationException>(() => 
+                        new SortedEnumeratorList<int>(new[] { setA.GetEnumerator(), setB.GetEnumerator() }));
                 }
             }
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void ExceptionDuringConstructionCausesDisposalOfEnumerators()
         {
             // not wrapped with an ISorted<int>, therefore 'unsorted'.
@@ -36,7 +35,8 @@ namespace LargeCollections.Tests.Operations
             {
                 using (var setB = Unsorted(1, 3, 3, 4, 7))
                 {
-                    new SortedEnumeratorList<int>(new[] { setA.GetEnumerator(), setB.GetEnumerator() });
+                    Assert.Catch<InvalidOperationException>(() =>
+                        new SortedEnumeratorList<int>(new[] { setA.GetEnumerator(), setB.GetEnumerator() }));
                 }
             }
 
@@ -45,7 +45,6 @@ namespace LargeCollections.Tests.Operations
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void ExceptionDuringEnumeratorWrappingCausesDisposalOfEnumerators()
         {
             // not wrapped with an ISorted<int>, therefore 'unsorted'.
@@ -53,7 +52,8 @@ namespace LargeCollections.Tests.Operations
             {
                 using (var setB = Unsorted(1, 3, 3, 4, 7))
                 {
-                    new SortedEnumeratorList<int>(new[] { setA.GetEnumerator(), setB.GetEnumerator() }, e => { throw new InvalidOperationException(); });
+                    Assert.Catch<InvalidOperationException>(() =>
+                        new SortedEnumeratorList<int>(new[] { setA.GetEnumerator(), setB.GetEnumerator() }, e => { throw new InvalidOperationException(); }));
                 }
             }
 

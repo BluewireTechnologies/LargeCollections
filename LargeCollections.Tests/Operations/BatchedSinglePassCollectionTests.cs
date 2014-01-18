@@ -2,7 +2,7 @@
 using LargeCollections.Collections;
 using LargeCollections.Linq;
 using LargeCollections.Operations;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
@@ -20,7 +20,7 @@ namespace LargeCollections.Tests.Operations
             using(var batcher = new BatchedSinglePassCollection<int>(GetCollection(1, 2, 3, 4, 5), 10))
             {
                 Assert.IsTrue(batcher.MoveNext());
-                Assert.AreElementsEqual(new []{ 1, 2, 3, 4, 5 }, batcher.Current);
+                CollectionAssert.AreEqual(new []{ 1, 2, 3, 4, 5 }, batcher.Current);
                 Assert.IsFalse(batcher.MoveNext());
             }
         }
@@ -31,7 +31,7 @@ namespace LargeCollections.Tests.Operations
             using (var batcher = new BatchedSinglePassCollection<int>(GetCollection(1, 2, 3, 4, 5), 5))
             {
                 Assert.IsTrue(batcher.MoveNext());
-                Assert.AreElementsEqual(new[] { 1, 2, 3, 4, 5 }, batcher.Current);
+                CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5 }, batcher.Current);
                 Assert.IsFalse(batcher.MoveNext());
             }
         }
@@ -59,7 +59,7 @@ namespace LargeCollections.Tests.Operations
                     batches.AddRange(batcher.Current);
                 }
             }
-            Assert.AreElementsEqual(new []{ 1, 2, 3, 4, 5 }, batches);
+            CollectionAssert.AreEqual(new []{ 1, 2, 3, 4, 5 }, batches);
         }
     }
 }

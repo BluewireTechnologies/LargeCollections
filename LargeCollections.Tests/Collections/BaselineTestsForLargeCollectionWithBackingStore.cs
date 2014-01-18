@@ -1,162 +1,132 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using LargeCollections.Resources;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Collections
 {
-    public class BaselineTestsForLargeCollectionWithBackingStore<TBackingStore>
+    public abstract class BaselineTestsForLargeCollectionWithBackingStore<TBackingStore>
     {
-        public IEnumerable<Test> GetTests(Func<LargeCollectionTestHarness<TBackingStore>> harness)
-        {
-            return new Func<Func<LargeCollectionTestHarness<TBackingStore>>, Test>[] {
-                AccumulatorBecomesReadOnly_When_CollectionIsCreated,
-                CanUseCollection_Before_AccumulatorIsDisposed,
-                CannotCompleteAccumulatorTwice,
-                CanSafelyDisposeMultipleTimes,
-                AccumulatorCleansUpBackingStore_If_NoCollectionIsCreated,
-                CleansUpBackingStore_WhenDisposed,
-                CanCleanUpEmptyCollection,
-                DoesNotCleanUpBackingStore_WhenIterationIsComplete,
-                CanReadCompletedCollection
-            }.Select(t => t(harness));
-        }
+        protected abstract LargeCollectionTestHarness<TBackingStore> CreateHarness();
 
-        private Test AccumulatorBecomesReadOnly_When_CollectionIsCreated(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
+        [Test]
+        public void AccumulatorBecomesReadOnly_When_CollectionIsCreated()
         {
-            return new TestCase("AccumulatorBecomesReadOnly_When_CollectionIsCreated", () =>
-                Assert.Throws<ReadOnlyException>(() =>
-                {
-                    using (var harness = getHarness())
-                    using (var accumulator = harness.GetAccumulator())
-                    {
-                        accumulator.Add(1);
-                        using (accumulator.Complete())
-                        {
-                            accumulator.Add(2);
-                        }
-                    }
-                }));
-        }
-
-        private Test CanUseCollection_Before_AccumulatorIsDisposed(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
-        {
-            return new TestCase("CanUseCollection_Before_AccumulatorIsDisposed", () =>
+            Assert.Throws<ReadOnlyException>(() =>
             {
-                using (var harness = getHarness())
+                using (var harness = CreateHarness())
+                using (var accumulator = harness.GetAccumulator())
+                {
+                    accumulator.Add(1);
+                    using (accumulator.Complete())
+                    {
+                        accumulator.Add(2);
+                    }
+                }
+            });
+        }
+
+        [Test]
+        public void CanUseCollection_Before_AccumulatorIsDisposed()
+        {
+            using (var harness = CreateHarness())
+            using (var accumulator = harness.GetAccumulator())
+            {
+                accumulator.Add(1);
+                accumulator.Add(2);
+                using (var collection = accumulator.Complete())
+                {
+                    collection.ToArray();
+                }
+            }
+        }
+
+        [Test]
+        public void CannotCompleteAccumulatorTwice()
+        {
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                using (var harness = CreateHarness())
                 using (var accumulator = harness.GetAccumulator())
                 {
                     accumulator.Add(1);
                     accumulator.Add(2);
-                    using (var collection = accumulator.Complete())
+                    using (accumulator.Complete())
                     {
-                        collection.ToArray();
+                    }
+                    using (accumulator.Complete())
+                    {
                     }
                 }
             });
         }
 
-        private Test CannotCompleteAccumulatorTwice(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
+        [Test]
+        public void CanSafelyDisposeMultipleTimes()
         {
-            return new TestCase("CannotCompleteAccumulatorTwice", () =>
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    using (var harness = getHarness())
-                    using (var accumulator = harness.GetAccumulator())
-                    {
-                        accumulator.Add(1);
-                        accumulator.Add(2);
-                        using (accumulator.Complete())
-                        {
-                        }
-                        using (accumulator.Complete())
-                        {
-                        }
-                    }
-                }));
+            using (var harness = CreateHarness())
+            using (var collection = harness.GetCollection(new[] { 1, 2, 3 }))
+            {
+                collection.Dispose();
+            }
         }
 
-        private Test CanSafelyDisposeMultipleTimes(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
+        [Test]
+        public void AccumulatorCleansUpBackingStore_If_NoCollectionIsCreated()
         {
-            return new TestCase("CanSafelyDisposeMultipleTimes", () =>
+            using (var harness = CreateHarness())
             {
-                using (var harness = getHarness())
-                using (var collection = harness.GetCollection(new[] {1, 2, 3}))
+                var accumulator = harness.GetAccumulator();
+                using (accumulator)
                 {
-                    collection.Dispose();
+                    accumulator.Add(1);
                 }
-            });
+                Assert.IsFalse(harness.BackingStoreExists(accumulator));
+            }
         }
 
-        private Test AccumulatorCleansUpBackingStore_If_NoCollectionIsCreated(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
+        [Test]
+        public void CleansUpBackingStore_WhenDisposed ()
         {
-            return new TestCase("AccumulatorCleansUpBackingStore_If_NoCollectionIsCreated", () =>
+            using (var harness = CreateHarness())
+            using (var collection = harness.GetCollection(new[] { 1, 2, 3 }))
             {
-                using (var harness = getHarness())
-                {
-                    var accumulator = harness.GetAccumulator();
-                    using (accumulator)
-                    {
-                        accumulator.Add(1);
-                    }
-                    Assert.IsFalse(harness.BackingStoreExists(accumulator));
-                }
-            });
+                Assert.IsTrue(harness.BackingStoreExists(collection));
+                collection.Dispose();
+                Assert.IsFalse(harness.BackingStoreExists(collection));
+            }
         }
 
-        private Test CleansUpBackingStore_WhenDisposed(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
+        [Test]
+        public void CanCleanUpEmptyCollection()
         {
-            return new TestCase("CleansUpBackingStore_WhenDisposed", () =>
+            using (var harness = CreateHarness())
+            using (harness.GetCollection(new int[] { }))
             {
-                using (var harness = getHarness())
-                using (var collection = harness.GetCollection(new[] {1, 2, 3}))
-                {
-                    Assert.IsTrue(harness.BackingStoreExists(collection));
-                    collection.Dispose();
-                    Assert.IsFalse(harness.BackingStoreExists(collection));
-                }
-            });
+            }
         }
 
-
-        private Test CanCleanUpEmptyCollection(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
+        [Test]
+        public void DoesNotCleanUpBackingStore_WhenIterationIsComplete()
         {
-            return new TestCase("CanCleanUpEmptyCollection", () =>
+            using (var harness = CreateHarness())
+            using (var collection = harness.GetCollection(new[] { 1, 2, 3 }))
             {
-                using (var harness = getHarness())
-                using (harness.GetCollection(new int[] {}))
-                {
-                }
-            });
+                Assert.IsTrue(harness.BackingStoreExists(collection));
+                collection.ToArray();
+                Assert.IsTrue(harness.BackingStoreExists(collection));
+            }
         }
 
-        private Test DoesNotCleanUpBackingStore_WhenIterationIsComplete(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
+        [Test]
+        public void CanReadCompletedCollection()
         {
-            return new TestCase("DoesNotCleanUpBackingStore_WhenIterationIsComplete", () =>
+            var elements = new[] { 1, 2, 3 };
+            using(var harness = CreateHarness())
+            using (var collection = harness.GetCollection(elements))
             {
-                using (var harness = getHarness())
-                using (var collection = harness.GetCollection(new[] {1, 2, 3}))
-                {
-                    Assert.IsTrue(harness.BackingStoreExists(collection));
-                    collection.ToArray();
-                    Assert.IsTrue(harness.BackingStoreExists(collection));
-                }
-            });
-        }
-
-        private Test CanReadCompletedCollection(Func<LargeCollectionTestHarness<TBackingStore>> getHarness)
-        {
-            return new TestCase("CanReadCompletedCollection", () =>
-            {
-                var elements = new[] { 1, 2, 3 };
-                using (var harness = getHarness())
-                using (var collection = harness.GetCollection(elements))
-                {
-                    Assert.AreElementsEqualIgnoringOrder(elements, collection);
-                }
-            });
+                CollectionAssert.AreEquivalent(elements, collection);
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LargeCollections.Linq;
 using LargeCollections.Operations;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
@@ -11,13 +11,11 @@ namespace LargeCollections.Tests.Operations
     public class SetUnionSortPreservingMergeTests
     {
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void SortedEnumerableMergerRequiresSortedInputs()
         {
             var items = new[] { 1, 2, 3, 4, 5 };
-            var merged = new SortedEnumerableMerger<int>(new[] { items }, new SetUnionSortPreservingMerge<int>());
-
-            Assert.AreElementsEqual(items, merged);
+            Assert.Catch<InvalidOperationException>(() =>
+                new SortedEnumerableMerger<int>(new[] { items }, new SetUnionSortPreservingMerge<int>()));
         }
 
         [Test]
@@ -26,7 +24,7 @@ namespace LargeCollections.Tests.Operations
             var items = Sorted(1, 2, 3, 4, 5);
             var merged = new SortedEnumerableMerger<int>(new[] {items}, new SetUnionSortPreservingMerge<int>());
 
-            Assert.AreElementsEqual(items, merged);
+            CollectionAssert.AreEqual(items, merged);
         }
 
         private IEnumerable<int> Sorted(params int[] items)
@@ -44,7 +42,7 @@ namespace LargeCollections.Tests.Operations
             };
             var merged = new SortedEnumerableMerger<int>(itemSets, new SetUnionSortPreservingMerge<int>());
 
-            Assert.Sorted(merged, SortOrder.Increasing);
+            CollectionAssert.IsOrdered(merged, Comparer<int>.Default);
         }
 
         [Test]

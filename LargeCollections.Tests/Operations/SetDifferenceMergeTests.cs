@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LargeCollections.Linq;
 using LargeCollections.Operations;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
@@ -21,7 +21,7 @@ namespace LargeCollections.Tests.Operations
             var items = Sorted(1, 2, 3, 4, 5);
             var merged = new SortedEnumerableMerger<int>(new[] { items }, new SetDifferenceMerge<int>());
 
-            Assert.AreElementsEqual(items, merged);
+            CollectionAssert.AreEqual(items, merged);
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace LargeCollections.Tests.Operations
             };
             var merged = new SortedEnumerableMerger<int>(itemSets, new SetDifferenceMerge<int>());
 
-            Assert.AreElementsEqual(new []{ 1, 2, 3, 5, 6, 8, 9, 10, 11, 12 }, merged);
+            CollectionAssert.AreEqual(new []{ 1, 2, 3, 5, 6, 8, 9, 10, 11, 12 }, merged);
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace LargeCollections.Tests.Operations
             };
             var merged = new SortedEnumerableMerger<int>(itemSets, new SetDifferenceMerge<int>());
 
-            Assert.AreElementsEqual(new[] { 1, 2, 3, 5, 6, 8, 9, 10, 11, 12 }, merged);
+            CollectionAssert.AreEqual(new[] { 1, 2, 3, 5, 6, 8, 9, 10, 11, 12 }, merged);
         }
 
       
@@ -73,7 +73,7 @@ namespace LargeCollections.Tests.Operations
             {
                 var enumerable = EnumerableDifference(setA, setB).ToArray();
 
-                Assert.AreElementsEqualIgnoringOrder(enumerable, largeCollection.ToArray());
+                CollectionAssert.AreEquivalent(enumerable, largeCollection.ToArray());
             }
         }
 

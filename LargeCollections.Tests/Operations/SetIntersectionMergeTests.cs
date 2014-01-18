@@ -5,7 +5,7 @@ using System.Text;
 using LargeCollections.Collections;
 using LargeCollections.Linq;
 using LargeCollections.Operations;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace LargeCollections.Tests.Operations
 {
@@ -28,7 +28,7 @@ namespace LargeCollections.Tests.Operations
             var items = Sorted(1, 2, 3, 4, 5);
             var merged = new SortedEnumerableMerger<int>(new[] { items }, new SetIntersectionMerge<int>());
 
-            Assert.AreElementsEqual(items, merged);
+            CollectionAssert.AreEqual(items, merged);
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace LargeCollections.Tests.Operations
             };
             var merged = new SortedEnumerableMerger<int>(itemSets, new SetIntersectionMerge<int>());
 
-            Assert.AreElementsEqual(new[] { 4, 9 }, merged);
+            CollectionAssert.AreEqual(new[] { 4, 9 }, merged);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace LargeCollections.Tests.Operations
             };
             var merged = new SortedEnumerableMerger<int>(itemSets, new SetIntersectionMerge<int>());
 
-            Assert.AreElementsEqual(new[] { 9 }, merged);
+            CollectionAssert.AreEqual(new[] { 9 }, merged);
         }
 
         private IEnumerable<Guid> GenerateGuids(int count)
@@ -68,7 +68,6 @@ namespace LargeCollections.Tests.Operations
 
 
         [Test]
-        [MultipleAsserts]
         public void Fuzz_GuidSets_LargeCollectionProducesSameResultsAsEnumerables()
         {
             var shared = GenerateGuids(100).ToArray();
@@ -80,12 +79,12 @@ namespace LargeCollections.Tests.Operations
                 var enumerable = EnumerableIntersection(setA, setB).ToArray();
                 var lc = largeCollection.ToArray();
 
-                Assert.AreElementsEqualIgnoringOrder(enumerable, lc);
+                CollectionAssert.AreEquivalent(enumerable, lc);
                 Assert.AreEqual(enumerable.Length, lc.Length);
             }
         }
 
-        private static IAccumulatorSelector accumulatorSelector = new SizeBasedAccumulatorSelector(0);
+        private static readonly IAccumulatorSelector accumulatorSelector = new SizeBasedAccumulatorSelector(0);
 
         private static IDisposableEnumerable<Guid> LargeCollectionIntersection(IEnumerable<Guid> setA, IEnumerable<Guid> setB)
         {
