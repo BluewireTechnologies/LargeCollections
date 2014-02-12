@@ -82,10 +82,6 @@ namespace LargeCollections.Storage.Database
             {
                 instance.Dispose();
             }
-            catch (AggregateException ex)
-            {
-                throw ex.Flatten().InnerException;
-            }
             finally
             {
                 factory.Dispose();
@@ -167,13 +163,25 @@ namespace LargeCollections.Storage.Database
 
             public void CheckState()
             {
-                if (bulkWriterTask.IsFaulted) bulkWriterTask.Wait();
+                if (bulkWriterTask.IsFaulted) WaitAndRethrowExceptions();
+            }
+
+            private void WaitAndRethrowExceptions()
+            {
+                try
+                {
+                    bulkWriterTask.Wait();
+                }
+                catch(AggregateException ex)
+                {
+                    throw new BackgroundWriterAbortedException(ex.Flatten().InnerException);
+                }
             }
 
             public void Dispose()
             {
                 currentQueue.CompleteAdding();
-                bulkWriterTask.Wait();
+                WaitAndRethrowExceptions();
             }
         }
     }

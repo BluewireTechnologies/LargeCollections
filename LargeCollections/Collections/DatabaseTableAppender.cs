@@ -73,9 +73,9 @@ namespace LargeCollections.Collections
             {
                 Count += writer.Write(items);
             }
-            catch (DbException ex)
+            catch (BackgroundWriterAbortedException ex)
             {
-                throw new BackingStoreException("Bulk insert aborted during write attempt.", ex);
+                throw new BackingStoreException("Could not perform bulk insert.", ex);
             }
         }
 
