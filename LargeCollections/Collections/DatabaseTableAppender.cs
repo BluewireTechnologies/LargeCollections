@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using LargeCollections.Resources;
 using LargeCollections.Storage.Database;
@@ -68,7 +69,14 @@ namespace LargeCollections.Collections
         {
             if (completed) throw new ReadOnlyException();
             EnsureUnderlyingWriterIsOpen();
-            Count += writer.Write(items);
+            try
+            {
+                Count += writer.Write(items);
+            }
+            catch (DbException ex)
+            {
+                throw new BackingStoreException("Bulk insert aborted during write attempt.", ex);
+            }
         }
 
         public long Count { get; private set; }
