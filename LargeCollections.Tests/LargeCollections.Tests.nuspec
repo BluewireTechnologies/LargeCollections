@@ -10,7 +10,7 @@
     <description>$description$</description>
     <copyright>Copyright 2012</copyright>
 	<dependencies>
-		<dependency id="mbunit" version="3.3.454.0" />
+		<dependency id="NUnit" version="2.6.3" />
 		<dependency id="Moq" version="4.0.10827" />
 		<dependency id="LargeCollections" version="$version$" />
 	</dependencies>
