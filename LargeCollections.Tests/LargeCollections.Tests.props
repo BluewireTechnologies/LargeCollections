@@ -1,0 +1,5 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FileExclusionPattern Condition="'$(FileExclusionPattern)'==''">*.CodeAnalysisLog.xml;*.lastcodeanalysissucceeded</FileExclusionPattern>
+  </PropertyGroup>  
+</Project>
