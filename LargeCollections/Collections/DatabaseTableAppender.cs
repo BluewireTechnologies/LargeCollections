@@ -14,9 +14,39 @@ namespace LargeCollections.Collections
         private IDisposable reference;
         private bool completed;
 
+        /// <summary>
+        /// Create a temporary table reference with the specified name on the provided connection with the specified schema.
+        /// </summary>
+        public DatabaseTableAppender(SqlConnection connection, DatabaseTableSchema<T> schema, string tableName)
+        {
+            InitialiseTableReference(new TemporaryDatabaseTableReference<T>(connection, schema, tableName));
+        }
+
+        /// <summary>
+        /// Create a unique temporary table reference on the provided connection with the specified schema.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="schema"></param>
         public DatabaseTableAppender(SqlConnection connection, DatabaseTableSchema<T> schema)
         {
-            this.TableReference = new TemporaryDatabaseTableReference<T>(connection, schema);
+            InitialiseTableReference(new TemporaryDatabaseTableReference<T>(connection, schema));
+        }
+
+        /// <summary>
+        /// Use the specified table reference as the backing store.
+        /// </summary>
+        /// <remarks>
+        /// A reference will be acquired by the constructor.
+        /// The table will be created when writing begins.
+        /// </remarks>
+        public DatabaseTableAppender(TemporaryDatabaseTableReference<T> tableReference)
+        {
+            InitialiseTableReference(tableReference);
+        }
+
+        private void InitialiseTableReference(TemporaryDatabaseTableReference<T> tableReference)
+        {
+            this.TableReference = tableReference;
             reference = this.TableReference.Acquire();
         }
 
