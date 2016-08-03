@@ -1,18 +1,19 @@
 ﻿using System;
 using LargeCollections.Resources;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace LargeCollections.Tests
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class CheckResourcesAttribute : Attribute, ITestAction
     {
-        public void AfterTest(TestDetails testDetails)
+        public void AfterTest(ITest testDetails)
         {
             Utils.AssertReferencesDisposed();
         }
 
-        public void BeforeTest(TestDetails testDetails)
+        public void BeforeTest(ITest testDetails)
         {
             // cleanup leftovers from any previous tests.
             ReferenceCountedResource.Diagnostics.Reset();
