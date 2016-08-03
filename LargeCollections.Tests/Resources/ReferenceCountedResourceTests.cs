@@ -28,7 +28,7 @@ namespace LargeCollections.Tests.Resources
         public void ExceptionInDerivedConstructor_DoesNotCauseCleanup()
         {
             var exception = Assert.Catch<Exception>(() => new UnconstructableResource(Assert.Fail));
-            Assert.That(exception.Message, Is.StringContaining("can't construct"));
+            Assert.That(exception.Message, Does.Contain("can't construct"));
         }
 
         [Test]
