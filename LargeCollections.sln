@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections", "LargeCollections\LargeCollections.csproj", "{75713237-5AAA-414E-BE9E-2F9AFE906A4D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.Tests", "LargeCollections.Tests\LargeCollections.Tests.csproj", "{476F7C46-D589-408D-907E-4971B2722BBB}"
