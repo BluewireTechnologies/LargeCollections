@@ -74,6 +74,10 @@ namespace LargeCollections.Resources
         {
         }
 
+        protected virtual void WasLeaked()
+        {
+        }
+
         private readonly IList<Reference> references = new SynchronizedCollection<Reference>();
         
 
@@ -90,6 +94,7 @@ namespace LargeCollections.Resources
                 if (RefCount == 0) return; // construction failed.
 
                 Diagnostics.Leaked(this);
+                WasLeaked();
 
                 log.DebugFormat("Resource leaked : {0}", this);
                 // really unsafe:
