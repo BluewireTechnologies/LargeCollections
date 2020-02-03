@@ -8,4 +8,13 @@
         <!-- Full list of NUnit test projects -->
         <NUnitProjects Include="LargeCollections.Tests\LargeCollections.Tests.csproj" />
     </ItemGroup>
+    <ItemDefinitionGroup>
+        <!-- Library repository: all packages use SemVer -->
+        <NugetProjects>
+            <UseSemVer>True</UseSemVer>
+        </NugetProjects>
+    </ItemDefinitionGroup>
+    <PropertyGroup>
+        <DotCoverConfigurationFile>DotCover.coverage.xml</DotCoverConfigurationFile>
+    </PropertyGroup>
 </Project>
