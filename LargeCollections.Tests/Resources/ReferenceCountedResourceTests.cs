@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using LargeCollections.Resources;
@@ -15,13 +16,20 @@ namespace LargeCollections.Tests.Resources
         [Test]
         public void CanDetectLeakedReferencedResources()
         {
-            var instance = new ReferenceCountedResource();
-            instance.Acquire();
-            var resource = new WeakReference(instance, true);
-            instance = null;
+            var resource = CreateWeaklyHeldResource();
 
             Assert.AreEqual(1, ReferenceCountedResource.Diagnostics.CountLeaks());
             ReferenceCountedResource.Diagnostics.Reset();
+
+            GC.KeepAlive(resource);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private WeakReference CreateWeaklyHeldResource()
+        {
+            var instance = new ReferenceCountedResource();
+            instance.Acquire();
+            return new WeakReference(instance, true);
         }
 
         [Test]
