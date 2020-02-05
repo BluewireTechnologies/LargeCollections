@@ -1,107 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{476F7C46-D589-408D-907E-4971B2722BBB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LargeCollections.Tests</RootNamespace>
-    <AssemblyName>LargeCollections.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <TargetFrameworks>net462</TargetFrameworks>
+    <VersionPrefix>10.0.0</VersionPrefix>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
+    <None Remove="*.ncrunchproject" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\LargeCollectionTestHarness.cs" />
-    <Compile Include="Collections\BaselineTestsForLargeCollectionWithBackingStore.cs" />
-    <Compile Include="Linq\BufferTests.cs" />
-    <Compile Include="Linq\ExtensionsTests.cs" />
-    <Compile Include="Operations\BatchedSinglePassCollectionTests.cs" />
-    <Compile Include="Collections\DiskBasedLargeCollectionTests.cs" />
-    <Compile Include="Operations\ConcatenatedEnumeratorTests.cs" />
-    <Compile Include="CheckResourcesAttribute.cs" />
-    <Compile Include="Operations\SetDifferenceAndIntersectionMergeTests.cs" />
-    <Compile Include="Operations\SetIntersectionMergeTests.cs" />
-    <Compile Include="Operations\SortedEnumeratorListTests.cs" />
-    <Compile Include="Resources\DisposableListTests.cs" />
-    <Compile Include="Resources\ReferenceCountedResourceTests.cs" />
-    <Compile Include="Storage\BufferedItemWriterTests.cs" />
-    <Compile Include="Storage\Database\NameValueObjectFactoryTests.cs" />
-    <Compile Include="Storage\DefaultItemSerialiserTests.cs" />
-    <Compile Include="Storage\GuidSerialiserTests.cs" />
-    <Compile Include="Collections\InMemoryLargeCollectionTests.cs" />
-    <Compile Include="Operations\LargeCollectionSorterTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Operations\SetDifferenceMergeTests.cs" />
-    <Compile Include="Operations\SetUnionSortPreservingMergeTests.cs" />
-    <Compile Include="Collections\LargeCollectionEnumeratorTests.cs" />
-    <Compile Include="SizeBasedAccumulatorSelectorTests.cs" />
-    <Compile Include="Operations\SortedDistinctEnumeratorTests.cs" />
-    <Compile Include="Utils.cs" />
+    <ProjectReference Include="..\LargeCollections\LargeCollections.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LargeCollections\LargeCollections.csproj">
-      <Project>{75713237-5AAA-414E-BE9E-2F9AFE906A4D}</Project>
-      <Name>LargeCollections</Name>
-    </ProjectReference>
+    <PackageReference Include="Moq">
+      <Version>4.13.1</Version>
+    </PackageReference>
+    <PackageReference Include="NUnit">
+      <Version>3.12.0</Version>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="LargeCollections.Tests.nuspec">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="LargeCollections.Tests.props" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\MsBuild.NuGet.Pack.1.6.1\tools\MsBuild.NuGet.Pack.targets" Condition="Exists('..\packages\MsBuild.NuGet.Pack.1.6.1\tools\MsBuild.NuGet.Pack.targets')" />
-  <Target Name="EnsureMsBuildNuGetPackImported" BeforeTargets="BeforeBuild" Condition="'$(MsBuildNuGetPackImported)' == ''">
-    <Error Condition="!Exists('..\packages\MsBuild.NuGet.Pack.1.6.1\tools\MsBuild.NuGet.Pack.targets') And ('$(RunNuGetPack)' != '' And $(RunNuGetPack))" Text="You are trying to build with MsBuild.NuGet.Pack, but the MsBuild.NuGet.Pack.targets file is not available on this computer. This is probably because the MsBuild.NuGet.Pack package has not been committed to source control, or NuGet Package Restore is not enabled. Please enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
-    <Error Condition="Exists('..\packages\MsBuild.NuGet.Pack.1.6.1\tools\MsBuild.NuGet.Pack.targets') And ('$(RunNuGetPack)' != '' And $(RunNuGetPack))" Text="MsBuild.NuGet.Pack cannot be run because NuGet packages were restored prior to the build running, and the targets file was unavailable when the build started. Please build the project again to include these packages in the build. You may also need to make sure that your build server does not delete packages prior to each build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>-->
 </Project>

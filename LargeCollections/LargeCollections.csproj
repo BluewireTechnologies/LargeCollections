@@ -1,145 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{75713237-5AAA-414E-BE9E-2F9AFE906A4D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LargeCollections</RootNamespace>
-    <AssemblyName>LargeCollections</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DEBUG_REFERENCE_COUNTS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;DEBUG_REFERENCE_COUNTS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFrameworks>net462</TargetFrameworks>
+    <VersionPrefix>10.0.0</VersionPrefix>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <None Remove="*.ncrunchproject" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\DatabaseTableAccumulator.cs" />
-    <Compile Include="Collections\DatabaseTableAppender.cs" />
-    <Compile Include="Collections\DatabaseTableLargeCollection.cs" />
-    <Compile Include="Collections\LargeCollectionWithBackingStore.cs" />
-    <Compile Include="DummyAccumulatorSelector.cs" />
-    <Compile Include="IOperatorCache.cs" />
-    <Compile Include="Linq\CountInheritance.cs" />
-    <Compile Include="Linq\LargeCollectionOperations.cs" />
-    <Compile Include="Operations\BatchedSinglePassCollection.cs" />
-    <Compile Include="Operations\BatchingPolicy.cs" />
-    <Compile Include="Operations\CachingEnumerator.cs" />
-    <Compile Include="Operations\ConcatenatedEnumerator.cs" />
-    <Compile Include="Operations\ConcatenatedLargeCollection.cs" />
-    <Compile Include="Linq\Extensions.cs" />
-    <Compile Include="Operations\GuardedDisposalEnumerator.cs" />
-    <Compile Include="Operations\SetDifferenceAndIntersectionMerge.cs" />
-    <Compile Include="Operations\SetIntersectionMerge.cs" />
-    <Compile Include="Operations\MultipleCollection.cs" />
-    <Compile Include="Linq\SortOrderInheritance.cs" />
-    <Compile Include="Operations\SortedEnumeratorList.cs" />
-    <Compile Include="Operations\SortPreservingMergeBase.cs" />
-    <Compile Include="Resources\DatabaseTable.cs" />
-    <Compile Include="Resources\DatabaseTableReference.cs" />
-    <Compile Include="Resources\Diagnostics\CrashLog.cs" />
-    <Compile Include="Resources\Diagnostics\ILeakedResourceCounter.cs" />
-    <Compile Include="Resources\Diagnostics\NontracingLeakedResourceCounter.cs" />
-    <Compile Include="Resources\Diagnostics\TracingLeakedResourceCounter.cs" />
-    <Compile Include="Resources\DisposableResourceReference.cs" />
-    <Compile Include="Resources\IResourceReference.cs" />
-    <Compile Include="Resources\MultipleResource.cs" />
-    <Compile Include="Resources\ReferenceCountedResource.cs" />
-    <Compile Include="Resources\TemporaryDatabaseTableReference.cs" />
-    <Compile Include="Resources\TemporaryFileReference.cs" />
-    <Compile Include="Storage\BufferedItemReader.cs" />
-    <Compile Include="Storage\BufferedItemWriter.cs" />
-    <Compile Include="Storage\Database\BackgroundWriterAbortedException.cs" />
-    <Compile Include="Storage\Database\BackingStoreException.cs" />
-    <Compile Include="Storage\Database\ColumnPropertyMapping.cs" />
-    <Compile Include="Storage\Database\NameValueObjectFactory.cs" />
-    <Compile Include="Storage\Database\PropertyMappingBase.cs" />
-    <Compile Include="Storage\Database\TableReader.cs" />
-    <Compile Include="Storage\Database\DatabaseTableSchema.cs" />
-    <Compile Include="Storage\Database\IColumnPropertyMapping.cs" />
-    <Compile Include="Storage\Database\TableWriter.cs" />
-    <Compile Include="Storage\DefaultItemSerialiser.cs" />
-    <Compile Include="Collections\DiskBasedLargeCollection.cs" />
-    <Compile Include="Resources\DisposableList.cs" />
-    <Compile Include="Collections\FileAccumulator.cs" />
-    <Compile Include="Resources\FileReference.cs" />
-    <Compile Include="Storage\GuidSerialiser.cs" />
-    <Compile Include="IAccumulator.cs" />
-    <Compile Include="IAccumulatorSelector.cs" />
-    <Compile Include="IAppendable.cs" />
-    <Compile Include="ICounted.cs" />
-    <Compile Include="IHasBackingStore.cs" />
-    <Compile Include="IHasUnderlyingCollection.cs" />
-    <Compile Include="ILargeCollection.cs" />
-    <Compile Include="Collections\InMemoryAccumulator.cs" />
-    <Compile Include="Collections\InMemoryLargeCollection.cs" />
-    <Compile Include="Resources\IReferenceCountedResource.cs" />
-    <Compile Include="Operations\ISortedMerge.cs" />
-    <Compile Include="LargeCollectionExtensions.cs" />
-    <Compile Include="Operations\LargeCollectionSorter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\Database\ObjectDataReader.cs" />
-    <Compile Include="Storage\IItemSerialiser.cs" />
-    <Compile Include="Storage\SerialisedSizeEstimator.cs" />
-    <Compile Include="Storage\SerialiserSelector.cs" />
-    <Compile Include="Operations\SetDifferenceMerge.cs" />
-    <Compile Include="Operations\SetUnionSortPreservingMerge.cs" />
-    <Compile Include="Collections\LargeCollectionEnumerator.cs" />
-    <Compile Include="SizeBasedAccumulatorSelector.cs" />
-    <Compile Include="Operations\SortedDistinctEnumerator.cs" />
-    <Compile Include="Operations\SortedEnumerableMerger.cs" />
-    <Compile Include="TemporaryFileProvider.cs" />
-    <Compile Include="Utils.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="LargeCollections.nuspec">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
     <None Include="readme.txt" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\MsBuild.NuGet.Pack.1.6.1\tools\MsBuild.NuGet.Pack.targets" Condition="Exists('..\packages\MsBuild.NuGet.Pack.1.6.1\tools\MsBuild.NuGet.Pack.targets')" />
-  <Target Name="EnsureMsBuildNuGetPackImported" BeforeTargets="BeforeBuild" Condition="'$(MsBuildNuGetPackImported)' == ''">
-    <Error Condition="!Exists('..\packages\MsBuild.NuGet.Pack.1.6.1\tools\MsBuild.NuGet.Pack.targets') And ('$(RunNuGetPack)' != '' And $(RunNuGetPack))" Text="You are trying to build with MsBuild.NuGet.Pack, but the MsBuild.NuGet.Pack.targets file is not available on this computer. This is probably because the MsBuild.NuGet.Pack package has not been committed to source control, or NuGet Package Restore is not enabled. Please enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
-    <Error Condition="Exists('..\packages\MsBuild.NuGet.Pack.1.6.1\tools\MsBuild.NuGet.Pack.targets') And ('$(RunNuGetPack)' != '' And $(RunNuGetPack))" Text="MsBuild.NuGet.Pack cannot be run because NuGet packages were restored prior to the build running, and the targets file was unavailable when the build started. Please build the project again to include these packages in the build. You may also need to make sure that your build server does not delete packages prior to each build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>-->
+  <ItemGroup>
+    <PackageReference Include="log4net">
+      <Version>2.0.8</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
 </Project>
