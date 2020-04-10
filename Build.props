@@ -3,7 +3,7 @@
     <ItemGroup>
         <!-- Full list of NuGet package projects -->
         <NugetProjects Include="Bluewire.ReferenceCounting\Bluewire.ReferenceCounting.csproj" />
-        <NugetProjects Include="LargeCollections\LargeCollections.csproj" />
+        <NugetProjects Include="LargeCollections.Core\LargeCollections.Core.csproj" />
         <NugetProjects Include="LargeCollections.FileSystem\LargeCollections.FileSystem.csproj" />
         <NugetProjects Include="LargeCollections.SqlServer\LargeCollections.SqlServer.csproj" />
         <NugetProjects Include="LargeCollections.Operations\LargeCollections.Operations.csproj" />
