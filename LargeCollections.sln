@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolutionPackages", "Solutio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bluewire.ReferenceCounting", "Bluewire.ReferenceCounting\Bluewire.ReferenceCounting.csproj", "{2CF95D96-7B41-4E0E-9FE3-1D6085B08BA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.SqlServer", "LargeCollections.SqlServer\LargeCollections.SqlServer.csproj", "{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,18 @@ Global
 		{2CF95D96-7B41-4E0E-9FE3-1D6085B08BA4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2CF95D96-7B41-4E0E-9FE3-1D6085B08BA4}.Release|x86.ActiveCfg = Release|Any CPU
 		{2CF95D96-7B41-4E0E-9FE3-1D6085B08BA4}.Release|x86.Build.0 = Release|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Debug|x86.Build.0 = Debug|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Release|x86.ActiveCfg = Release|Any CPU
+		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
