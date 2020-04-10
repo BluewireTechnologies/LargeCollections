@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using Bluewire.ReferenceCounting;
 using LargeCollections.Resources;
 using NUnit.Framework;
 

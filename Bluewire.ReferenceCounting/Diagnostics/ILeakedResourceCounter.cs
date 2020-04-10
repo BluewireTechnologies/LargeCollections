@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LargeCollections.Resources.Diagnostics
+namespace Bluewire.ReferenceCounting.Diagnostics
 {
     public interface ILeakedResourceCounter
     {

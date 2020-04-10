@@ -1,4 +1,4 @@
-﻿namespace LargeCollections.Resources
+﻿namespace Bluewire.ReferenceCounting
 {
     public interface ITracedReference
     {

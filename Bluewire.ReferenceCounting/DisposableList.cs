@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LargeCollections.Resources
+namespace Bluewire.ReferenceCounting
 {
     public class DisposableList<T> : List<T>, IDisposable
     {

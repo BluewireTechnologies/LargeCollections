@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LargeCollections.Resources
+namespace Bluewire.ReferenceCounting
 {
     public class DisposableResourceReference<T> : ReferenceCountedResource where T : class, IDisposable
     {

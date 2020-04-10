@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LargeCollections.Resources;
 
-namespace LargeCollections.Linq
+namespace Bluewire.ReferenceCounting
 {
     public static class Extensions
     {

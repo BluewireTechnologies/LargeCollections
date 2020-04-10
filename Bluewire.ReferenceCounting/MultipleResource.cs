@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using LargeCollections.Linq;
 
-namespace LargeCollections.Resources
+namespace Bluewire.ReferenceCounting
 {
     public class MultipleResource : IReferenceCountedResource
     {

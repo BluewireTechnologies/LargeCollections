@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Bluewire.ReferenceCounting;
 using LargeCollections.Linq;
 using NUnit.Framework;
 using Moq;

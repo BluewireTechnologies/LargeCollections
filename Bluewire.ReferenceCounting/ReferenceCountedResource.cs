@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using LargeCollections.Resources.Diagnostics;
+using Bluewire.ReferenceCounting.Diagnostics;
 
-namespace LargeCollections.Resources
+namespace Bluewire.ReferenceCounting
 {
     /// <summary>
     /// Reference-counting marker for a resource.

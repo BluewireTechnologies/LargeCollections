@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace LargeCollections.Resources.Diagnostics
+namespace Bluewire.ReferenceCounting.Diagnostics
 {
     class CrashLog
     {

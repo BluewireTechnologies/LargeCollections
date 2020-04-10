@@ -1,4 +1,5 @@
 ﻿using System;
+using Bluewire.ReferenceCounting;
 using LargeCollections.Resources;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;

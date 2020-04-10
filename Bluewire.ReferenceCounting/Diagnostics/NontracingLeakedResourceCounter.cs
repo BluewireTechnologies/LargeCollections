@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace LargeCollections.Resources.Diagnostics
+namespace Bluewire.ReferenceCounting.Diagnostics
 {
     public class NontracingLeakedResourceCounter : ILeakedResourceCounter
     {

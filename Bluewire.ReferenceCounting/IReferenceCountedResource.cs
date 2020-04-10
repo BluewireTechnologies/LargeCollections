@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Linq;
 
-namespace LargeCollections.Resources
+namespace Bluewire.ReferenceCounting
 {
     public interface IReferenceCountedResource
     {

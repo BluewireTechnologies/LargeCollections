@@ -1,4 +1,5 @@
 ﻿using System;
+using Bluewire.ReferenceCounting;
 using LargeCollections.Storage.Database;
 
 namespace LargeCollections.Resources
