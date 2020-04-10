@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Data;
 using System.Linq.Expressions;
 
-namespace LargeCollections.Storage.Database
+namespace LargeCollections.SqlServer
 {
     public interface IDatabaseTableSchema<T> : IEnumerable<IColumnPropertyMapping<T>>
     {

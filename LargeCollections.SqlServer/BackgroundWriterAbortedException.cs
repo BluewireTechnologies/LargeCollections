@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LargeCollections.Storage.Database
+namespace LargeCollections.SqlServer
 {
     public class BackgroundWriterAbortedException : Exception
     {

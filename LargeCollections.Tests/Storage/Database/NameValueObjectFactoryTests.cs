@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using LargeCollections.Storage.Database;
+using LargeCollections.SqlServer;
 using NUnit.Framework;
 
 namespace LargeCollections.Tests.Storage.Database

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
-using LargeCollections.Resources;
-using LargeCollections.Storage.Database;
 
-namespace LargeCollections.Collections
+namespace LargeCollections.SqlServer
 {
     public class DatabaseTableAppender<T> : IAppendable<T>, IDisposable, IHasBackingStore<DatabaseTableReference<T>>
     {

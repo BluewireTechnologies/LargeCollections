@@ -1,9 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Data;
 using System.Linq.Expressions;
 
-namespace LargeCollections.Storage.Database
+namespace LargeCollections.SqlServer
 {
     public class PropertyMappingBase<T, TProp>
     {

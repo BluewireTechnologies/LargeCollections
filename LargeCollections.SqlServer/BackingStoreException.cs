@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace LargeCollections.Storage.Database
+namespace LargeCollections.SqlServer
 {
     public class BackingStoreException : IOException
     {

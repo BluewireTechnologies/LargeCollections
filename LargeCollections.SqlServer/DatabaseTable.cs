@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
-namespace LargeCollections.Resources
+namespace LargeCollections.SqlServer
 {
     public static class DatabaseTable
     {

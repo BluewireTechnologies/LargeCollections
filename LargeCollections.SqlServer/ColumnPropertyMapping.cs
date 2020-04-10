@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Linq.Expressions;
-using System.Reflection;
 
-namespace LargeCollections.Storage.Database
+namespace LargeCollections.SqlServer
 {
     public class ColumnPropertyMapping<T,TProp> : PropertyMappingBase<T, TProp>, IColumnPropertyMapping<T>
     {

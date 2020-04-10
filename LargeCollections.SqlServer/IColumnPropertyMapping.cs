@@ -1,8 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Data;
 
-namespace LargeCollections.Storage.Database
+namespace LargeCollections.SqlServer
 {
     public interface IPropertyMapping
     {

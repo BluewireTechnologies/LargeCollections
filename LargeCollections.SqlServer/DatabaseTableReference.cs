@@ -1,8 +1,7 @@
 ﻿using System;
 using Bluewire.ReferenceCounting;
-using LargeCollections.Storage.Database;
 
-namespace LargeCollections.Resources
+namespace LargeCollections.SqlServer
 {
     public class DatabaseTableReference<T> : ReferenceCountedResource
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace LargeCollections.Storage.Database
+namespace LargeCollections.SqlServer
 {
     public class NameValueObjectFactory<TSelector, TEntity> : NameValueObjectFactory<TSelector, TEntity, IPropertyMapping<TSelector, TEntity>>
     {

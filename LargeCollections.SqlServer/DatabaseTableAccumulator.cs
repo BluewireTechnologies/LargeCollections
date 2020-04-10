@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using LargeCollections.Resources;
-using LargeCollections.Storage.Database;
+using LargeCollections.Collections;
 
-namespace LargeCollections.Collections
+namespace LargeCollections.SqlServer
 {
     public class DatabaseTableAccumulator<T> : DatabaseTableAppender<T>, IAccumulator<T>
     {

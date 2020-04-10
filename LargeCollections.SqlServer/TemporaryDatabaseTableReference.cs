@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using LargeCollections.Storage.Database;
 
-namespace LargeCollections.Resources
+namespace LargeCollections.SqlServer
 {
     public class TemporaryDatabaseTableReference<T> : DatabaseTableReference<T>
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace LargeCollections.Storage.Database
+namespace LargeCollections.SqlServer
 {
     public interface IEntityReader<out T> : IEnumerator<T>
     {

@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using LargeCollections.Resources;
-using LargeCollections.Storage.Database;
+using LargeCollections.Collections;
 
-namespace LargeCollections.Collections
+namespace LargeCollections.SqlServer
 {
     public class DatabaseTableLargeCollection<T> : LargeCollectionWithBackingStore<T, DatabaseTableReference<T>>
     {
