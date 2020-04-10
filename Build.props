@@ -6,6 +6,7 @@
         <NugetProjects Include="LargeCollections\LargeCollections.csproj" />
         <NugetProjects Include="LargeCollections.FileSystem\LargeCollections.FileSystem.csproj" />
         <NugetProjects Include="LargeCollections.SqlServer\LargeCollections.SqlServer.csproj" />
+        <NugetProjects Include="LargeCollections.Operations\LargeCollections.Operations.csproj" />
         <NugetProjects Include="LargeCollections.Tests\LargeCollections.Tests.csproj" />
     
         <!-- Full list of NUnit test projects -->
