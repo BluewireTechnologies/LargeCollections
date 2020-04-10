@@ -2,14 +2,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net462</TargetFrameworks>
-    <VersionPrefix>10.0.0</VersionPrefix>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="*.ncrunchproject" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LargeCollections\LargeCollections.csproj" />
+    <ProjectReference Include="..\Bluewire.ReferenceCounting.Tests\Bluewire.ReferenceCounting.Tests.csproj" />
+    <ProjectReference Include="..\LargeCollections.FileSystem\LargeCollections.FileSystem.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Moq">

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using LargeCollections.Collections;
-using LargeCollections.Resources;
+using Bluewire.ReferenceCounting;
+using Bluewire.ReferenceCounting.Tests;
+using LargeCollections.Core;
+using LargeCollections.Core.Collections;
 using NUnit.Framework;
 using Moq;
 

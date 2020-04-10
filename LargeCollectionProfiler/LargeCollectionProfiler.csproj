@@ -8,7 +8,8 @@
     <None Remove="*.ncrunchproject" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LargeCollections\LargeCollections.csproj" />
+    <ProjectReference Include="..\LargeCollections.FileSystem\LargeCollections.FileSystem.csproj" />
+    <ProjectReference Include="..\LargeCollections.Operations\LargeCollections.Operations.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NConsoler">

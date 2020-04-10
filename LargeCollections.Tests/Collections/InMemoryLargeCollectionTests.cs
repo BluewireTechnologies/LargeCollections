@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using LargeCollections.Collections;
-using LargeCollections.Storage;
+using Bluewire.ReferenceCounting.Tests;
+using LargeCollections.Core.Collections;
 using NUnit.Framework;
 
 namespace LargeCollections.Tests.Collections

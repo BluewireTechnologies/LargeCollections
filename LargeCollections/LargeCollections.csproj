@@ -1,22 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFrameworks>net462</TargetFrameworks>
-    <VersionPrefix>10.0.0</VersionPrefix>
+    <VersionPrefix>11.0.0</VersionPrefix>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
   <ItemGroup>
-    <None Remove="*.ncrunchproject" />
+    <ProjectReference Include="..\Bluewire.ReferenceCounting\Bluewire.ReferenceCounting.csproj" />
+    <ProjectReference Include="..\LargeCollections.Core\LargeCollections.Core.csproj" />
+    <ProjectReference Include="..\LargeCollections.FileSystem\LargeCollections.FileSystem.csproj" />
+    <ProjectReference Include="..\LargeCollections.Operations\LargeCollections.Operations.csproj" />
+    <ProjectReference Include="..\LargeCollections.SqlServer\LargeCollections.SqlServer.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="log4net">
-      <Version>2.0.8</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.ServiceModel" />
-  </ItemGroup>
+
 </Project>
