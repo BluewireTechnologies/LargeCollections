@@ -2,6 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ItemGroup>
         <!-- Full list of NuGet package projects -->
+        <NugetProjects Include="Bluewire.ReferenceCounting\Bluewire.ReferenceCounting.csproj" />
         <NugetProjects Include="LargeCollections\LargeCollections.csproj" />
         <NugetProjects Include="LargeCollections.Tests\LargeCollections.Tests.csproj" />
     

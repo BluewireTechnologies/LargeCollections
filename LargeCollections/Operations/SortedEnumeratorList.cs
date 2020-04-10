@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LargeCollections.Linq;
 using LargeCollections.Resources;
-using Extensions = LargeCollections.Linq.Extensions;
 
 namespace LargeCollections.Operations
 {

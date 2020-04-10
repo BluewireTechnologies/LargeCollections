@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using LargeCollections.Resources.Diagnostics;
-using log4net;
 
 namespace LargeCollections.Resources
 {
@@ -15,12 +13,10 @@ namespace LargeCollections.Resources
     /// </summary>
     public class ReferenceCountedResource : IReferenceCountedResource
     {
-        private static ILog log = LogManager.GetLogger(typeof (ReferenceCountedResource));
-
         public ReferenceCountedResource()
         {
             Trace = Diagnostics.CaptureTrace();
-            log.DebugFormat("Constructed resource : {0}", this);
+            DebugLog("Constructed resource : {0}", this);
         }
 
         public int RefCount { get; private set; }
@@ -34,7 +30,7 @@ namespace LargeCollections.Resources
         /// <returns></returns>
         public IDisposable Acquire()
         {
-            lock (this)
+            lock (references)
             {
                 if (released) throw new ObjectDisposedException(this.ToString(), "Resource has been released");
                 return AddReference(new Reference(this));
@@ -44,26 +40,26 @@ namespace LargeCollections.Resources
         private IDisposable AddReference(Reference reference)
         {
             RefCount++;
-            log.DebugFormat("Acquired resource : {0}", this);
+            DebugLog("Acquired resource : {0}", this);
             references.Add(reference);
             return reference;
         }
 
         private void Release(Reference reference)
         {
-            lock (this)
+            lock (references)
             {
                 if (released) throw new ObjectDisposedException(this.ToString(), "Resource has been released");
                 references.Remove(reference);
                 RefCount--;
-                log.DebugFormat("Released resource : {0}", this);
+                DebugLog("Released resource : {0}", this);
 
                 if (RefCount != 0) return; // Reference is still live.
 
                 this.released = true;
             }
             // This must be done out of the lock, since cleanup may take time.
-            log.DebugFormat("Disposing resource : {0}", this);
+            DebugLog("Disposing resource : {0}", this);
             GC.SuppressFinalize(this);
             CleanUp();
         }
@@ -78,8 +74,15 @@ namespace LargeCollections.Resources
         {
         }
 
-        private readonly IList<Reference> references = new SynchronizedCollection<Reference>();
+        private readonly IList<Reference> references = new List<Reference>();
         
+        private ITracedReference[] GetReferencesOnCrash()
+        {
+            lock (references)
+            {
+                return references.Cast<ITracedReference>().ToArray();
+            }
+        }
 
 #if DEBUG || DEBUG_REFERENCE_COUNTS
         public static ILeakedResourceCounter Diagnostics = new TracingLeakedResourceCounter();
@@ -96,7 +99,7 @@ namespace LargeCollections.Resources
                 Diagnostics.Leaked(this);
                 WasLeaked();
 
-                log.DebugFormat("Resource leaked : {0}", this);
+                DebugLog("Resource leaked : {0}", this);
                 // really unsafe:
                 try
                 {
@@ -104,7 +107,7 @@ namespace LargeCollections.Resources
                 }
                 catch (Exception ex)
                 {
-                    Diagnostics.OnFinalizerCrash(ex, this, references);
+                    Diagnostics.OnFinalizerCrash(ex, this, GetReferencesOnCrash());
                     throw; // Crash the application. This is intentional; shouldn't get here!
                 }
                 finally
@@ -148,6 +151,12 @@ namespace LargeCollections.Resources
             {
                 return Trace;
             }
+        }
+
+        private static void DebugLog(string format, params object[] parameters)
+        {
+            if (Debug.Listeners.Count == 0) return;
+            Debug.WriteLine(String.Format(format, parameters), typeof(ReferenceCountedResource).FullName);
         }
     }
 }

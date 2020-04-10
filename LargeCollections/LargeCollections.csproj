@@ -17,6 +17,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Bluewire.ReferenceCounting\Bluewire.ReferenceCounting.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
 </Project>
