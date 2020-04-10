@@ -9,6 +9,7 @@
     <None Remove="*.ncrunchproject" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LargeCollections.FileSystem\LargeCollections.FileSystem.csproj" />
     <ProjectReference Include="..\LargeCollections.SqlServer\LargeCollections.SqlServer.csproj" />
     <ProjectReference Include="..\LargeCollections\LargeCollections.csproj" />
   </ItemGroup>

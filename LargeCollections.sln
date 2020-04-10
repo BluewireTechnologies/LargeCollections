@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bluewire.ReferenceCounting"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.SqlServer", "LargeCollections.SqlServer\LargeCollections.SqlServer.csproj", "{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.FileSystem", "LargeCollections.FileSystem\LargeCollections.FileSystem.csproj", "{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,18 @@ Global
 		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Release|x86.ActiveCfg = Release|Any CPU
 		{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}.Release|x86.Build.0 = Release|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Debug|x86.Build.0 = Debug|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Release|x86.ActiveCfg = Release|Any CPU
+		{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

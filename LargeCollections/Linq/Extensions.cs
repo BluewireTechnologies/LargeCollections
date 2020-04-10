@@ -6,7 +6,6 @@ using System.Text;
 using Bluewire.ReferenceCounting;
 using LargeCollections.Collections;
 using LargeCollections.Operations;
-using LargeCollections.Resources;
 
 namespace LargeCollections.Linq
 {

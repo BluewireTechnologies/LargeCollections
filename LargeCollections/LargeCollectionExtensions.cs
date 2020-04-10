@@ -5,7 +5,6 @@ using System.Linq;
 using LargeCollections.Collections;
 using System.Collections.Generic;
 using Bluewire.ReferenceCounting;
-using LargeCollections.Resources;
 
 namespace LargeCollections
 {
