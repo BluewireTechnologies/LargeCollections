@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Bluewire.ReferenceCounting;
 
-namespace LargeCollections.Collections
+namespace LargeCollections.Core.Collections
 {
     public class InMemoryLargeCollection<T> : ILargeCollection<T>, IHasBackingStore<IReferenceCountedResource>
     {

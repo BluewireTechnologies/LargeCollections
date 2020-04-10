@@ -1,4 +1,4 @@
-﻿namespace LargeCollections
+﻿namespace LargeCollections.Core
 {
     public interface IHasBackingStore<out T>
     {

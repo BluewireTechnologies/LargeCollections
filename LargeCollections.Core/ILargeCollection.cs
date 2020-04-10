@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LargeCollections
+namespace LargeCollections.Core
 {
     public interface IDisposableEnumerable<T> : IEnumerable<T>, IDisposable
     {

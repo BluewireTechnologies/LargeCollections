@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LargeCollections.Linq;
 using LargeCollections.Operations;
 using NUnit.Framework;
 

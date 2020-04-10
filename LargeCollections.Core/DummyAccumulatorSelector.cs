@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LargeCollections.Collections;
+﻿using LargeCollections.Core.Collections;
 
-namespace LargeCollections
+namespace LargeCollections.Core
 {
     public class DummyAccumulatorSelector : IAccumulatorSelector
     {

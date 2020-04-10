@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using LargeCollections.Linq;
+using LargeCollections.Core;
+using LargeCollections.Core.Linq;
 
 namespace LargeCollections.Operations
 {

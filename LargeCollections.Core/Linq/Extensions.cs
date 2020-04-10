@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Bluewire.ReferenceCounting;
-using LargeCollections.Collections;
 
-namespace LargeCollections.Linq
+namespace LargeCollections.Core.Linq
 {
     public static class Extensions
     {

@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Timers;
 using LargeCollections;
-using LargeCollections.Collections;
+using LargeCollections.Core;
 using LargeCollections.FileSystem;
-using LargeCollections.Linq;
 using LargeCollections.Operations;
 using NConsoler;
 

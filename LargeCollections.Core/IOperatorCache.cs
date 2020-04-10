@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LargeCollections
+namespace LargeCollections.Core
 {
     public interface IOperatorCache
     {

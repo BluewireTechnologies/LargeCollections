@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 
-namespace LargeCollections.Storage
+namespace LargeCollections.Core.Storage
 {
     public class BufferedItemWriter<T> : IDisposable
     {

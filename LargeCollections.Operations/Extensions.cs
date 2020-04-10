@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Bluewire.ReferenceCounting;
-using LargeCollections.Collections;
+using LargeCollections.Core;
+using LargeCollections.Core.Collections;
 
 namespace LargeCollections.Operations
 {

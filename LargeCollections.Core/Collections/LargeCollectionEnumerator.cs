@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace LargeCollections.Collections
+namespace LargeCollections.Core.Collections
 {
     public class LargeCollectionEnumerator<T> : IEnumerator<T>, ICounted, IHasUnderlying
     {

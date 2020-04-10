@@ -1,5 +1,6 @@
 ﻿using System;
-using LargeCollections.Collections;
+using LargeCollections.Core;
+using LargeCollections.Core.Collections;
 using LargeCollections.Operations;
 using NUnit.Framework;
 

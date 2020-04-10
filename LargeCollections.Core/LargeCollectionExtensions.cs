@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using LargeCollections.Collections;
-using System.Collections.Generic;
 using Bluewire.ReferenceCounting;
 
-namespace LargeCollections
+namespace LargeCollections.Core
 {
     public static class LargeCollectionExtensions
     {

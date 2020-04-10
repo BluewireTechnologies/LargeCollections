@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace LargeCollections
+namespace LargeCollections.Core
 {
     public interface ICounted
     {

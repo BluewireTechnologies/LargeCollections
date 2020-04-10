@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace LargeCollections.Storage
+namespace LargeCollections.Core.Storage
 {
     public class SerialiserSelector : IEnumerable<Type>
     {

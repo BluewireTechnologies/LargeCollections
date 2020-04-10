@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using LargeCollections.Collections;
-using LargeCollections.Storage;
+using LargeCollections.Core;
+using LargeCollections.Core.Collections;
+using LargeCollections.Core.Storage;
 
 namespace LargeCollections.FileSystem
 {

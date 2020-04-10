@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading;
 
-namespace LargeCollections.Storage
+namespace LargeCollections.Core.Storage
 {
     public class GuidSerialiser : IItemSerialiser<Guid>
     {

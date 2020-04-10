@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Bluewire.ReferenceCounting;
-using LargeCollections.Linq;
+using LargeCollections.Core;
 
 namespace LargeCollections.Operations
 {

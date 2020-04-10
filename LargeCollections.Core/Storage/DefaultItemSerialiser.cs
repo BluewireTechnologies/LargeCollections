@@ -2,7 +2,7 @@
 using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace LargeCollections.Storage
+namespace LargeCollections.Core.Storage
 {
     public class DefaultItemSerialiser<T> : IItemSerialiser<T>
     {

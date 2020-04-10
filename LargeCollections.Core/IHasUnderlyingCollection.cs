@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace LargeCollections
+﻿namespace LargeCollections.Core
 {
     public interface IHasUnderlying
     {

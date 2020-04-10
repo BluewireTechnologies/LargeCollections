@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace LargeCollections.Storage
+namespace LargeCollections.Core.Storage
 {
     public class SerialisedSizeEstimator
     {

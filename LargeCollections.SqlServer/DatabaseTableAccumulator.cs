@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using LargeCollections.Collections;
+using LargeCollections.Core;
+using LargeCollections.Core.Collections;
 
 namespace LargeCollections.SqlServer
 {

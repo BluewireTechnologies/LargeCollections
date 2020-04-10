@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using LargeCollections.Collections;
-using LargeCollections.Linq;
+using LargeCollections.Core;
+using LargeCollections.Core.Collections;
 using LargeCollections.Operations;
 using NUnit.Framework;
 

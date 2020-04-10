@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Bluewire.ReferenceCounting;
 
-namespace LargeCollections.Collections
+namespace LargeCollections.Core.Collections
 {
     public class InMemoryAccumulator<T> : IAccumulator<T>, IHasBackingStore<IReferenceCountedResource>
     {

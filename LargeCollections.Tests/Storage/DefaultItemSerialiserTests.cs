@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LargeCollections.Storage;
+using LargeCollections.Core.Storage;
 using NUnit.Framework;
 
 namespace LargeCollections.Tests.Storage

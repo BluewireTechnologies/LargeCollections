@@ -2,9 +2,9 @@
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using LargeCollections.Collections;
+using LargeCollections.Core;
+using LargeCollections.Core.Storage;
 using LargeCollections.FileSystem;
-using LargeCollections.Storage;
 using NUnit.Framework;
 
 namespace LargeCollections.Tests.Collections

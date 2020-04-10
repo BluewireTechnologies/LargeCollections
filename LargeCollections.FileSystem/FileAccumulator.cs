@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using LargeCollections.Storage;
+using LargeCollections.Core;
+using LargeCollections.Core.Storage;
 
 namespace LargeCollections.FileSystem
 {
