@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using LargeCollections.Linq;
 
-namespace LargeCollections.Linq
+namespace LargeCollections.Operations
 {
     public static class SortOrderInheritance
     {

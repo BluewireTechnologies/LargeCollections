@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
+using LargeCollections.Linq;
 
-namespace LargeCollections.Linq
+namespace LargeCollections.Operations
 {
     public static class CountInheritance
     {
