@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using LargeCollections.Collections;
-using LargeCollections.Resources;
+using LargeCollections.FileSystem;
 using LargeCollections.Storage;
 using NUnit.Framework;
 

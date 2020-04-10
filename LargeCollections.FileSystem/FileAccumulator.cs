@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using LargeCollections.Resources;
 using LargeCollections.Storage;
 
-namespace LargeCollections.Collections
+namespace LargeCollections.FileSystem
 {
     public class FileAccumulator<T> : IAccumulator<T>, IHasBackingStore<FileReference>
     {

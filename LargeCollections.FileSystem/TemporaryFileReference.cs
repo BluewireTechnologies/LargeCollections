@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LargeCollections.Resources
+namespace LargeCollections.FileSystem
 {
     public class TemporaryFileReference : FileReference
     {

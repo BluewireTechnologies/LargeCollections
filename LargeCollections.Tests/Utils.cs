@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Bluewire.ReferenceCounting;
-using LargeCollections.Resources;
 using NUnit.Framework;
 
 namespace LargeCollections.Tests

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace LargeCollections
+namespace LargeCollections.FileSystem
 {
     public class TemporaryFileProvider
     {

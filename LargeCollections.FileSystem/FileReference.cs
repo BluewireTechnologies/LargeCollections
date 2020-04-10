@@ -2,7 +2,7 @@
 using System.IO;
 using Bluewire.ReferenceCounting;
 
-namespace LargeCollections.Resources
+namespace LargeCollections.FileSystem
 {
     public class FileReference : ReferenceCountedResource
     {

@@ -1,4 +1,4 @@
-﻿using LargeCollections.Resources;
+﻿using LargeCollections.FileSystem;
 using NUnit.Framework;
 
 namespace LargeCollections.Tests

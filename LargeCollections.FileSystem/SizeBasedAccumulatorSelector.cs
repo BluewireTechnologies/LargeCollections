@@ -5,7 +5,7 @@ using System.Threading;
 using LargeCollections.Collections;
 using LargeCollections.Storage;
 
-namespace LargeCollections
+namespace LargeCollections.FileSystem
 {
     /// <summary>
     /// 

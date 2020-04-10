@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using LargeCollections.Resources;
+using LargeCollections.Collections;
 using LargeCollections.Storage;
 
-namespace LargeCollections.Collections
+namespace LargeCollections.FileSystem
 {
     public class DiskBasedLargeCollection<T> : LargeCollectionWithBackingStore<T, FileReference>
     {
