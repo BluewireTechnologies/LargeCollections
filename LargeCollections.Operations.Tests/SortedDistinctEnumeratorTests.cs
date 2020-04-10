@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LargeCollections.Operations;
+using LargeCollections.Tests;
 using NUnit.Framework;
 
-namespace LargeCollections.Tests.Operations
+namespace LargeCollections.Operations.Tests
 {
     [TestFixture, CheckResources]
     public class SortedDistinctEnumeratorTests

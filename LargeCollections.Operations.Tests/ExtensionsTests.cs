@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Bluewire.ReferenceCounting;
-using NUnit.Framework;
+using LargeCollections.Tests;
 using Moq;
+using NUnit.Framework;
 
-namespace LargeCollections.Tests.Linq
+namespace LargeCollections.Operations.Tests
 {
     [TestFixture, CheckResources]
     public class ExtensionsTests

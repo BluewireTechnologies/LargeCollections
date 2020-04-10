@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using LargeCollections.Core;
 using LargeCollections.Core.Collections;
-using LargeCollections.Operations;
-using NUnit.Framework;
+using LargeCollections.Tests;
 using Moq;
+using NUnit.Framework;
 
-namespace LargeCollections.Tests.Linq
+namespace LargeCollections.Operations.Tests
 {
     [TestFixture, CheckResources]
     public class BufferTests

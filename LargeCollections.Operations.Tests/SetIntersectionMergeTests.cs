@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using LargeCollections.Core;
 using LargeCollections.Core.Collections;
 using LargeCollections.FileSystem;
-using LargeCollections.Operations;
+using LargeCollections.Tests;
 using NUnit.Framework;
 
-namespace LargeCollections.Tests.Operations
+namespace LargeCollections.Operations.Tests
 {
     [TestFixture, CheckResources]
     public class SetIntersectionMergeTests

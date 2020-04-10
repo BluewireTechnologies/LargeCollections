@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.SqlServer.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.FileSystem.Tests", "LargeCollections.FileSystem.Tests\LargeCollections.FileSystem.Tests.csproj", "{DFCA93D5-C502-4C6A-8985-14DC482648EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.Operations.Tests", "LargeCollections.Operations.Tests\LargeCollections.Operations.Tests.csproj", "{B22058CA-0F64-4B3F-AF81-986C7091987C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -163,6 +165,18 @@ Global
 		{DFCA93D5-C502-4C6A-8985-14DC482648EB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{DFCA93D5-C502-4C6A-8985-14DC482648EB}.Release|x86.ActiveCfg = Release|Any CPU
 		{DFCA93D5-C502-4C6A-8985-14DC482648EB}.Release|x86.Build.0 = Release|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Debug|x86.Build.0 = Debug|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Release|x86.ActiveCfg = Release|Any CPU
+		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

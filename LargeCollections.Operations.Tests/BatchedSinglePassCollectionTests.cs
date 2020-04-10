@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Bluewire.ReferenceCounting;
 using LargeCollections.Core.Collections;
-using LargeCollections.Operations;
+using LargeCollections.Tests;
 using NUnit.Framework;
 
-namespace LargeCollections.Tests.Operations
+namespace LargeCollections.Operations.Tests
 {
     [TestFixture, CheckResources]
     public class BatchedSinglePassCollectionTests

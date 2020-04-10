@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LargeCollections.Core;
 using LargeCollections.Core.Collections;
-using LargeCollections.Operations;
-using NUnit.Framework;
+using LargeCollections.Tests;
 using Moq;
+using NUnit.Framework;
 
-namespace LargeCollections.Tests.Operations
+namespace LargeCollections.Operations.Tests
 {
     [TestFixture, CheckResources]
     public class LargeCollectionSorterTests
