@@ -12,6 +12,7 @@
     
         <!-- Full list of NUnit test projects -->
         <NUnitProjects Include="LargeCollections.Tests\LargeCollections.Tests.csproj" />
+        <NUnitProjects Include="LargeCollections.FileSystem.Tests\LargeCollections.FileSystem.Tests.csproj" />
         <NUnitProjects Include="LargeCollections.SqlServer.Tests\LargeCollections.SqlServer.Tests.csproj" />
     </ItemGroup>
     <ItemDefinitionGroup>

@@ -1,8 +1,8 @@
 ﻿using LargeCollections.Core;
-using LargeCollections.FileSystem;
+using LargeCollections.Tests;
 using NUnit.Framework;
 
-namespace LargeCollections.Tests
+namespace LargeCollections.FileSystem.Tests
 {
     [TestFixture, CheckResources]
     public class SizeBasedAccumulatorSelectorTests

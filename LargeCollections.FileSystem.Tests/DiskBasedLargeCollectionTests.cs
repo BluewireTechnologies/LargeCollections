@@ -4,10 +4,11 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using LargeCollections.Core;
 using LargeCollections.Core.Storage;
-using LargeCollections.FileSystem;
+using LargeCollections.Tests;
+using LargeCollections.Tests.Collections;
 using NUnit.Framework;
 
-namespace LargeCollections.Tests.Collections
+namespace LargeCollections.FileSystem.Tests
 {
     [TestFixture, CheckResources]
     public class DiskBasedLargeCollectionTests : BaselineTestsForLargeCollectionWithBackingStore<FileReference>
