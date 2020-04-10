@@ -10,7 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bluewire.ReferenceCounting.Tests\Bluewire.ReferenceCounting.Tests.csproj" />
     <ProjectReference Include="..\LargeCollections.SqlServer\LargeCollections.SqlServer.csproj" />
+    <ProjectReference Include="..\LargeCollections.Tests\LargeCollections.Tests.csproj" />
   </ItemGroup>
 
 </Project>
