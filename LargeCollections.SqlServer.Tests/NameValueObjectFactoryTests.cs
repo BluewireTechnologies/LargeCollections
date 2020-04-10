@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Data;
-using LargeCollections.SqlServer;
 using NUnit.Framework;
 
-namespace LargeCollections.Tests.Storage.Database
+namespace LargeCollections.SqlServer.Tests
 {
     [TestFixture]
     public class NameValueObjectFactoryTests
