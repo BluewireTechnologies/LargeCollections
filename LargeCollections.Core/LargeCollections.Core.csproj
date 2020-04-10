@@ -12,14 +12,6 @@
     <None Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="log4net">
-      <Version>2.0.8</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Bluewire.ReferenceCounting\Bluewire.ReferenceCounting.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.ServiceModel" />
   </ItemGroup>
 </Project>
