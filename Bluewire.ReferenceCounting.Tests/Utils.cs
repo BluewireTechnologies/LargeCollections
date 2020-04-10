@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Bluewire.ReferenceCounting;
 using NUnit.Framework;
 
-namespace LargeCollections.Tests
+namespace Bluewire.ReferenceCounting.Tests
 {
     public static class Utils
     {

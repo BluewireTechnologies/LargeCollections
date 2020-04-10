@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Bluewire.ReferenceCounting;
+using Bluewire.ReferenceCounting.Tests;
 using LargeCollections.Core.Collections;
 using LargeCollections.Tests;
 using NUnit.Framework;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Bluewire.ReferenceCounting.Tests;
 using LargeCollections.Core;
 using LargeCollections.Core.Collections;
 using LargeCollections.Tests;

@@ -9,23 +9,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollectionProfiler", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolutionPackages", "SolutionPackages\SolutionPackages.csproj", "{71191707-58E7-4BC8-B035-259D7DCEC50F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bluewire.ReferenceCounting", "Bluewire.ReferenceCounting\Bluewire.ReferenceCounting.csproj", "{2CF95D96-7B41-4E0E-9FE3-1D6085B08BA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bluewire.ReferenceCounting", "Bluewire.ReferenceCounting\Bluewire.ReferenceCounting.csproj", "{2CF95D96-7B41-4E0E-9FE3-1D6085B08BA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.SqlServer", "LargeCollections.SqlServer\LargeCollections.SqlServer.csproj", "{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.SqlServer", "LargeCollections.SqlServer\LargeCollections.SqlServer.csproj", "{1F4D9CB5-8CE4-4EA4-8B56-22D1B3B7E17F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.FileSystem", "LargeCollections.FileSystem\LargeCollections.FileSystem.csproj", "{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.FileSystem", "LargeCollections.FileSystem\LargeCollections.FileSystem.csproj", "{07A2BBE5-0CB9-4EA6-8386-4DAE9397D3BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.Operations", "LargeCollections.Operations\LargeCollections.Operations.csproj", "{90A84227-E6A0-4141-A9F8-B0FCD08029C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.Operations", "LargeCollections.Operations\LargeCollections.Operations.csproj", "{90A84227-E6A0-4141-A9F8-B0FCD08029C9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.Core", "LargeCollections.Core\LargeCollections.Core.csproj", "{5FCCB031-DD19-40AA-9EDF-EEBFA582B8D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections", "LargeCollections\LargeCollections.csproj", "{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections", "LargeCollections\LargeCollections.csproj", "{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.SqlServer.Tests", "LargeCollections.SqlServer.Tests\LargeCollections.SqlServer.Tests.csproj", "{DFBF940C-6496-4AC0-84D4-86CA48139240}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.SqlServer.Tests", "LargeCollections.SqlServer.Tests\LargeCollections.SqlServer.Tests.csproj", "{DFBF940C-6496-4AC0-84D4-86CA48139240}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.FileSystem.Tests", "LargeCollections.FileSystem.Tests\LargeCollections.FileSystem.Tests.csproj", "{DFCA93D5-C502-4C6A-8985-14DC482648EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.FileSystem.Tests", "LargeCollections.FileSystem.Tests\LargeCollections.FileSystem.Tests.csproj", "{DFCA93D5-C502-4C6A-8985-14DC482648EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargeCollections.Operations.Tests", "LargeCollections.Operations.Tests\LargeCollections.Operations.Tests.csproj", "{B22058CA-0F64-4B3F-AF81-986C7091987C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.Operations.Tests", "LargeCollections.Operations.Tests\LargeCollections.Operations.Tests.csproj", "{B22058CA-0F64-4B3F-AF81-986C7091987C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bluewire.ReferenceCounting.Tests", "Bluewire.ReferenceCounting.Tests\Bluewire.ReferenceCounting.Tests.csproj", "{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -177,6 +179,18 @@ Global
 		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Release|x86.ActiveCfg = Release|Any CPU
 		{B22058CA-0F64-4B3F-AF81-986C7091987C}.Release|x86.Build.0 = Release|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Debug|x86.Build.0 = Debug|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Release|x86.ActiveCfg = Release|Any CPU
+		{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

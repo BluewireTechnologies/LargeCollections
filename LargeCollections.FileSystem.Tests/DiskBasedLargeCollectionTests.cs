@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using Bluewire.ReferenceCounting.Tests;
 using LargeCollections.Core;
 using LargeCollections.Core.Storage;
 using LargeCollections.Tests;

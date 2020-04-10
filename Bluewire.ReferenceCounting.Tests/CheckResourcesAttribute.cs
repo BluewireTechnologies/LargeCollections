@@ -1,9 +1,8 @@
 ﻿using System;
-using Bluewire.ReferenceCounting;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace LargeCollections.Tests
+namespace Bluewire.ReferenceCounting.Tests
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class CheckResourcesAttribute : Attribute, ITestAction
