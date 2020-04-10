@@ -7,7 +7,6 @@
         <NugetProjects Include="LargeCollections.FileSystem\LargeCollections.FileSystem.csproj" />
         <NugetProjects Include="LargeCollections.SqlServer\LargeCollections.SqlServer.csproj" />
         <NugetProjects Include="LargeCollections.Operations\LargeCollections.Operations.csproj" />
-        <NugetProjects Include="LargeCollections.Tests\LargeCollections.Tests.csproj" />
         <NugetProjects Include="Bluewire.ReferenceCounting.Tests\Bluewire.ReferenceCounting.Tests.csproj" />
         <NugetProjects Include="LargeCollections\LargeCollections.csproj" />
     
