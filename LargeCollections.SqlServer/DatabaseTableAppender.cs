@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using LargeCollections.Core;
 
 namespace LargeCollections.SqlServer
@@ -15,19 +14,17 @@ namespace LargeCollections.SqlServer
         /// <summary>
         /// Create a temporary table reference with the specified name on the provided connection with the specified schema.
         /// </summary>
-        public DatabaseTableAppender(SqlConnection connection, DatabaseTableSchema<T> schema, string tableName)
+        public DatabaseTableAppender(SqlSession session, DatabaseTableSchema<T> schema, string tableName)
         {
-            InitialiseTableReference(new TemporaryDatabaseTableReference<T>(connection, schema, tableName));
+            InitialiseTableReference(new TemporaryDatabaseTableReference<T>(session, schema, tableName));
         }
 
         /// <summary>
         /// Create a unique temporary table reference on the provided connection with the specified schema.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="schema"></param>
-        public DatabaseTableAppender(SqlConnection connection, DatabaseTableSchema<T> schema)
+        public DatabaseTableAppender(SqlSession session,  DatabaseTableSchema<T> schema)
         {
-            InitialiseTableReference(new TemporaryDatabaseTableReference<T>(connection, schema));
+            InitialiseTableReference(new TemporaryDatabaseTableReference<T>(session, schema));
         }
 
         /// <summary>

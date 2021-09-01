@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace LargeCollections.SqlServer
 {
     public class TemporaryDatabaseTableReference<T> : DatabaseTableReference<T>
     {
-        public SqlConnection Connection { get; private set; }
+        public SqlSession Session { get; private set; }
 
-        public TemporaryDatabaseTableReference(SqlConnection connection, DatabaseTableSchema<T> schema)
+        public TemporaryDatabaseTableReference(SqlSession session, DatabaseTableSchema<T> schema)
             : base(schema, "##temp_" + Guid.NewGuid().ToString("N"))
         {
-            Connection = connection;
+            Session = session;
         }
 
-        public TemporaryDatabaseTableReference(SqlConnection connection, DatabaseTableSchema<T> schema, string tableName)
+        public TemporaryDatabaseTableReference(SqlSession session, DatabaseTableSchema<T> schema, string tableName)
             : base(schema, ValidateTableName(tableName))
         {
-            Connection = connection;
+            Session = session;
         }
 
         private static string ValidateTableName(string specifiedTableName)
@@ -30,8 +29,8 @@ namespace LargeCollections.SqlServer
         private bool exists;
         public TableWriter<T> Create()
         {
-            Schema.CreateTable(Connection, TableName);
-            var writer = Schema.GetWriter(Connection, TableName);
+            Schema.CreateTable(Session, TableName);
+            var writer = Schema.GetWriter(Session, TableName);
             exists = true;
             return writer;
         }
@@ -39,7 +38,7 @@ namespace LargeCollections.SqlServer
         public void ApplyIndex(string columnName)
         {
             if(!exists) throw new InvalidOperationException("Cannot create index. Table has not yet been created.");
-            Schema.AddIndex(Connection, TableName, columnName);
+            Schema.AddIndex(Session, TableName, columnName);
         }
 
         public override bool Exists()
@@ -51,7 +50,7 @@ namespace LargeCollections.SqlServer
         {
             if (exists)
             {
-                using (var command = Connection.CreateCommand())
+                using (var command = Session.CreateCommand())
                 {
                     command.CommandType = CommandType.Text;
                     command.CommandText = String.Format("DROP TABLE [{0}]", TableName);
