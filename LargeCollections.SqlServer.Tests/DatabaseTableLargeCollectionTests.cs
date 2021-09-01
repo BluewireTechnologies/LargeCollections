@@ -14,24 +14,40 @@ namespace LargeCollections.SqlServer.Tests
     {
         class Harness : LargeCollectionTestHarness<DatabaseTableReference<int>>
         {
-            private readonly SqlConnection connection;
+            private readonly SqlSession session;
 
             public Harness()
             {
                 var connectionString = TestDatabase.LocalTempDb.Get();
-                connection = new SqlConnection(connectionString);
+                var connection = new SqlConnection(connectionString);
                 connection.Open();
+                var transaction = connection.BeginTransaction();
+                session = new SqlSession(connection, transaction);
             }
 
             public override void Dispose()
             {
-                connection.Close();
+                try
+                {
+                    try
+                    {
+                        session.Transaction.Commit();
+                    }
+                    finally
+                    {
+                        session.Transaction.Dispose();
+                    }
+                }
+                finally
+                {
+                    session.Connection.Dispose();
+                }
                 base.Dispose();
             }
 
             public override IAccumulator<int> GetAccumulator()
             {
-                return new DatabaseTableAccumulator<int>(connection, SqlDbType.Int);
+                return new DatabaseTableAccumulator<int>(session, SqlDbType.Int);
             }
 
             public override bool BackingStoreExists(IAccumulator<int> accumulator)

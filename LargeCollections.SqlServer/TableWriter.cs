@@ -16,9 +16,9 @@ namespace LargeCollections.SqlServer
     {
         private QueueConsumerFactory factory;
 
-        public TableWriter(SqlConnection cn, List<IColumnPropertyMapping<T>> columns, string tableName)
+        public TableWriter(SqlSession session, List<IColumnPropertyMapping<T>> columns, string tableName)
         {
-            factory = new QueueConsumerFactory(cn, columns, tableName);
+            factory = new QueueConsumerFactory(session, columns, tableName);
             timeout = TimeSpan.FromSeconds(factory.BulkCopy.BulkCopyTimeout);
             instance = new BackgroundWriter(factory);
         }
@@ -93,9 +93,9 @@ namespace LargeCollections.SqlServer
             public SqlBulkCopy BulkCopy { get; private set; }
             private readonly List<IColumnPropertyMapping<T>> columns;
 
-            public QueueConsumerFactory(SqlConnection cn, List<IColumnPropertyMapping<T>> columns, string tableName)
+            public QueueConsumerFactory(SqlSession session, List<IColumnPropertyMapping<T>> columns, string tableName)
             {
-                this.BulkCopy = new SqlBulkCopy(cn, SqlBulkCopyOptions.TableLock, null)
+                this.BulkCopy = new SqlBulkCopy(session.Connection, SqlBulkCopyOptions.TableLock, session.Transaction)
                 {
                     DestinationTableName = tableName,
                     BatchSize = 500

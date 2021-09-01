@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -9,11 +8,11 @@ namespace LargeCollections.SqlServer
 {
     public interface IDatabaseTableSchema<T> : IEnumerable<IColumnPropertyMapping<T>>
     {
-        void CreateTable(SqlConnection cn, string tableName);
-        void AddIndex(SqlConnection cn, string tableName, string columnName);
+        void CreateTable(SqlSession session, string tableName);
+        void AddIndex(SqlSession session, string tableName, string columnName);
 
         string PrimaryKey { get; }
-        TableWriter<T> GetWriter(SqlConnection cn, string tableName);
+        TableWriter<T> GetWriter(SqlSession session, string tableName);
 
         NameValueObjectFactory<string, T> GetRecordFactory();
     }
@@ -49,11 +48,11 @@ namespace LargeCollections.SqlServer
         private string primaryKey;
         private bool clustered;
 
-        public void CreateTable(SqlConnection cn, string tableName)
+        public void CreateTable(SqlSession session, string tableName)
         {
             var columns = properties.Select(FormatColumn).ToArray();
             var sql = String.Format("create table [{0}]({1});", tableName, String.Join(",\n", columns));
-            using (var command = cn.CreateCommand())
+            using (var command = session.CreateCommand())
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
@@ -72,11 +71,11 @@ namespace LargeCollections.SqlServer
             return columnDefinition;
         }
 
-        public void AddIndex(SqlConnection cn, string tableName, string columnName)
+        public void AddIndex(SqlSession session, string tableName, string columnName)
         {
             if (!properties.Any(p => p.Name == columnName)) throw new InvalidOperationException("Column does not exist: " + columnName);
             var createSql = String.Format("CREATE NONCLUSTERED INDEX [idx_{0}_{2}] ON [{1}]([{2}])", tableName.TrimStart('#'), tableName, columnName);
-            using (var command = cn.CreateCommand())
+            using (var command = session.CreateCommand())
             {
                 command.CommandType = CommandType.Text;
                 command.CommandText = createSql;
@@ -111,9 +110,9 @@ namespace LargeCollections.SqlServer
         }
 
 
-        public TableWriter<T> GetWriter(SqlConnection cn, string tableName)
+        public TableWriter<T> GetWriter(SqlSession session, string tableName)
         {
-            return new TableWriter<T>(cn, properties, tableName);
+            return new TableWriter<T>(session, properties, tableName);
         }
 
 

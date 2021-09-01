@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace LargeCollections.SqlServer
 {
     public static class DatabaseTable
     {
-        public static void Delete(SqlConnection cn, string tableName)
+        public static void Delete(SqlSession session, string tableName)
         {
-            using (var command = cn.CreateCommand())
+            using (var command = session.CreateCommand())
             {
                 command.CommandType = CommandType.Text;
                 command.CommandText = String.Format("DROP TABLE [{0}]", tableName);
@@ -16,9 +15,9 @@ namespace LargeCollections.SqlServer
             }
         }
 
-        public static bool Exists(SqlConnection cn, string tableName)
+        public static bool Exists(SqlSession session, string tableName)
         {
-            using (var cmd = cn.CreateCommand())
+            using (var cmd = session.CreateCommand())
             {
                 cmd.CommandText = "SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tableName";
                 cmd.Parameters.AddWithValue("tableName", tableName);

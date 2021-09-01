@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using LargeCollections.Core.Collections;
 
@@ -9,14 +8,14 @@ namespace LargeCollections.SqlServer
 {
     public class DatabaseTableLargeCollection<T> : LargeCollectionWithBackingStore<T, DatabaseTableReference<T>>
     {
-        private readonly SqlConnection connection;
+        private readonly SqlSession session;
 
         private readonly bool readTableUsingCasts;
 
-        public DatabaseTableLargeCollection(SqlConnection connection, DatabaseTableReference<T> reference, long itemCount) : base(reference, itemCount)
+        public DatabaseTableLargeCollection(SqlSession session, DatabaseTableReference<T> reference, long itemCount) : base(reference, itemCount)
         {
             readTableUsingCasts = ShouldUseCastsForReadingSingleColumn(reference.Schema);
-            this.connection = connection;
+            this.session = session;
         }
 
         private static bool ShouldUseCastsForReadingSingleColumn(IDatabaseTableSchema<T> schema)
@@ -35,7 +34,7 @@ namespace LargeCollections.SqlServer
 
         private IEnumerator<T> GetSimpleEnumeratorImplementation(string fieldName)
         {
-            using (var command = connection.CreateCommand())
+            using (var command = session.CreateCommand())
             {
                 command.CommandType = CommandType.Text;
                 command.CommandText = String.Format("SELECT [{0}] FROM [{1}]", fieldName, BackingStore.TableName);
@@ -52,7 +51,7 @@ namespace LargeCollections.SqlServer
 
         private IEnumerator<T> GetMultiColumnEnumeratorImplementation(NameValueObjectFactory<string,T> factory)
         {
-            using (var command = connection.CreateCommand())
+            using (var command = session.CreateCommand())
             {
                 command.CommandType = CommandType.Text;
                 command.CommandText = String.Format("SELECT [{0}] FROM [{1}]", String.Join("], [", factory.RequiredNames.ToArray()), BackingStore.TableName);
