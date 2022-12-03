@@ -110,10 +110,6 @@ namespace Bluewire.ReferenceCounting
                     Diagnostics.OnFinalizerCrash(ex, this, GetReferencesOnCrash());
                     throw; // Crash the application. This is intentional; shouldn't get here!
                 }
-                finally
-                {
-                    Debug.Fail(String.Format("Resource was not released before finalisation. {0}", this));
-                }
             }
         }
 
@@ -155,7 +151,6 @@ namespace Bluewire.ReferenceCounting
 
         private static void DebugLog(string format, params object[] parameters)
         {
-            if (Debug.Listeners.Count == 0) return;
             Debug.WriteLine(String.Format(format, parameters), typeof(ReferenceCountedResource).FullName);
         }
     }

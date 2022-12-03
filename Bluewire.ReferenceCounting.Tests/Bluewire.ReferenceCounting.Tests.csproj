@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
+    <VersionPrefix>2.0.0</VersionPrefix>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
@@ -11,7 +11,10 @@
     <ProjectReference Include="..\Bluewire.ReferenceCounting\Bluewire.ReferenceCounting.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+    <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.36" />
   </ItemGroup>
   <Import Project="..\StyleCopAnalyzers.props" />
 </Project>

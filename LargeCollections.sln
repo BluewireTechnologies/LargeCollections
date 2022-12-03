@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.SqlServer.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.FileSystem.Tests", "LargeCollections.FileSystem.Tests\LargeCollections.FileSystem.Tests.csproj", "{DFCA93D5-C502-4C6A-8985-14DC482648EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bluewire.ReferenceCounting.Tests", "Bluewire.ReferenceCounting.Tests\Bluewire.ReferenceCounting.Tests.csproj", "{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bluewire.ReferenceCounting.Tests", "Bluewire.ReferenceCounting.Tests\Bluewire.ReferenceCounting.Tests.csproj", "{A084E680-3A2F-4004-88BB-6AE3C70B4D4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
