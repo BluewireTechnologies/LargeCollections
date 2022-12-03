@@ -25,7 +25,7 @@ namespace Bluewire.ReferenceCounting
                 catch
                 {
                     // clean up as much as possible.
-                } 
+                }
             }
         }
 

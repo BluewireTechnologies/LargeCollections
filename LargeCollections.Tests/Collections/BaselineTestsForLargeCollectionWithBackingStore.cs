@@ -122,7 +122,7 @@ namespace LargeCollections.Tests.Collections
         public void CanReadCompletedCollection()
         {
             var elements = new[] { 1, 2, 3 };
-            using(var harness = CreateHarness())
+            using (var harness = CreateHarness())
             using (var collection = harness.GetCollection(elements))
             {
                 CollectionAssert.AreEquivalent(elements, collection);

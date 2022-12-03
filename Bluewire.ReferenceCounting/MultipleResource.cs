@@ -6,7 +6,7 @@ namespace Bluewire.ReferenceCounting
     public class MultipleResource : IReferenceCountedResource
     {
         private readonly IReferenceCountedResource[] resources;
-        
+
         public MultipleResource(params IReferenceCountedResource[] resources)
         {
             this.resources = resources;

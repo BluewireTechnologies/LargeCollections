@@ -21,7 +21,7 @@ namespace LargeCollections.SqlServer
         private static bool ShouldUseCastsForReadingSingleColumn(IDatabaseTableSchema<T> schema)
         {
             var factory = schema.GetRecordFactory();
-            if(!factory.IsValid)
+            if (!factory.IsValid)
             {
                 // A collection backed by a single-column table can try to cast instead of using a record factory, if
                 // the field mapping doesn't define deserialisation.
@@ -76,7 +76,7 @@ namespace LargeCollections.SqlServer
                 return GetSimpleEnumeratorImplementation(BackingStore.Schema.Single().Name);
             }
             var factory = BackingStore.Schema.GetRecordFactory();
-            
+
             return GetMultiColumnEnumeratorImplementation(factory);
         }
     }

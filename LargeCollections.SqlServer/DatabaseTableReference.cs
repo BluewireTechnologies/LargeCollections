@@ -12,9 +12,9 @@ namespace LargeCollections.SqlServer
             Schema = schema;
             TableName = tableName;
         }
-        
+
         public IDatabaseTableSchema<T> Schema { get; private set; }
-        
+
         public virtual bool Exists()
         {
             throw new NotImplementedException();

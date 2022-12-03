@@ -14,7 +14,7 @@ namespace LargeCollections.Core.Linq
         public static long Count<T>(this IEnumerator<T> enumerator)
         {
             var counted = enumerator.GetUnderlying<ICounted>();
-            if(counted == null) throw new InvalidOperationException("Not a counted enumerator.");
+            if (counted == null) throw new InvalidOperationException("Not a counted enumerator.");
             return counted.Count;
         }
     }
@@ -40,7 +40,7 @@ namespace LargeCollections.Core.Linq
 
         public void Dispose()
         {
-            if(enumerable is IDisposable) ((IDisposable)enumerable).Dispose();
+            if (enumerable is IDisposable) ((IDisposable)enumerable).Dispose();
         }
 
         public object Underlying

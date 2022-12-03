@@ -75,7 +75,7 @@ namespace Bluewire.ReferenceCounting
         }
 
         private readonly IList<Reference> references = new List<Reference>();
-        
+
         private ITracedReference[] GetReferencesOnCrash()
         {
             lock (references)

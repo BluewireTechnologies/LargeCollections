@@ -24,7 +24,7 @@ namespace LargeCollections.Tests.Storage
         [Test]
         public void CanSerialiseGuidArray()
         {
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 Write(stream, 50.Times(Guid.NewGuid).ToArray());
 

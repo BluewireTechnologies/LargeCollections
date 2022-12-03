@@ -10,7 +10,7 @@ Large Collections Library
  
  * If a class wraps a disposable collection object:
    * If the class disposes the underlying collection, nothing else must do that, and the class must not live longer than the underlying collection.
-      For example: using(var sorted = GetEnumerator().UsesSortOrder(Comparer<T>.Default)) { ... }
+      For example: using (var sorted = GetEnumerator().UsesSortOrder(Comparer<T>.Default)) { ... }
    * If the class does not dispose the underlying collection, it should acquire references to its resources and dispose them at the appropriate time.
       For example: return accumulator.Complete().UseSafely(a => new SinglePassLargeCollection<T>(a));
 

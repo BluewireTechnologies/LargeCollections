@@ -25,7 +25,7 @@ namespace LargeCollections.Tests.Storage
         [Test]
         public void CanSerialiseGuidArray()
         {
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 Write(stream, 50.Times(Guid.NewGuid).ToArray());
 
@@ -101,7 +101,7 @@ namespace LargeCollections.Tests.Storage
                     AssertRoundTrippable(Guid.NewGuid());
                 }
             })).ToArray();
-            
+
             foreach (var t in threads) t.Start();
 
             foreach (var t in threads) t.Join();

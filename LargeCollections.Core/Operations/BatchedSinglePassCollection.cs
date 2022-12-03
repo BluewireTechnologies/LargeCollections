@@ -42,7 +42,7 @@ namespace LargeCollections.Core.Operations
 
         public bool MoveNext()
         {
-            if(!source.MoveNext())
+            if (!source.MoveNext())
             {
                 Dispose();
                 return false;

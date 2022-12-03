@@ -31,7 +31,7 @@ namespace LargeCollections.SqlServer
             get { return timeout; }
             set
             {
-                if(value != timeout)
+                if (value != timeout)
                 {
                     instance.Configure(bulkCopy => bulkCopy.BulkCopyTimeout = (int) value.TotalSeconds);
                     timeout = value;
@@ -43,7 +43,7 @@ namespace LargeCollections.SqlServer
         {
             var count = 0;
             var batchDuration = GetBatchDuration();
-            using(var enumerator = items.GetEnumerator())
+            using (var enumerator = items.GetEnumerator())
             {
                 while (enumerator.MoveNext()) QueueItemBatch(enumerator, batchDuration, ref count);
             }
@@ -131,7 +131,7 @@ namespace LargeCollections.SqlServer
             private readonly QueueConsumerFactory factory;
             private Task bulkWriterTask;
             private BlockingCollection<T> currentQueue = new BlockingCollection<T>();
-            
+
             public BackgroundWriter(QueueConsumerFactory factory)
             {
                 this.factory = factory;
@@ -171,7 +171,7 @@ namespace LargeCollections.SqlServer
                 {
                     bulkWriterTask.Wait();
                 }
-                catch(AggregateException ex)
+                catch (AggregateException ex)
                 {
                     throw new BackgroundWriterAbortedException(ex.Flatten().InnerException);
                 }

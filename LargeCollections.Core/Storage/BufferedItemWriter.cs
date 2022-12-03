@@ -18,7 +18,7 @@ namespace LargeCollections.Core.Storage
         {
             serialiser.Write(stream, item);
         }
-        
+
         public void Dispose()
         {
             stream.Dispose();

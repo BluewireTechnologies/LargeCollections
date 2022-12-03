@@ -58,7 +58,7 @@ namespace Bluewire.ReferenceCounting.Diagnostics
                 if (log == null) return;
                 log.Log(exception, resource, references.ToArray());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // Already crashing if this was called.
                 Debug.Fail(String.Format("Failed to log crash details: {0}", ex.Message));

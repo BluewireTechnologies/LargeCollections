@@ -41,7 +41,7 @@ namespace LargeCollections.SqlServer.Tests
 
         [Test]
         public void CanDeserialiseWritableProperty()
-        {   
+        {
             var mappings = new INamePropertyMapping<SimpleEntity>[] {  new ColumnPropertyMapping<SimpleEntity, string>("source", e => e.StringProperty,SqlDbType.Variant) };
             var factory = new NameValueObjectFactory<string, SimpleEntity>(mappings);
             var entity = factory.ReadRecord(s => "Test Value");
@@ -51,7 +51,7 @@ namespace LargeCollections.SqlServer.Tests
 
         [Test]
         public void CanDeserialiseWritableField()
-        {   
+        {
             var mappings = new INamePropertyMapping<SimpleEntity>[] {  new ColumnPropertyMapping<SimpleEntity, int>("source", e => e.IntField, SqlDbType.Variant) };
             var factory = new NameValueObjectFactory<string, SimpleEntity>(mappings);
             var entity = factory.ReadRecord(s => 1);
@@ -61,7 +61,7 @@ namespace LargeCollections.SqlServer.Tests
 
         [Test]
         public void CannotDeserialiseUnwritableField()
-        {   
+        {
             var mappings = new INamePropertyMapping<SimpleEntity>[] {  new ColumnPropertyMapping<SimpleEntity, string>("source", e => e.ReadOnlyStringField, SqlDbType.Variant) };
             var factory = new NameValueObjectFactory<string, SimpleEntity>(mappings);
             var entity = factory.ReadRecord(s => "Test Value");
@@ -69,10 +69,10 @@ namespace LargeCollections.SqlServer.Tests
             Assert.AreNotEqual("Test Value", entity.ReadOnlyStringField);
         }
 
-        
+
         [Test]
         public void CannotDeserialiseUnwritableProperty()
-        {   
+        {
             var mappings = new INamePropertyMapping<SimpleEntity>[] {  new ColumnPropertyMapping<SimpleEntity, int>("source", e => e.ReadOnlyIntProperty, SqlDbType.Variant) };
             var factory = new NameValueObjectFactory<string, SimpleEntity>(mappings);
             var entity = factory.ReadRecord(s => 1);
@@ -82,7 +82,7 @@ namespace LargeCollections.SqlServer.Tests
 
         [Test]
         public void CanDeserialiseWithConstructorParameterMatchingNameAndType()
-        {   
+        {
             var mappings = new INamePropertyMapping<EntityWithConstructor>[] {  new ColumnPropertyMapping<EntityWithConstructor, int>("source", e => e.IntField, SqlDbType.Variant) };
             var factory = new NameValueObjectFactory<string, EntityWithConstructor>(mappings);
             var entity = factory.ReadRecord(s => 1);
@@ -93,16 +93,16 @@ namespace LargeCollections.SqlServer.Tests
 
         [Test]
         public void CannotDeserialiseWithConstructorParameterMatchingNameButNotType()
-        {   
+        {
             var mappings = new INamePropertyMapping<EntityWithConstructor>[] {  new ColumnPropertyMapping<EntityWithConstructor, string>("source", e => e.StringProperty, SqlDbType.Variant) };
             var factory = new NameValueObjectFactory<string, EntityWithConstructor>(mappings);
             Assert.Catch<InvalidOperationException>(() => factory.ReadRecord(s => "test"));
         }
 
-        
+
         [Test]
         public void CannotDeserialiseWithoutAllConstructorParametersSatisfied()
-        {   
+        {
             var mappings = new INamePropertyMapping<EntityWithUnsatisfiedConstructor>[] {  new ColumnPropertyMapping<EntityWithUnsatisfiedConstructor, int>("source", e => e.IntField, SqlDbType.Variant) };
             var factory = new NameValueObjectFactory<string, EntityWithUnsatisfiedConstructor>(mappings);
             Assert.Catch<InvalidOperationException>(() => factory.ReadRecord(s => 1));

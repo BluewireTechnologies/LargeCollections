@@ -69,7 +69,6 @@ namespace LargeCollections.Tests.Collections
                 while (collection.MoveNext()) ;
                 Assert.AreEqual(0, resource.RefCount);
             }
-            
         }
 
 

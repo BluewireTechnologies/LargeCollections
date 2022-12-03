@@ -14,4 +14,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Bluewire.ReferenceCounting\Bluewire.ReferenceCounting.csproj" />
   </ItemGroup>
+  <Import Project="..\StyleCopAnalyzers.props" />
 </Project>

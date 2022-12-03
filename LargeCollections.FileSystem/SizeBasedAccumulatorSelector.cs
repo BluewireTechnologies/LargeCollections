@@ -9,7 +9,7 @@ using LargeCollections.Core.Storage;
 namespace LargeCollections.FileSystem
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <remarks>
     /// Threadsafe.
@@ -45,7 +45,7 @@ namespace LargeCollections.FileSystem
         /// <returns></returns>
         public IAccumulator<T> GetAccumulator<T>(long totalSizeOfCollection)
         {
-            if(totalSizeOfCollection > backingStoreThreshold)
+            if (totalSizeOfCollection > backingStoreThreshold)
             {
                 var file = TemporaryFileProvider.GetTempFile();
                 return new FileAccumulator<T>(file, Serialisers.Get<T>());
@@ -75,7 +75,7 @@ namespace LargeCollections.FileSystem
         public IAccumulator<T> GetAccumulator<T>(IEnumerator source)
         {
             var countable = source.GetUnderlying<ICounted>();
-            if(countable != null)
+            if (countable != null)
             {
                 return GetAccumulator<T>(countable.Count);
             }
@@ -106,7 +106,7 @@ namespace LargeCollections.FileSystem
 
             public void Add(T item)
             {
-                if(Count == backingStoreThreshold && inMemoryAccumulator != null)
+                if (Count == backingStoreThreshold && inMemoryAccumulator != null)
                 {
                     var file = temporaryFileProvider.GetTempFile();
                     accumulator = new FileAccumulator<T>(file, serialiser);
@@ -119,7 +119,7 @@ namespace LargeCollections.FileSystem
 
             public void AddRange(IEnumerable<T> items)
             {
-                foreach(var item in items)
+                foreach (var item in items)
                 {
                     Add(item);
                 }
@@ -141,7 +141,7 @@ namespace LargeCollections.FileSystem
             if (!operatorCache.Value.TryGetValue(typeof(T), out operatorInstance))
             {
                 operatorInstance = create();
-                operatorCache.Value[typeof (T)] = operatorInstance;
+                operatorCache.Value[typeof(T)] = operatorInstance;
             }
             return (T)operatorInstance;
         }

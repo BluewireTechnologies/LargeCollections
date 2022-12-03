@@ -49,8 +49,8 @@ namespace LargeCollections.Core
         }
 
         public static TInterface GetUnderlying<TInterface>(this object item) where TInterface : class
-        {   
-            if(item is TInterface)
+        {
+            if (item is TInterface)
             {
                 return item as TInterface;
             }
@@ -58,10 +58,10 @@ namespace LargeCollections.Core
             if (wrappingItem == null) return null;
             return GetUnderlying<TInterface>(wrappingItem.Underlying);
         }
-        
+
         public static T GetOperator<T>(this IAccumulatorSelector accumulatorSelector, Func<T> createDefault)
         {
-            if(accumulatorSelector is IOperatorCache)
+            if (accumulatorSelector is IOperatorCache)
             {
                 return ((IOperatorCache)accumulatorSelector).GetInstance(createDefault);
             }
@@ -84,7 +84,7 @@ namespace LargeCollections.Core
         private static IComparer<T> GetSingleSortOrder<T>(IEnumerable<ISorted<T>> enumerables)
         {
             var sortOrders = enumerables.Select(c => c.SortOrder).Distinct();
-            if(sortOrders.Count() != 1)
+            if (sortOrders.Count() != 1)
             {
                 throw new InvalidOperationException("All input collections must be sorted in the same way.");
             }

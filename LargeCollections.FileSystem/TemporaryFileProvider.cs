@@ -26,14 +26,14 @@ namespace LargeCollections.FileSystem
             var attempts = 10;
             do
             {
-                if(--attempts < 0)
+                if (--attempts < 0)
                 {
                     // This probably can't happen, but if it does then the only reasonable response is to give up.
                     throw new OutOfMemoryException("Cannot generate a unique random filename. All attempts were duplicates.");
                 }
                 fileName = Path.Combine(tempRoot, Path.GetRandomFileName());
             } while (File.Exists(fileName));
-            using(File.Create(fileName))
+            using (File.Create(fileName))
             {
             }
             return fileName;

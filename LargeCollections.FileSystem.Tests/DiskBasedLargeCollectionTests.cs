@@ -32,7 +32,7 @@ namespace LargeCollections.FileSystem.Tests
                 return collection.GetUnderlying<IHasBackingStore<FileReference>>().BackingStore.File.Exists;
             }
         }
-        
+
         [Test]
         public void AccumulatorDoesNotOverwriteNonemptyExistingFile()
         {
@@ -57,7 +57,7 @@ namespace LargeCollections.FileSystem.Tests
         public void AccumulatorDoesNotLeakResources_If_ExceptionOccursInConstructor()
         {
             var fileName = GetUnwritableTempFile();
-            
+
             Assert.Catch<UnauthorizedAccessException>(() =>
             {
                 using (new FileAccumulator<int>(fileName, new DefaultItemSerialiser<int>()))

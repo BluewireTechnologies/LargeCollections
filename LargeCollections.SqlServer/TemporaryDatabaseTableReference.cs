@@ -37,7 +37,7 @@ namespace LargeCollections.SqlServer
 
         public void ApplyIndex(string columnName)
         {
-            if(!exists) throw new InvalidOperationException("Cannot create index. Table has not yet been created.");
+            if (!exists) throw new InvalidOperationException("Cannot create index. Table has not yet been created.");
             Schema.AddIndex(Session, TableName, columnName);
         }
 

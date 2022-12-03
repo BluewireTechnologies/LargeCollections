@@ -40,7 +40,7 @@ namespace LargeCollections.SqlServer
 
         public void Add(IColumnPropertyMapping<T> mapping)
         {
-            if(properties.Any(p => p.Name == mapping.Name)) throw new InvalidOperationException("Property mapping already exists");
+            if (properties.Any(p => p.Name == mapping.Name)) throw new InvalidOperationException("Property mapping already exists");
             properties.Add(mapping);
         }
 

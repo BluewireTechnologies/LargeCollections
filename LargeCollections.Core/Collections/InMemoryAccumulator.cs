@@ -44,7 +44,7 @@ namespace LargeCollections.Core.Collections
 
         public void AddRange(IEnumerable<T> items)
         {
-            if(completed) throw new ReadOnlyException();
+            if (completed) throw new ReadOnlyException();
             buffer.AddRange(items);
         }
 
@@ -67,7 +67,7 @@ namespace LargeCollections.Core.Collections
 
         public static ILargeCollection<T> From(IEnumerable<T> items)
         {
-            using(var accumulator = new InMemoryAccumulator<T>())
+            using (var accumulator = new InMemoryAccumulator<T>())
             {
                 accumulator.AddRange(items);
                 return accumulator.Complete();
