@@ -65,6 +65,7 @@ namespace LargeCollections.SqlServer
             if (writer == null) return;
             try
             {
+                writer.Complete();
                 writer.Dispose();
             }
             catch (Exception ex)
