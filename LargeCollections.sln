@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29326.143
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.Tests", "LargeCollections.Tests\LargeCollections.Tests.csproj", "{476F7C46-D589-408D-907E-4971B2722BBB}"
 EndProject
@@ -18,8 +18,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.Operations", "LargeCollections.Operations\LargeCollections.Operations.csproj", "{90A84227-E6A0-4141-A9F8-B0FCD08029C9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.Core", "LargeCollections.Core\LargeCollections.Core.csproj", "{5FCCB031-DD19-40AA-9EDF-EEBFA582B8D2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections", "LargeCollections\LargeCollections.csproj", "{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeCollections.SqlServer.Tests", "LargeCollections.SqlServer.Tests\LargeCollections.SqlServer.Tests.csproj", "{DFBF940C-6496-4AC0-84D4-86CA48139240}"
 EndProject
@@ -131,18 +129,6 @@ Global
 		{5FCCB031-DD19-40AA-9EDF-EEBFA582B8D2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5FCCB031-DD19-40AA-9EDF-EEBFA582B8D2}.Release|x86.ActiveCfg = Release|Any CPU
 		{5FCCB031-DD19-40AA-9EDF-EEBFA582B8D2}.Release|x86.Build.0 = Release|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Debug|x86.Build.0 = Debug|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Release|x86.ActiveCfg = Release|Any CPU
-		{EB4CCE4B-1B12-46AF-9B6B-646960577C2B}.Release|x86.Build.0 = Release|Any CPU
 		{DFBF940C-6496-4AC0-84D4-86CA48139240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DFBF940C-6496-4AC0-84D4-86CA48139240}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFBF940C-6496-4AC0-84D4-86CA48139240}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
