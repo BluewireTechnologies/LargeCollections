@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using LargeCollections.Core;
 
-namespace LargeCollections.Operations
+namespace LargeCollections.Core.Operations
 {
     /// <summary>
     /// Reads an ISinglePassCollection as a series of batches of the specified size.
@@ -14,7 +13,7 @@ namespace LargeCollections.Operations
     /// similar to IDataReader.
     /// </remarks>
     /// <typeparam name="T"></typeparam>
-    public class BatchedSinglePassCollection<T> : IEnumerator<IEnumerable<T>>, IMappedCount
+    internal class BatchedSinglePassCollection<T> : IEnumerator<IEnumerable<T>>, IMappedCount
     {
         private readonly IEnumerator<T> source;
         private readonly int batchSize;

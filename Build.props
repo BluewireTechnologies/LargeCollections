@@ -6,7 +6,6 @@
         <NugetProjects Include="LargeCollections.Core\LargeCollections.Core.csproj" />
         <NugetProjects Include="LargeCollections.FileSystem\LargeCollections.FileSystem.csproj" />
         <NugetProjects Include="LargeCollections.SqlServer\LargeCollections.SqlServer.csproj" />
-        <NugetProjects Include="LargeCollections.Operations\LargeCollections.Operations.csproj" />
         <NugetProjects Include="Bluewire.ReferenceCounting.Tests\Bluewire.ReferenceCounting.Tests.csproj" />
     
         <!-- Full list of NUnit test projects -->
@@ -14,7 +13,6 @@
         <NUnitProjects Include="LargeCollections.Tests\LargeCollections.Tests.csproj" />
         <NUnitProjects Include="LargeCollections.FileSystem.Tests\LargeCollections.FileSystem.Tests.csproj" />
         <NUnitProjects Include="LargeCollections.SqlServer.Tests\LargeCollections.SqlServer.Tests.csproj" />
-        <NUnitProjects Include="LargeCollections.Operations.Tests\LargeCollections.Operations.Tests.csproj" />
     </ItemGroup>
     <ItemDefinitionGroup>
         <!-- Library repository: all packages use SemVer -->

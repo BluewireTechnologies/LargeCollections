@@ -1,20 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LargeCollections.Core;
-using LargeCollections.Core.Linq;
 
-namespace LargeCollections.Operations
+namespace LargeCollections.Core.Operations
 {
-    public static class CountInheritance
+    internal static class CountInheritance
     {
-        public static IDisposableEnumerable<T> InheritsCount<T>(this IEnumerable<T> collection, object source)
-        {
-            var count = TryGetCount(collection, source);
-            if (count == null) return collection.AsDisposable();
-            return new CountedEnumerable<T>(collection, count.Value);
-        }
-
         private static long? TryGetCount(object inheritor, object source)
         {
             if (inheritor.GetUnderlying<ICounted>() != null) throw new InvalidOperationException("Inheritor is already counted.");
@@ -39,21 +30,6 @@ namespace LargeCollections.Operations
                 return new CountedEnumerator<T>(enumerator, counts.Sum(c => c.Value));
             }
             return enumerator;
-        }
-
-        class CountedEnumerable<T> : DisposableEnumerable<T>, ICounted
-        {
-            public CountedEnumerable(IEnumerable<T> underlying, long count) : base(underlying)
-            {
-                Count = count;
-            }
-
-            public override IEnumerator<T> GetEnumerator()
-            {
-                return new CountedEnumerator<T>(base.GetEnumerator(), Count);
-            }
-
-            public long Count { get; private set; }
         }
 
         class CountedEnumerator<T> : IEnumerator<T>, ICounted, IHasUnderlying
