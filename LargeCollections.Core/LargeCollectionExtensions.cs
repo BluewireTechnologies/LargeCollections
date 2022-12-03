@@ -78,7 +78,6 @@ namespace LargeCollections.Core
                     return sortedEnumerables;
                 }
             }
-            Debug.Fail("All input collections must be sorted.");
             throw new InvalidOperationException("All input collections must be sorted.");
         }
 
@@ -87,7 +86,6 @@ namespace LargeCollections.Core
             var sortOrders = enumerables.Select(c => c.SortOrder).Distinct();
             if(sortOrders.Count() != 1)
             {
-                Debug.Fail("All input collections must be sorted in the same way.");
                 throw new InvalidOperationException("All input collections must be sorted in the same way.");
             }
             return sortOrders.Single();
