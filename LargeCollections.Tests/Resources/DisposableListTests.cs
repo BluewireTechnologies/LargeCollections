@@ -19,10 +19,10 @@ namespace LargeCollections.Tests.Resources
                 MockDisposable()
             };
             var list = new DisposableList<IDisposable>(disposables.Select(d => d.Object));
-            
+
             list.Dispose();
 
-            foreach(var d in disposables)
+            foreach (var d in disposables)
             {
                 d.Verify();
             }

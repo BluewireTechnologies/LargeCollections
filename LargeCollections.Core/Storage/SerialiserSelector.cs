@@ -19,9 +19,9 @@ namespace LargeCollections.Core.Storage
 
         public IItemSerialiser<T> Get<T>()
         {
-            if(serialisers.ContainsKey(typeof(T)))
+            if (serialisers.ContainsKey(typeof(T)))
             {
-                return (IItemSerialiser<T>)serialisers[typeof (T)];
+                return (IItemSerialiser<T>)serialisers[typeof(T)];
             }
             return new DefaultItemSerialiser<T>();
         }

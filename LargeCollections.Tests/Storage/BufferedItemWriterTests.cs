@@ -18,8 +18,8 @@ namespace LargeCollections.Tests.Storage
         {
             var serialiser = new Mock<IItemSerialiser<int>>();
             serialiser.Setup(s => s.Write(It.IsAny<Stream>(), It.IsAny<int>()));
-            
-            using(var stream = new MemoryStream())
+
+            using (var stream = new MemoryStream())
             {
                 using (var writer = new BufferedItemWriter<int>(stream, serialiser.Object))
                 {

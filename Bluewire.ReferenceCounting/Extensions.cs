@@ -8,9 +8,9 @@ namespace Bluewire.ReferenceCounting
     {
         public static IList<T> EvaluateSafely<T>(this IEnumerable<T> enumerable)
         {
-            using(var list = new DisposableList<T>())
+            using (var list = new DisposableList<T>())
             {
-                foreach(var entry in enumerable)
+                foreach (var entry in enumerable)
                 {
                     list.Add(entry);
                 }
@@ -44,7 +44,7 @@ namespace Bluewire.ReferenceCounting
         /// </summary>
         /// <remarks>
         /// Given:
-        ///      using(a) { return new B(); }
+        ///      using (a) { return new B(); }
         /// Where:
         ///      class B : IDisposable
         /// Then:
@@ -67,7 +67,7 @@ namespace Bluewire.ReferenceCounting
             }
             catch (Exception)
             {
-                if(result != null) result.Dispose();
+                if (result != null) result.Dispose();
                 throw;
             }
             return result;

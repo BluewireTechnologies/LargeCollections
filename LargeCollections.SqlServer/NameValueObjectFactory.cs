@@ -35,7 +35,7 @@ namespace LargeCollections.SqlServer
         }
 
         public bool IsValid { get { return factory != null; } }
- 
+
 
         class Factory
         {
@@ -80,11 +80,11 @@ namespace LargeCollections.SqlServer
         {
             var parameters = constructorInfo.GetParameters();
             var paramColumnNames = new List<TMapping>();
-            foreach(var parameter in parameters)
+            foreach (var parameter in parameters)
             {
                 TMapping mapping;
-                if(!columns.TryGetValue(parameter.Name, out mapping)) return null;
-                if(mapping.Type != parameter.ParameterType) return null;
+                if (!columns.TryGetValue(parameter.Name, out mapping)) return null;
+                if (mapping.Type != parameter.ParameterType) return null;
                 paramColumnNames.Add(mapping);
             }
             return paramColumnNames.ToArray();
@@ -112,7 +112,7 @@ namespace LargeCollections.SqlServer
                 {
                     object value = UNSET;
                     copier(c, v => value = v);
-                    if(ReferenceEquals(value, UNSET)) throw new InvalidOperationException(String.Format("Unable to read value for required property {0}", c.PropertyName));
+                    if (ReferenceEquals(value, UNSET)) throw new InvalidOperationException(String.Format("Unable to read value for required property {0}", c.PropertyName));
                     return value;
                 };
         }

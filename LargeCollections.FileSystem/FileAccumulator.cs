@@ -39,7 +39,7 @@ namespace LargeCollections.FileSystem
 
         public void Add(T item)
         {
-            if(completed) throw new ReadOnlyException();
+            if (completed) throw new ReadOnlyException();
             writer.Write(item);
             Count++;
         }

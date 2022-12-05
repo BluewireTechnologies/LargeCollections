@@ -57,13 +57,13 @@ namespace LargeCollections.Tests.Collections
         [Test]
         public void DisposeDoesNotInvalidateBackingStore()
         {
-            using(var collection = InMemoryAccumulator<int>.From(new[] {1, 2, 3, 4}))
+            using (var collection = InMemoryAccumulator<int>.From(new[] {1, 2, 3, 4}))
             {
                 var enumerator = collection.GetEnumerator();
                 collection.Dispose();
 
                 var list = new List<int>();
-                while(enumerator.MoveNext()) list.Add(enumerator.Current);
+                while (enumerator.MoveNext()) list.Add(enumerator.Current);
 
                 Assert.AreEqual(4, list.Count);
 

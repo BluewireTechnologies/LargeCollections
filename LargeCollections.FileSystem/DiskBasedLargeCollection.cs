@@ -16,7 +16,7 @@ namespace LargeCollections.FileSystem
 
         protected override IEnumerator<T> GetEnumeratorImplementation()
         {
-            using(var reader = new BufferedItemReader<T>(File.OpenRead(BackingStore.File.FullName), serialiser))
+            using (var reader = new BufferedItemReader<T>(File.OpenRead(BackingStore.File.FullName), serialiser))
             {
                 for (var i = 0; i < Count; i++)
                 {

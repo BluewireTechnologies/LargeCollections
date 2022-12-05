@@ -2,186 +2,185 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LargeCollections.SqlServer
 {
-    public interface IEntityWriter<in T> : IDisposable
+    public struct TableWriterOptions
     {
-        int Write(IEnumerable<T> items);
-        int Write(T item);
+        /// <summary>
+        /// Timeout to use for SqlBulkCopy.
+        /// </summary>
+        public TimeSpan? Timeout { get; set; }
+        /// <summary>
+        /// Maximum number of items to buffer at a time. Add will block/wait once the buffer is full.
+        /// Default: 4096.
+        /// </summary>
+        public int? BufferSize { get; set; }
     }
 
-    public class TableWriter<T> : IEntityWriter<T>
+    public class TableWriter<T> : IDisposable
     {
-        private QueueConsumerFactory factory;
+        private readonly Task bulkWriterTask;
+        private readonly BlockingCollection<T> queue;
+        private readonly List<IColumnPropertyMapping<T>> columns;
+        /// <summary>
+        /// Cancelled when Abort or Dispose is called.
+        /// </summary>
+        private readonly CancellationTokenSource abortCts = new CancellationTokenSource();
+        /// <summary>
+        /// Cancelled by the writer loop when it completes or aborts.
+        /// </summary>
+        private readonly CancellationTokenSource abortedCts = new CancellationTokenSource();
 
-        public TableWriter(SqlSession session, List<IColumnPropertyMapping<T>> columns, string tableName)
+        public TableWriter(SqlSession session, List<IColumnPropertyMapping<T>> columns, string tableName, TableWriterOptions options = default(TableWriterOptions))
         {
-            factory = new QueueConsumerFactory(session, columns, tableName);
-            timeout = TimeSpan.FromSeconds(factory.BulkCopy.BulkCopyTimeout);
-            instance = new BackgroundWriter(factory);
+            this.columns = columns;
+            queue = new BlockingCollection<T>(options.BufferSize ?? 4096);
+            bulkWriterTask = Task.Run(() => WriterLoop(session, tableName, options));
         }
 
-        private readonly BackgroundWriter instance;
-
-        private TimeSpan timeout;
-        public TimeSpan Timeout
+        private async Task WriterLoop(SqlSession session, string tableName, TableWriterOptions options)
         {
-            get { return timeout; }
-            set
+            try
             {
-                if(value != timeout)
+                using (var bulkCopy = new SqlBulkCopy(session.Connection, SqlBulkCopyOptions.TableLock, session.Transaction))
                 {
-                    instance.Configure(bulkCopy => bulkCopy.BulkCopyTimeout = (int) value.TotalSeconds);
-                    timeout = value;
+                    bulkCopy.DestinationTableName = tableName;
+                    bulkCopy.BatchSize = 50;
+                    if (options.Timeout != null) bulkCopy.BulkCopyTimeout = (int)options.Timeout.Value.TotalSeconds;
+
+                    for (var i = 0; i < columns.Count; i++)
+                    {
+                        bulkCopy.ColumnMappings.Add(i, columns[i].Name);
+                    }
+
+                    var consumer = queue.GetConsumingEnumerable(abortCts.Token);
+                    using (var iterator = consumer.GetEnumerator())
+                    using (var reader = new ObjectDataReader<T>(columns, iterator))
+                    {
+                        await bulkCopy.WriteToServerAsync(reader, abortCts.Token);
+                    }
                 }
+            }
+            finally
+            {
+                abortedCts.Cancel();
             }
         }
 
         public int Write(IEnumerable<T> items)
         {
             var count = 0;
-            var batchDuration = GetBatchDuration();
-            using(var enumerator = items.GetEnumerator())
+            foreach (var item in items)
             {
-                while (enumerator.MoveNext()) QueueItemBatch(enumerator, batchDuration, ref count);
+                if (queue.TryAdd(item, -1, abortedCts.Token))
+                {
+                    count++;
+                }
+                else
+                {
+                    if (bulkWriterTask.IsFaulted)
+                    {
+                        WaitAndRethrowExceptionsAsync(CancellationToken.None).GetAwaiter().GetResult();
+                    }
+                    // If we're not aborted, wait 10ms for the queue to clear slightly.
+                    Thread.Sleep(10);
+                }
             }
             return count;
         }
 
-        private TimeSpan GetBatchDuration()
+        public async Task<int> WriteAsync(IEnumerable<T> items, CancellationToken token = default)
         {
-            var duration = TimeSpan.FromSeconds(Timeout.TotalSeconds / 2);
-            if (duration == TimeSpan.Zero) return TimeSpan.FromSeconds(5);
-            return duration;
-        }
-
-        private void QueueItemBatch(IEnumerator<T> items, TimeSpan duration, ref int count)
-        {
-            var end = DateTime.Now + duration;
-            instance.CheckState();
-            do
+            var count = 0;
+            using (var linkedToken = CancellationTokenSource.CreateLinkedTokenSource(abortedCts.Token, token))
             {
-                instance.Add(items.Current);
-                count++;
-            } while (end > DateTime.Now && items.MoveNext());
+                foreach (var item in items)
+                {
+                    if (queue.TryAdd(item, -1, linkedToken.Token))
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        token.ThrowIfCancellationRequested();
+                        if (bulkWriterTask.IsFaulted)
+                        {
+                            await WaitAndRethrowExceptionsAsync(token).ConfigureAwait(false);
+                        }
+                        // If we're not aborted, wait 10ms for the queue to clear slightly.
+                        await Task.Delay(10, token).ConfigureAwait(false);
+                    }
+                }
+            }
+            return count;
         }
 
-        public int Write(T item)
+
+        /// <summary>
+        /// Closes the buffer and waits for it to clear.
+        /// </summary>
+        public void Complete() => CompleteAsync().GetAwaiter().GetResult();
+
+        /// <summary>
+        /// Closes the buffer and waits for it to clear.
+        /// </summary>
+        public async Task CompleteAsync(CancellationToken token = default)
         {
-            instance.CheckState();
-            instance.Add(item);
-            return 1;
+            queue.CompleteAdding();
+            await WaitAndRethrowExceptionsAsync(token).ConfigureAwait(false);
         }
 
-        public void Dispose()
+        /// <summary>
+        /// Aborts the operation. Does not wait for it to finish.
+        /// </summary>
+        public void Abort()
         {
+            abortCts.Cancel();
+        }
+
+        /// <summary>
+        /// Aborts the operation, then waits for it to finish. Does not throw.
+        /// </summary>
+        public void AbortAndWait() => AbortAndWaitAsync().GetAwaiter().GetResult();
+
+        /// <summary>
+        /// Aborts the operation, then waits for it to finish. Does not throw.
+        /// </summary>
+        public async Task AbortAndWaitAsync(CancellationToken token = default)
+        {
+            Abort();
+            await WaitForWriterToTerminate(token).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Aborts the operation if it is still running. Waits for the background loop to shut down.
+        /// </summary>
+        public void Dispose() => AbortAndWait();
+
+        private async Task WaitAndRethrowExceptionsAsync(CancellationToken token)
+        {
+            await WaitForWriterToTerminate(token).ConfigureAwait(false);
             try
             {
-                instance.Dispose();
+                await bulkWriterTask.ConfigureAwait(false);
             }
-            finally
+            catch (Exception ex)
             {
-                factory.Dispose();
+                throw new BackgroundWriterAbortedException(ex);
             }
         }
 
-
-        class QueueConsumerFactory : IDisposable
+        private async Task WaitForWriterToTerminate(CancellationToken token)
         {
-            public SqlBulkCopy BulkCopy { get; private set; }
-            private readonly List<IColumnPropertyMapping<T>> columns;
-
-            public QueueConsumerFactory(SqlSession session, List<IColumnPropertyMapping<T>> columns, string tableName)
+            // We can't cancel an `await` on an existing Task, so instead we wait on a pair of tokens.
+            using (var linkedToken = CancellationTokenSource.CreateLinkedTokenSource(abortedCts.Token, token))
             {
-                this.BulkCopy = new SqlBulkCopy(session.Connection, SqlBulkCopyOptions.TableLock, session.Transaction)
-                {
-                    DestinationTableName = tableName,
-                    BatchSize = 500
-                };
-
-                for (var i = 0; i < columns.Count; i++)
-                {
-                    this.BulkCopy.ColumnMappings.Add(i, columns[i].Name);
-                }
-
-                this.columns = columns;
+                await linkedToken.Token;
             }
-
-            public Action CreateConsumer(IEnumerable<T> queue)
-            {
-                return () =>
-                {
-                    using (var reader = new ObjectDataReader<T>(columns, queue.GetEnumerator()))
-                    {
-                        this.BulkCopy.WriteToServer(reader);
-                    }
-                };
-            }
-
-            public void Dispose()
-            {
-                this.BulkCopy.Close();
-            }
-        }
-
-        class BackgroundWriter : IDisposable
-        {
-            private readonly QueueConsumerFactory factory;
-            private Task bulkWriterTask;
-            private BlockingCollection<T> currentQueue = new BlockingCollection<T>();
-            
-            public BackgroundWriter(QueueConsumerFactory factory)
-            {
-                this.factory = factory;
-                bulkWriterTask = Task.Factory.StartNew(factory.CreateConsumer(currentQueue.GetConsumingEnumerable()));
-            }
-
-            public void Configure(Action<SqlBulkCopy> configure)
-            {
-                configure(factory.BulkCopy);
-                Reopen();
-            }
-
-            private void Reopen()
-            {
-                currentQueue.CompleteAdding();
-                currentQueue = new BlockingCollection<T>();
-                var consumeQueue = factory.CreateConsumer(currentQueue.GetConsumingEnumerable());
-                bulkWriterTask = bulkWriterTask.ContinueWith(t => {
-                    t.Wait();
-                    consumeQueue();
-                });
-            }
-
-            public void Add(T item)
-            {
-                currentQueue.Add(item);
-            }
-
-            public void CheckState()
-            {
-                if (bulkWriterTask.IsFaulted) WaitAndRethrowExceptions();
-            }
-
-            private void WaitAndRethrowExceptions()
-            {
-                try
-                {
-                    bulkWriterTask.Wait();
-                }
-                catch(AggregateException ex)
-                {
-                    throw new BackgroundWriterAbortedException(ex.Flatten().InnerException);
-                }
-            }
-
-            public void Dispose()
-            {
-                currentQueue.CompleteAdding();
-                WaitAndRethrowExceptions();
-            }
+            token.ThrowIfCancellationRequested();
         }
     }
 }

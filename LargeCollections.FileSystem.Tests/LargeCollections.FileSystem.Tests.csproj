@@ -1,17 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Moq" Version="4.13.1" />
-    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="Moq" Version="4.18.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\LargeCollections.FileSystem\LargeCollections.FileSystem.csproj" />
     <ProjectReference Include="..\LargeCollections.Tests\LargeCollections.Tests.csproj" />
   </ItemGroup>
-
+  <Import Project="..\StyleCopAnalyzers.props" />
 </Project>

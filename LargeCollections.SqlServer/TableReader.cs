@@ -34,7 +34,7 @@ namespace LargeCollections.SqlServer
         {
             get
             {
-                if(!loadedCurrent)
+                if (!loadedCurrent)
                 {
                     current = objectFactory.ReadRecord(f => ReadValueAsClrType(f.Name));
                     loadedCurrent = true;
