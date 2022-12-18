@@ -3,6 +3,7 @@
     <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
     <VersionPrefix>2.0.0</VersionPrefix>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="*.ncrunchproject" />
