@@ -27,10 +27,10 @@ namespace LargeCollections.SqlServer
         }
 
         private bool exists;
-        public TableWriter<T> Create()
+        public TableWriter<T> Create(TableWriterOptions options = default(TableWriterOptions))
         {
             Schema.CreateTable(Session, TableName);
-            var writer = Schema.GetWriter(Session, TableName);
+            var writer = Schema.GetWriter(Session, TableName, options);
             exists = true;
             return writer;
         }

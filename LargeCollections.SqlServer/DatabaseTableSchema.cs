@@ -12,7 +12,7 @@ namespace LargeCollections.SqlServer
         void AddIndex(SqlSession session, string tableName, string columnName);
 
         string PrimaryKey { get; }
-        TableWriter<T> GetWriter(SqlSession session, string tableName);
+        TableWriter<T> GetWriter(SqlSession session, string tableName, TableWriterOptions options = default(TableWriterOptions));
 
         NameValueObjectFactory<string, T> GetRecordFactory();
     }
@@ -110,9 +110,9 @@ namespace LargeCollections.SqlServer
         }
 
 
-        public TableWriter<T> GetWriter(SqlSession session, string tableName)
+        public TableWriter<T> GetWriter(SqlSession session, string tableName, TableWriterOptions options = default(TableWriterOptions))
         {
-            return new TableWriter<T>(session, properties, tableName);
+            return new TableWriter<T>(session, properties, tableName, options);
         }
 
 
